@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <script src="../../libs/rxw/rxw.js"></script>
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../libs/jquery.cookie.js"></script>
+    <title>医院管理</title>
+
+    <style>
+        .cell {
+            text-align: center;
+            display: inline-block;
+            padding:0 5px;
+            overflow: hidden;
+            height:100%;
+            white-space:nowrap;
+            text-overflow:ellipsis;
+            cursor: default;
+        }
+        .cell1 {
+            width:60px;
+        }
+        .cell2 {
+            width:200px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell3 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell4 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell5 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+
+        .cell6 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+
+        .cell7 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+
+        }
+        .row {
+            border-top: 1px solid #7d7d7d;
+            padding:3px 0;
+            height:20px;
+            font-size:15px;
+            min-width:1000px;
+        }
+
+        .row:hover{
+            background-color:#e8e8e8;
+        }
+        .row-title {
+            padding:2px 0;
+            min-width:1000px;
+            background-color:#e8e8e8;
+        }
+
+    </style>
+</head>
+
+<body style="margin:0;">
+
+<div style="width:100%;margin-top:5px;">
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()" name="queryBtn">查询</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="lookClinics()">查看门诊</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="lookPatients()">查看病人</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="lookUsers()">查看用户</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="developerManage()">开发者管理</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="doctorManage()">医生管理</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="projectManage()">项目管理</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="officeManage()">科室管理</button>
+</div>
+
+<div style="width:100%;margin-top:10px;">
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;">
+                    <span style="font-size: 14px">医院名:</span>
+                    <span>
+                        <input name="nameQuery" class="queryCondition"/>
+                    </span>
+                </span>
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;">
+                    <span style="font-size: 14px">电话:</span>
+                    <span>
+                        <input name="telQuery"  class="queryCondition"/>
+                    </span>
+                </span>
+</div>
+
+<div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
+    <div class="row-title">
+        <span class="cell cell1">选择</span><span class="cell cell2">医院</span><span class="cell cell3">电话</span><span class="cell cell4">院长</span><span class="cell cell5">添加者手机</span><span class="cell cell6">添加者姓名</span><span class="cell cell7">操作</span>
+    </div>
+    <div name="itemExample" class="row" style="display:none">
+        <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span><span class="cell cell2" name="name"></span></span><span class="cell cell3" name="tel"></span><span class="cell cell4" name="headmanName"></span><span class="cell cell5" name="developerPhone"></span><span class="cell cell6" name="developerRealname"></span><span class="cell cell7" ><button name="detailEntDoor">详情</button></span>
+    </div>
+    <div name="itemsShowPad" style="max-height:300px;">
+        <div name="itemsShow">
+
+        </div>
+        <div name="pagingBottomPad" style="text-align: center;margin:5px  0;">
+            <span name="noitem" style="display:none;position: relative;z-index: 2;background:white;padding:0 5px;color:#7d7d7d">无数据</span>
+            <span name="more" style="display:none;cursor:pointer;position: relative;z-index: 2;background:white;padding:0 5px;color:#7d7d7d" onclick="loadMore()">点击加载更多</span>
+            <span name="finish" style="cursor: default;;display:none;position: relative;z-index: 2;background:white;padding:0 5px;color:#7d7d7d">加载完毕</span>
+            <div style="margin:auto;position: relative; left: 0;top: -10px;width: 95%;height: 1px;background: #DCDCDC;z-index: 1;"></div>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+<script>
+    rxw1.relativePath = '../../libs/'
+    var token = $.cookie('login-token');
+    var queryString =rxw1.parseQueryStr(location.search.substr(1))
+    var userId =queryString.user_id;
+    var developerId =queryString.developer_id;
+
+
+    var hasMoreItems;
+    var page_no;
+    var page_size;
+    var items = {};
+    var queryParams = {token: token,user_id:userId,developer_id:developerId}
+
+    $('.queryCondition').keyup(function(event){
+        if(event.keyCode ==13){
+            $('[name=queryBtn]').click()
+        }
+
+    });
+
+
+    onload();
+
+
+    function onload() {
+        rxw1.waitLock()
+        page_no = 1;
+        page_size = 30;
+        hasMoreItems = true;
+        $('[name=itemsShow]').html('');
+        $('[name=pagingBottomPad] [name=noitem]').css('display', '');
+        $('[name=pagingBottomPad] [name=more]').css('display', 'none');
+        $('[name=pagingBottomPad] [name=finish]').css('display', 'none');
+        loadItems();
+        rxw1.waitLock.remove()
+    }
+
+    function query(){
+        queryParams.name=$('[name=nameQuery]').val();
+        queryParams.tel=$('[name=telQuery]').val();
+        onload();
+    }
+    function loadMore(){
+        rxw1.waitLock()
+        page_no++;
+        loadItems();
+        rxw1.waitLock.remove()
+    }
+    rxw1.scrollEvent($('#itemsContainer').get(0), function () {
+        if (hasMoreItems) {
+            page_no++;
+            loadItems();
+        }
+    })
+    function loadItems(){
+        queryParams.page_no=page_no;
+        queryParams.page_size=page_size;
+        $.ajax({
+            url: "/zaylt/mm/hm/hospitallist" ,
+            type: 'post',
+            async: false,
+            data: queryParams,
+            success: function (res) {
+                if (res.code == 0) {
+                    var itemsLength = res.data.items.length;
+                    if(itemsLength==0 && page_no ==1){
+                        hasMoreItems=false;
+                    }else if(itemsLength>= 0 && itemsLength<page_size && page_no>=1){
+                        $('[name=pagingBottomPad] [name=noitem]').css('display', 'none');
+                        $('[name=pagingBottomPad] [name=more]').css('display', 'none');
+                        $('[name=pagingBottomPad] [name=finish]').css('display', '');
+                        hasMoreItems=false;
+                    }else if(itemsLength==page_size){
+                        $('[name=pagingBottomPad] [name=noitem]').css('display', 'none');
+                        $('[name=pagingBottomPad] [name=finish]').css('display', 'none');
+                        $('[name=pagingBottomPad] [name=more]').css('display', '');
+                        hasMoreItems = true;
+                    }
+                    $(res.data.items).each(function(index,item){
+                        items[item.id]=item;
+                        var newItemRow = $('[name=itemExample]').clone(true)
+                        renderItemRow(newItemRow,item)
+                        eventToItemRow(newItemRow,item.id)
+                        newItemRow.css('display', '');
+                        $('[name=itemsShow]').append(newItemRow)
+                    })
+                } else {
+                    rxw1.errorpad(res.codeMsg)
+                }
+            }
+        })
+    }
+
+
+    function refreshItemRow(itemRow,itemId){
+        $.ajax({
+            url: "/zaylt/mm/hm/hospitaldetail",
+            type: 'post',
+            async: false,
+            data: {id:itemId,token:token},
+            success: function (res) {
+                if(res.code==0){
+                    var item = res.data;
+                    items[itemId]= item;
+                    renderItemRow(itemRow,item)
+                }else{
+                    rxw1.errorpad(res.codeMsg)
+                }
+            }
+        })
+    }
+
+
+    function renderItemRow(itemRow,item) {
+        itemRow.attr('name','')
+        itemRow.attr('itemId',item.id)
+        itemRow.find('[name=name]').text(item.name).attr('title',item.name)
+        itemRow.find('[name=tel]').text(item.tel).attr('title',item.tel)
+        itemRow.find('[name=headmanName]').text(item.headmanName).attr('title',item.headmanName)
+        itemRow.find('[name=developerPhone]').text(item.developerPhone).attr('title',item.developerPhone)
+        itemRow.find('[name=developerRealname]').text(item.developerRealname).attr('title',item.developerRealname)
+    }
+
+    function eventToItemRow(itemRow,itemId){
+        itemRow.find('[name=detailEntDoor]').click(function(){
+            rxw1.waitLock()
+            rxw1.layer({init:function(layer){
+                layer.style['background-color']='white';
+                $(layer).append('<div style="height:30px"><button style="margin:0 10px;display:inline-block;margin-top:5px;width:60px;height:25px" name="closeLayer">关闭</button></div>')
+                $(layer).append('<iframe frameborder="no" style="width: 100%;height:100%" src="'+'hdetail.html?id='+itemId+'"></iframe>')
+                $(layer).find('[name=closeLayer]').click(function(){
+                    refreshItemRow(itemRow,itemId)
+                    $(layer).remove();
+                })
+            }})
+            rxw1.waitLock.remove()
+        })
+        itemRow.click(function(){
+            $('.row [name=itemChosen] ').prop("checked",false);
+            $(this).find('[name=itemChosen]').prop("checked",true);
+            $('.row').css('background-color','')
+            $(this).css('background-color','#e8e8e8')
+        })
+    }
+
+
+
+
+function lookClinics(){
+    var itemRow = $('.row [name=itemChosen]:checked').parents('.row');
+    var itemId = itemRow.attr('itemId')
+    if(itemId){
+        location.href='../cm/ent.html?hospital_id='+itemId
+
+    }else
+        rxw1.errorpad('请选择一条记录')
+}
+    function lookPatients(){
+        var itemRow = $('.row [name=itemChosen]:checked').parents('.row');
+        var itemId = itemRow.attr('itemId')
+        if(itemId){
+            location.href='../pm/ent.html?hospital_id='+itemId
+
+        }else
+            rxw1.errorpad('请选择一条记录')
+    }
+
+    function lookUsers(){
+        var itemRow = $('.row [name=itemChosen]:checked').parents('.row');
+        var itemId = itemRow.attr('itemId')
+        if(itemId){
+            location.href='../um/ent.html?hospital_id='+itemId
+
+        }else
+            rxw1.errorpad('请选择一条记录')
+    }
+
+    function developerManage(){
+        var itemRow = $('.row [name=itemChosen]:checked').parents('.row');
+        var itemId = itemRow.attr('itemId')
+        if(itemId){
+            location.href='developerManage.html?hospital_id='+itemId
+        }else
+            rxw1.errorpad('请选择一条记录')
+    }
+
+    function doctorManage(){
+        var itemRow = $('.row [name=itemChosen]:checked').parents('.row');
+        var itemId = itemRow.attr('itemId')
+        if(itemId){
+            location.href='dm_ent.html?hospital_id='+itemId
+        }else
+            rxw1.errorpad('请选择一条记录')
+    }
+
+    function projectManage(){
+        var itemRow = $('.row [name=itemChosen]:checked').parents('.row');
+        var itemId = itemRow.attr('itemId')
+        if(itemId){
+            location.href='pm_ent.html?hospital_id='+itemId
+        }else
+            rxw1.errorpad('请选择一条记录')
+    }
+    function officeManage(){
+        var itemRow = $('.row [name=itemChosen]:checked').parents('.row');
+        var itemId = itemRow.attr('itemId')
+        if(itemId){
+            location.href='om_ent.html?hospital_id='+itemId
+        }else
+            rxw1.errorpad('请选择一条记录')
+    }
+
+
+    function unbindUser(){
+        var itemRow = $('.row [name=itemChosen]:checked').parents('.row');
+        var itemId = itemRow.attr('itemId');
+        if(itemId){
+        rxw1.confirmpad({content:'确定解绑开发者吗',confirm:function(){
+            $.ajax({
+                url: "/zaylt/mm/hm/unbinddeveloper",
+                type: 'post',
+                async: false,
+                data: {hospital_id:itemId,token:token},
+                success: function (res) {
+                    if(res.code==0){
+                        var item = res.data;
+                        items[itemId]= item;
+                        refreshItemRow(itemRow,itemId)
+                    }else{
+                        rxw1.errorpad(res.codeMsg)
+                    }
+                }
+            })
+        }})
+        }else
+            rxw1.errorpad('请选择一条记录')
+
+
+    }
+
+
+</script>
+
+</html>
