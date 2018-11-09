@@ -218,7 +218,7 @@
         //可以最多回退的次数,默认20
         //,maxUndoCount:20
         //当输入的字符数超过该值时，保存一次现场
-        //,maxInputCount:1
+        ,maxInputCount:1
 
         //imageScaleEnabled
         // 是否允许点击文件拖拽改变大小,默认true
