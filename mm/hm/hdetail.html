@@ -43,6 +43,8 @@
             <div><span class="title">市:</span><span name="cityName"></span></div>
             <div><span class="title">区:</span><span name="districtName"></span></div>
             <div><span class="title">地址<img class="alterEntDoor" onclick="alterAddress()" src="../img/update.png"/>:</span><span name="address"></span></div>
+            <div><span class="title">经度<img class="alterEntDoor" onclick="alterLongitude()" src="../img/update.png"/>:</span><span name="longitude"></span><a style="margin-left:10px" target="_blank" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">选择经纬度</a></div>
+            <div><span class="title">纬度<img class="alterEntDoor" onclick="alterLatitude()" src="../img/update.png"/>:</span><span name="latitude"></span></div>
         </fieldset>
     </form>
     <form id="introPad" style="line-height: 20px">
@@ -89,6 +91,8 @@
                     $('#detailPad [name=provinceName]').text(item.provinceName);
                     $('#detailPad [name=cityName]').text(item.cityName);
                     $('#detailPad [name=districtName]').text(item.districtName);
+                    $('#detailPad [name=longitude]').text(item.longitude);
+                    $('#detailPad [name=latitude]').text(item.latitude);
                     $('#introPad [name=intro1]').text(item.intro1);
                     $('#introPad [name=intro2]').text(item.intro2);
                     $('#introPad [name=intro3]').text(item.intro3);
@@ -205,6 +209,22 @@ function alterName(){
             onload();
         }})
     }
+
+    function alterLongitude(){
+        var nowValue = $('#detailPad [name=longitude]').text();
+        rxw1.inputpad({content:'请输入经度',def:nowValue,confirm:function(data){
+            alterItem({'longitude':data});
+            onload();
+        }})
+    }
+    function alterLatitude(){
+        var nowValue = $('#detailPad [name=latitude]').text();
+        rxw1.inputpad({content:'请输入纬度',def:nowValue,confirm:function(data){
+            alterItem({'latitude':data});
+            onload();
+        }})
+    }
+
     function alterHeadmanName(){
         var nowValue = $('#detailPad [name=headmanName]').text();
         rxw1.inputpad({content:'请输入院长姓名',def:nowValue,confirm:function(data){
