@@ -68,7 +68,7 @@
                     item = res.data;
                     $('#detailPad [name=name]').text(item.name);
                     $('#detailPad [name=cover]').attr('src',item.cover)
-                    $('#detailPad [name=content]').text(item.content);
+                    $('#detailPad [name=content]').load('/zaylt/other/bigdata/'+item.contentId+'/'+item.contentId)
                 } else {
                     rxw1.errorpad(res.codeMsg)
                 }
