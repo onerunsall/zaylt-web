@@ -14,11 +14,17 @@
     <script src="../../libs/upload.js"></script>
     <script src="../../libs/cropper/cropper.js"></script>
     <link href="../../libs/cropper/cropper.css" rel="stylesheet" />
-    <link href="../../um/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
-    <script type="text/javascript" charset="utf-8" src="../../um/umeditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../../um/umeditor.min.js"></script>
-    <script type="text/javascript" src="../../um/lang/zh-cn/zh-cn.js"></script>
-    <title>医院详情</title>
+    <script type="text/javascript" charset="utf-8" src="/oss/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/oss/ueditor/ueditor.all.min.js"> </script>
+    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+    <script type="text/javascript" charset="utf-8" src="/oss/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <title>器械详情</title>
+    <script>
+        window.UEDITOR_CONFIG.serverUrl +='?project=zaylt'
+
+    </script>
+    <title>器械详情</title>
 
     <style>
 
@@ -39,18 +45,43 @@
     <form id="detailPad" style="line-height: 20px">
         <fieldset>
             <legend style="color: #595959">详细信息</legend>
-            <div><span class="title">姓名<img class="alterEntDoor" onclick="alterName()" src="../img/update.png"/>:</span><span name="name"></span></div>
-            <div><span class="title">头像<img class="alterEntDoor" onclick="alterHeadimg()" src="../img/update.png"/>:</span><span><img name="headimg" style="width:50px;vertical-align: middle"></span></div>
-            <div><span class="title">科室<img class="alterEntDoor" onclick="alterOffice()" src="../img/update.png"/>:</span><span name="office"></span></div>
-            <div><span class="title">头衔<img class="alterEntDoor" onclick="alterJobTitles()" src="../img/update.png"/>:</span><span name="jobTitles"></span></div>
-            <div><span class="title">介绍<img class="alterEntDoor" onclick="alterIntro()" src="../img/update.png"/>:</span><span ><div id="intro" style="height:200px;width:50%;min-width:300px;vertical-align: middle;" ></div></span></div>
-            <div><span class="title">擅长<img class="alterEntDoor" onclick="alterGoodAt()" src="../img/update.png"/>:</span><span ><div id="goodAt" style="height:200px;width:50%;min-width:300px;vertical-align: middle;" ></div></span></div>
+            <div style="margin:5px 0;">
+                <span class="title">器械名:</span>
+                <span ><input id="name" type="text" disabled /></span>
+            </div>
+            <div style="margin:5px 0;">
+                <span class="title">封面:</span>
+                <span><img id="coverAlter" src="../img/update.png" style="margin-left: 5px;;width:20px;display: none" /></span>
+            </div>
+            <div style="margin:5px 0;">
+                <span class="title">简介:</span>
+                <span><textarea id="brief" style="width:300px;height:200px"　disabled ></textarea></span>
+            </div>
+            <div style="margin:5px 0;">
+                <span class="title">内容领航图:</span>
+                <span id="leadPicsPad"><img id="leadPicAddBtn" src="../img/add.jpg" style="width:20px;margin-left:5px;display:none;" /></span>
+            </div>
+            <div style="margin:5px 0;">
+                <span class="title">内容:</span>
+                <span >
+                    <div id="detail"  style="height:500px;width:50%;min-width:300px;vertical-align: middle;" ></div>
+                </span>
+            </div>
+            <div style="margin:5px 0;">
+                <span class="title">联系方式:</span>
+                <span ><input disabled id="contactTel" type="text" /></span>
+            </div>
+            <div style="margin:5px 0;">
+                <span class="title">排序号:</span>
+                <span ><input disabled id="sortNo" type="number" placeholder="越小排名越前，默认99999"/></span>
+            </div>
         </fieldset>
     </form>
 
 
     <div style="margin-top:20px">
-        <button name="delBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">删除</button>
+        <button id="alterBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">修改</button>
+        <button id="alterCompleteBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">完成</button>
     </div>
     <div style="margin-top:20px;"></div>
 </div>
@@ -59,28 +90,58 @@
     rxw1.relativePath = '../../libs/'
     var token = $.cookie('login-token');
     var queryString = rxw1.parseQueryStr(location.search.substr(1));
-    var id = queryString.id;
+    var deviceId = queryString.deviceId;
     var item;
 
-    var introUM= UM.getEditor('intro',{autoHeightEnabled:false,readonly:true,toolbar:[]});
-    var goodAtUM= UM.getEditor('goodAt',{autoHeightEnabled:false,readonly:true,toolbar:[]});
+    var detailUE= UE.getEditor('detail',{autoHeightEnabled:false,readonly:true});
     onload();
     function onload() {
         rxw1.waitLock()
         $.ajax({
-            url: "/zaylt/mm/hm/dm/ddetail",
+            url: "/zaylt/mm/devicemg/deviceinfo",
             type: 'post',
             async: false,
-            data: {id: id, token: token},
+            data: {deviceId: deviceId, token: token},
             success: function (res) {
                 if (res.code == 0) {
                     item = res.data;
-                    $('#detailPad [name=name]').text(item.name);
-                    $('#detailPad [name=headimg]').attr('src',item.headimg)
-                    $('#detailPad [name=office]').text(item.office);
-                    $('#detailPad [name=jobTitles]').text(item.jobTitles);
-                    introUM.setContent(item.intro);
-                    goodAtUM.setContent(item.goodAt);
+                    $('#detailPad #name').val(item.name);
+                    if(item.cover){
+                        $('#coverAlter').before('<img id="cover" src="" style="width:50px;" />')
+                        $('#cover').attr('src',item.cover)
+                        $('#cover').css('cursor','pointer').click(function(){
+                            rxw1.imgPreview(this.src)
+                        });
+                    }
+                    $('#detailPad #brief').text(item.brief);
+                    $('#detailPad #contactTel').val(item.contactTel);
+                    $('#detailPad #sortNo').val(item.sortNo);
+                    if(item.detailBdId)
+                        $.get('/zaylt/other/bigdata/'+item.detailBdId+'/'+item.detailBdId,function(res){
+                            detailUE.ready(function(){
+                                detailUE.setContent(res);
+                            })
+                        })
+                    if(item.leadPics){
+                        var leadPics = item.leadPics.split(',')
+                        $(leadPics).each(function(index,ele){
+                           var leadPicEle = $('<img name="leadPic" src="" style="width:50px;" />')
+
+                            $(leadPicEle).attr('src',ele)
+                            $(leadPicEle).css('cursor','pointer').click(function(){
+                                rxw1.imgPreview(this.src)
+                            });
+                          var leadPicPad =   $('<span class="leadPicPad" style="margin-left:5px;"></span>')
+                           var leadPicPadX = $('<span class="leadPicPadX" style="cursor: pointer;display: none">X</span>')
+                            leadPicPad.append(leadPicEle);
+                            leadPicPad.append(leadPicPadX);
+
+                            $(leadPicPadX).css('cursor','pointer').click(function(){
+                                $(this).parent('.leadPicPad').remove()
+                            })
+                            $('#leadPicAddBtn').before(leadPicPad)
+                        })
+                    }
 
                 } else {
                     rxw1.errorpad(res.codeMsg)
@@ -90,75 +151,113 @@
         rxw1.waitLock.remove()
     }
 
-    $('#detailPad [name=headimg]').css('cursor','pointer').click(function(){
-        rxw1.imgPreview(this.src)
-    });
 
-
-
+    $('#coverAlter').css('cursor','pointer').click(function(){
+        var img = this;
+        rxw1.cutImg({complete:function(param){
+            var url = uploadBlob(rxw1.convertBase64UrlToBlob(param.canvas.toDataURL(param.input.files[0].type)),param.input.files[0].name)
+            if(url){
+                $('#cover').attr('src',url)
+            }
+        },xRadio:180,yRadio:140})
+    })
 
 function alterName(){
-    var nowValue = $('#detailPad [name=name]').text();
-    rxw1.inputpad({content:'请输入姓名',def:nowValue,confirm:function(data){
+    var nowValue = $('#detailPad #name').text();
+    rxw1.inputpad({content:'请输入器械名',def:nowValue,confirm:function(data){
         alterItem({'name':data});
         onload();
     }})
 }
-    function alterOffice(){
-        var nowValue = $('#detailPad [name=office]').text();
-        rxw1.inputpad({content:'请输入科室',def:nowValue,confirm:function(data){
-            alterItem({'office':data});
+    function alterBrief(){
+        var nowValue = $('#detailPad #brief').text();
+        rxw1.inputpad({content:'请输入简介',def:nowValue,confirm:function(data){
+            alterItem({'brief':data});
             onload();
         }})
     }
-    function alterJobTitles(){
-        var nowValue = $('#detailPad [name=jobTitles]').text();
-        rxw1.inputpad({content:'请输入科室',def:nowValue,confirm:function(data){
-            alterItem({'job_titles':data});
+    function alterSortNo(){
+        var nowValue = $('#detailPad [name=sortNo]').text();
+        rxw1.inputpad({content:'请输入排序号',def:nowValue,confirm:function(data){
+            alterItem({'sortNo':data});
             onload();
         }})
     }
 
-    function alterHeadimg(){
+    function alterCover(){
         rxw1.cutImg({complete:function(param){
             var url = uploadBlob(rxw1.convertBase64UrlToBlob(param.canvas.toDataURL(param.input.files[0].type)),param.input.files[0].name)
             if(url){
-                alterItem({'headimg':url});
+                alterItem({'cover':url});
                 onload();
             }
         },xRadio:1,yRadio:1})
     }
 
 
-    function alterIntro(){
-        var nowValue = introUM.getContent();
-      rxw1.inputUMPad({content:'请输入介绍',def:nowValue,confirm:function(data){
-          alterItem({'intro':data});
+    function alterDetail(){
+        var nowValue = detailUE.getContent();
+      rxw1.inputUEPad({content:'请输入详情',def:nowValue,confirm:function(data){
+          alterItem({'detail':data});
           onload();
       }})
 
 
     }
-    function alterGoodAt(){
-        var nowValue = goodAtUM.getContent();
-        rxw1.inputUMPad({content:'请输入擅长',def:nowValue,confirm:function(data){
-            alterItem({'good_at':data});
-            onload();
-        }})
-    }
 
+    $('#leadPicAddBtn').css('cursor','pointer').click(function(){
+        var outSpan = document.createElement('span')
+        outSpan.classList.add('leadPicPad')
+        var img = document.createElement('img')
+        img.name="leadPic"
+        img.style['margin-left']='5px'
+        img.style['width']='50px'
 
-    function alterItem(param){
-        param.id=id;
+        var xSpan = document.createElement('span')
+        xSpan.innerHTML='X'
+        $(xSpan).css('cursor','pointer').click(function(){
+            $(this).parent('.leadPicPad').remove()
+        })
+
+        outSpan.appendChild(img);
+        outSpan.appendChild(xSpan);
+        rxw1.cutImg({complete:function(param){
+            var url = uploadBlob(rxw1.convertBase64UrlToBlob(param.canvas.toDataURL(param.input.files[0].type)),param.input.files[0].name)
+            if(url){
+                img.src=url;
+                $('#leadPicAddBtn').before(outSpan)
+                $(img).click(function(){
+                    rxw1.imgPreview(this.src)
+                }).css('cursor','pointer')
+            }
+        },xRadio:750,yRadio:350})
+    })
+
+    function alter(){
+
+var param = {};
+        param.deviceId=deviceId;
         param.token=token;
+        param.name= $('#detailPad #name').val()
+        param.brief= $('#detailPad #brief').val()
+        param.contactTel= $('#detailPad #contactTel').val()
+        param.sortNo= $('#detailPad #sortNo').val()
+        param.cover= $('#detailPad #cover').attr('src')
+        param.detail= detailUE.getContent();
+        var leadPics = ""
+        $('#leadPicsPad [name=leadPic]').each(function(index,ele){
+            leadPics= leadPics+","+$(ele).attr('src');
+        })
+        param.leadPics=leadPics;
         $.ajax({
-            url: "/zaylt/mm/hm/dm/dalter",
+            url: "/zaylt/mm/devicemg/devicealter",
             type: 'post',
             async: false,
             data:param ,
             success: function (res) {
                 if (res.code == 0) {
                     rxw1.errorpad('成功');
+                    location.reload()
                 } else {
                     rxw1.errorpad(res.codeMsg)
                 }
@@ -166,28 +265,37 @@ function alterName(){
         })
     }
 
-    $('[name=delBtn]').click(function () {
-        rxw1.confirmpad({
-           content:'确认删除吗',
-            confirm: function (data) {
-                $.ajax({
-                    url: "/zaylt/mm/hm/dm/ddel",
-                    type: 'post',
-                    async: false,
-                    data: {id: id, token: token},
-                    success: function (res) {
-                        if (res.code == 0) {
-                            rxw1.errorpad('成功')
-                        } else {
-                            rxw1.errorpad(res.codeMsg)
-                        }
-                    }
-                })
+    $('#alterBtn').click(function(){
+        $('#alterCompleteBtn').show();
+        $('#alterBtn').hide();
+        $('#detailPad #name').attr("disabled",false);
+        $('#detailPad #coverAlter').show();
+        $('.leadPicPadX').show();
+        $('#leadPicAddBtn').show();
+        $('#detailPad #brief').attr("disabled",false);
+        $('#detailPad #contactTel').attr("disabled",false);
+        $('#detailPad #sortNo').attr("disabled",false);
+        detailUE.setEnabled()
 
-            }
-        })
+        $('#name').attr('placeholder','最大100字')
+        $('#brief').attr('placeholder','最大500字')
+        $('#contactTel').attr('placeholder','最大100字')
     })
 
+    $('#alterCompleteBtn').click(function(){
+        $('#alterCompleteBtn').hide();
+        $('#alterBtn').show();
+        alter();
+        $('#detailPad #name').attr("disabled",true);
+        $('#detailPad #coverAlter').hide();
+        $('.leadPicPadX').hide();
+        $('#leadPicAddBtn').hide();
+        $('#detailPad #brief').attr("disabled",true);
+        $('#detailPad #contactTel').attr("disabled",true);
+        $('#detailPad #sortNo').attr("disabled",true);
+        detailUE.setDisabled()
+
+    })
 
 </script>
 

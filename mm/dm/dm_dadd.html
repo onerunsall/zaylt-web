@@ -50,29 +50,29 @@
             <legend style="color: #595959">详细信息</legend>
             <div style="margin:5px 0;">
                 <span class="title">器械名:</span>
-                <span ><input id="name" type="text" placeholder="100字符"/></span>
+                <span ><input id="name" type="text" placeholder="最大100字"/></span>
             </div>
             <div style="margin:5px 0;">
                 <span class="title">封面:</span>
-                <span><img id="cover" src="../img/add.jpg" style="width:50px;vertical-align: middle" /></span>
+                <span><img id="cover" src="" style="width:50px;display: none" /><img id="coverAlter" src="../img/add.jpg" style="width:20px;margin-left:5px" /></span>
             </div>
             <div style="margin:5px 0;">
                 <span class="title">简介:</span>
-                <span><textarea id="brief" placeholder="500字符"></textarea></span>
+                <span><textarea id="brief" style="width:300px;height:200px"　placeholder="最大500字"></textarea></span>
             </div>
             <div style="margin:5px 0;">
                 <span class="title">内容领航图:</span>
-                <span id="leadPicsPad"><img name="leadPicAddBtn" src="../img/add.jpg" style="width:20px;vertical-align: middle;margin-left:5px" /></span>
+                <span id="leadPicsPad"><img name="leadPicAddBtn" src="../img/add.jpg" style="width:20px;margin-left:5px" /></span>
             </div>
             <div style="margin:5px 0;">
                 <span class="title">内容:</span>
                 <span >
-                    <div id="detail" style="height:200px;width:50%;min-width:300px;vertical-align: middle;" ></div>
+                    <div id="detail" style="height:500px;width:50%;min-width:300px;vertical-align: middle;" ></div>
                 </span>
             </div>
             <div style="margin:5px 0;">
                 <span class="title">联系方式:</span>
-                <span ><input id="contactTel" type="text" placeholder="50字符"/></span>
+                <span ><input id="contactTel" type="text" placeholder="最大50字"/></span>
             </div>
             <div style="margin:5px 0;">
                 <span class="title">排序号:</span>
@@ -136,12 +136,12 @@
         })
     })
 
-    $('#detailPad #cover').css('cursor','pointer').click(function(){
+    $('#coverAlter').css('cursor','pointer').click(function(){
         var img = this;
         rxw1.cutImg({complete:function(param){
             var url = uploadBlob(rxw1.convertBase64UrlToBlob(param.canvas.toDataURL(param.input.files[0].type)),param.input.files[0].name)
             if(url){
-                img.src=url;
+                $('#cover').attr('src',url).show()
             }
         },xRadio:180,yRadio:140})
     })
@@ -149,11 +149,11 @@
     $('#leadPicsPad [name=leadPicAddBtn]').css('cursor','pointer').click(function(){
         var outSpan = document.createElement('span')
         outSpan.classList.add('leadPicPad')
+        outSpan.style['margin-left']='5px'
         var img = document.createElement('img')
         img.name="leadPic"
         img.style['margin-left']='5px'
-        img.style['width']='30px'
-        img.style['vertical-align']='middle'
+        img.style['width']='50px'
 
         var xSpan = document.createElement('span')
         xSpan.innerHTML='X'

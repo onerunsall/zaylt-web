@@ -263,6 +263,9 @@
                 return false;
             }
         })
+        itemRow.find('[name=deviceEntDoor]').click(function(){
+           location.href="dm_ddetail.html?deviceId="+itemId
+        })
         itemRow.find('[name=cover]').click(function(){
             rxw1.imgPreview(this.src)
         }).css('cursor','pointer')
