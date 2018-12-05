@@ -218,21 +218,20 @@
                         hasMoreItems = true;
                     }
                     $(res.data.items).each(function(index,item){
-                        items[item.deviceId]=item;
+                        items[item.id]=item;
                         var newItemRow = $('[name=itemExample]').clone(true)
-                        newItemRow.attr('id','item'+item.deviceId)
-                        setItemRow(newItemRow,item)
+                        renderItemRow(newItemRow,item)
+                        eventToItemRow(newItemRow,item.deviceId)
                         newItemRow.css('display', '');
                         $('[name=itemsShow]').append(newItemRow)
                     })
-
                 } else {
                     rxw1.errorpad(res.codeMsg)
                 }
             }
         })
     }
-    eventToRows()
+
 
     function refreshItemRow(itemRow,itemId){
         $.ajax({
@@ -244,7 +243,7 @@
                 if(res.code==0){
                     var item = res.data;
                     items[itemId]= item;
-                    setItemRow(itemRow,item)
+                    renderItemRow(itemRow,item)
                 }else{
                     rxw1.errorpad(res.codeMsg)
                 }
@@ -253,7 +252,7 @@
     }
 
 
-    function setItemRow(itemRow,item) {
+    function renderItemRow(itemRow,item) {
         itemRow.attr('name','')
         itemRow.attr('itemId',item.id)
         itemRow.find('[name=name]').text(item.name).attr('title',item.name)
@@ -263,9 +262,9 @@
         itemRow.find('[name=stock]').text(item.stock)
     }
 
-    function eventToRows(){
-        $('.row [name=deviceEntDoor]').click(function(){
-            var itemId = $(this).parents('.row').attr('id').substr(4)
+    function eventToItemRow(itemRow,itemId){
+        itemRow.find('[name=deviceEntDoor]').click(function(){
+            rxw1.waitLock()
             rxw1.layer({init:function(layer){
                 layer.style['background-color']='white';
                 $(layer).append('<div style="height:30px"><button style="margin:0 10px;display:inline-block;margin-top:5px;width:60px;height:25px" name="closeLayer">关闭</button></div>')
@@ -275,11 +274,9 @@
                     $(layer).remove();
                 })
             }})
+            rxw1.waitLock.remove()
         })
-
-        $('.row [name=delEntDoor]').click(function(){
-            var row = $(this).parents('.row');
-            var itemId = row.attr('id').substr(4)
+        itemRow.find('[name=delEntDoor]').click(function(){
             if (confirm('确认删除吗')==true){
                 $.ajax({
                     url: "/zaylt/mm/devicemg/devicedel",
@@ -288,7 +285,7 @@
                     data: {deviceId:itemId,token:token},
                     success: function (res) {
                         if(res.code==0){
-                            row.remove()
+                            itemRow.remove()
                         }else{
                             rxw1.errorpad(res.codeMsg)
                         }
@@ -299,13 +296,13 @@
                 return false;
             }
         })
-        $('.row [name=deviceEntDoor]').click(function(){
-           location.href="detail.html?deviceId="+$(this).parents('.row').attr('id').substr(4)
+        itemRow.find('[name=deviceEntDoor]').click(function(){
+           location.href="detail.html?deviceId="+itemId
         })
-        $('.row [name=cover]').click(function(){
+        itemRow.find('[name=cover]').click(function(){
             rxw1.imgPreview(this.src)
         }).css('cursor','pointer')
-        $('.row').click(function(){
+        itemRow.click(function(){
             $('.row [name=itemChosen] ').prop("checked",false);
             $(this).find('[name=itemChosen]').prop("checked",true);
             $('.row').css('background-color','')
