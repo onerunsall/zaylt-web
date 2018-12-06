@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <script>
-    var token,queryString,item,detailUE,deviceId;
+    var token,queryString,item,detailUE,deviceId,localPath;
 </script>
 <head>
     <title>器械详情</title>
@@ -18,8 +18,10 @@
     <script>
         queryString = rxw1.parseQueryStr(location.search.substr(1));
         deviceId= queryString.deviceId;
+        localPath=queryString.localPath;
         rxw1.relativePath = '../../libs/'
         token = $.cookie('login-token');
+
     </script>
     <script src="../../libs/upload.js"></script>
     <script src="../../libs/cropper/cropper.js"></script>
@@ -46,62 +48,69 @@
     </style>
 </head>
 
-<body>
+<body style="margin:0;">
+<div id="localPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
+<hr/>
 <div style="width:100%;">
-    <form id="detailPad" style="line-height: 20px">
+    <form id="detailPad" style="line-height: 20px;text-align: center">
         <fieldset>
             <legend style="color: #595959">详细信息</legend>
-            <div style="margin:5px 0;">
-                <span class="title">器械名:</span>
-                <span ><input id="name" type="text" readonly /></span>
+            <div style="margin:15px 0;">
+                <div class="title">器械名</div>
+                <div ><input id="name" type="text"  style="text-align: center" readonly /></div>
             </div>
-            <div style="margin:5px 0;">
-                <span class="title">封面:</span>
-                <span><img id="coverAlter" src="../img/add.jpg" style="margin-left: 5px;;width:20px;display: none" /></span>
+            <div style="margin:15px 0;">
+                <div class="title">封面</div>
+                <div><img id="coverAlter" src="../img/add.jpg" style="margin-left: 5px;;width:20px;display: none" /></div>
             </div>
-            <div style="margin:5px 0;">
-                <span class="title">简介:</span>
-                <span><textarea id="brief" style="width:300px;height:150px" readonly ></textarea></span>
+            <div style="margin:15px 0;">
+                <div class="title">简介</div>
+                <div><textarea id="brief" style="width:300px;height:150px" readonly ></textarea></div>
             </div>
-            <div style="margin:5px 0;">
-                <span class="title">内容领航图:</span>
-                <span id="leadPicsPad"><img id="leadPicAddBtn" src="../img/add.jpg" style="width:20px;margin-left:5px;display:none;" /></span>
+            <div style="margin:15px 0;">
+                <div class="title">内容领航图</div>
+                <div id="leadPicsPad"><img id="leadPicAddBtn" src="../img/add.jpg" style="width:20px;margin-left:5px;display:none;" /></div>
             </div>
-            <div style="margin:5px 0;">
-                <span class="title">内容:</span>
-                <span >
-                    <div id="detail"  style="height:500px;width:50%;min-width:300px;vertical-align: middle;" ></div>
-                </span>
+            <div style="margin:15px 0;">
+                <div class="title">内容</div>
+                <div >
+                    <div id="detail"  style="height:500px;;width:400px;vertical-align: middle;margin:auto" ></div>
+                </div>
             </div>
-            <div style="margin:5px 0;">
-                <span class="title">联系方式:</span>
-                <span ><input readonly id="contactTel" type="text" /></span>
+            <div style="margin:15px 0;">
+                <div class="title">联系方式</div>
+                <div ><input readonly id="contactTel" style="text-align: center" type="text" /></div>
             </div>
-            <div style="margin:5px 0;">
-                <span class="title">库存:</span>
-                <span ><input id="stock" readonly type="text" placeholder="请输入不小于0的数字"/></span>
+            <div style="margin:15px 0;">
+                <div class="title">库存</div>
+                <div ><input id="stock" readonly style="text-align: center" type="text" placeholder="请输入不小于0的数字"/></div>
             </div>
-            <div style="margin:5px 0;">
-                <span class="title">类型:</span>
-                <span ><select disabled id="typeName"></select></span>
+            <div style="margin:15px 0;">
+                <div class="title">类型</div>
+                <div ><select disabled id="typeName"></select></div>
             </div>
-            <div style="margin:5px 0;">
-                <span class="title">排序号:</span>
-                <span ><input readonly id="sortNo" type="number" placeholder="越小排名越前，默认99999"/></span>
+            <div style="margin:15px 0;">
+                <div class="title">排序号</div>
+                <div ><input readonly id="sortNo" style="text-align: center" type="number" placeholder="越小排名越前，默认99999"/></div>
             </div>
         </fieldset>
     </form>
 
 
-    <div style="margin-top:20px">
+    <div style="margin-top:20px;text-align: center">
         <button id="alterBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">修改</button>
-        <button id="alterCompleteBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">完成</button>
+        <button id="alterCancelBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">取消修改</button>
+        <button id="alterCompleteBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">完成修改</button>
     </div>
     <div style="margin-top:20px;"></div>
 </div>
 </body>
 <script>
+
+    $('#localPath').text('当前路径: '+localPath)
         detailUE= UE.getEditor('detail',{autoHeightEnabled:false,readonly:true})
+
+
 
         renderTypeNameSelect();
         function renderTypeNameSelect(){
@@ -249,6 +258,7 @@
 
     $('#alterBtn').click(function(){
         $('#alterCompleteBtn').show();
+        $('#alterCancelBtn').show();
         $('#alterBtn').hide();
         $('#name').attr("readonly",false);
         $('.leadPicPad [name=close]').show();
@@ -268,6 +278,7 @@
 
     $('#alterCompleteBtn').click(function(){
         $('#alterCompleteBtn').hide();
+        $('#alterCancelBtn').hide();
         $('#alterBtn').show();
         alter();
         $('#name').attr("readonly",true);
@@ -284,6 +295,9 @@
 
     })
 
+        $('#alterCancelBtn').click(function(){
+            location.reload()
+        })
 </script>
 
 </html>

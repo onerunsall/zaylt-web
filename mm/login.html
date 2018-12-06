@@ -27,11 +27,10 @@
 <script>
     rxw1.relativePath = '../libs/'
     var token;
-    onload();
+    token = $.cookie('login-token');
 
-    function onload(){
-       token = $.cookie('login-token');
-        if(!rxw1.isEmptyStr(token)){
+
+        if(token){
             $.ajax({
                 url:'/zaylt/mm/useraction/loginrefresh',
                 data:{token:token},
@@ -39,7 +38,7 @@
                 async:false,
                 success:function(res){
                     if(res.code == 0) {
-                        $.cookie('login-token',token);
+                        $.cookie('login-token',res.data.token);
                         $.cookie('login-username',res.data.username);
                         location.href='index.html';
                     }
@@ -50,7 +49,7 @@
                 }
             })
         }
-    }
+
 
     function login(){
         var username=$('[name=username]').val()
@@ -62,9 +61,24 @@
             async:false,
             success:function(res){
                 if(res.code == 0) {
-                    $.cookie('login-token',res.data.token);
-                    $.cookie('login-username',res.data.username);
-                    location.href='index.html';
+                    token = res.data.token;
+                    $.ajax({
+                        url:'/zaylt/mm/useraction/loginrefresh',
+                        data:{token:token},
+                        type:'post',
+                        async:false,
+                        success:function(res){
+                            if(res.code == 0) {
+                                $.cookie('login-token',res.data.token);
+                                $.cookie('login-username',res.data.username);
+                                location.href='index.html';
+                            }
+                            else{
+                                $.removeCookie('login-token');
+                                $.removeCookie('login-username');
+                            }
+                        }
+                    })
                 }
                 else
                     rxw1.errorpad(res.codeMsg)

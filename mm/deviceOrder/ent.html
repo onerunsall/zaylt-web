@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>器械管理</title>
+    <title>器械订单管理</title>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -26,14 +26,14 @@
             cursor: default;
         }
         .cell1 {
-            width:60px;
+            width:40px;
         }
         .cell2 {
-            width:200px;
+            width:150px;
             border-left: 1px solid #7d7d7d;
         }
         .cell3 {
-            width:100px;
+            width:150px;
             border-left: 1px solid #7d7d7d;
         }
         .cell4 {
@@ -49,6 +49,18 @@
             border-left: 1px solid #7d7d7d;
         }
         .cell7 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell8 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell9 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell10 {
             width:60px;
             border-left: 1px solid #7d7d7d;
         }
@@ -73,23 +85,67 @@
 </head>
 
 <body style="margin:0;">
-
+<div id="localPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
+<hr/>
 <div style="width:100%;margin-top:5px;">
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()">查询</button>
-    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="addDevice()">新增器械</button>
 </div>
 
 <div style="width:100%;margin-top:10px;">
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;">
-                    <span style="font-size: 14px">器械名:</span>
-                    <span>
-                        <input name="nameQuery"/>
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                    <span style="font-size: 14px">订单号:</span>
+                    <span style="float:right">
+                        <input name="orderIdQuery" style="width:170px"/>
                     </span>
                 </span>
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;">
-                    <span style="font-size: 14px">联系电话:</span>
-                    <span>
-                        <input name="contactTelQuery"/>
+     <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                    <span style="font-size: 14px">运单号:</span>
+                    <span style="float:right">
+                        <input name="expressNoQuery" style="width:170px"/>
+                    </span>
+                </span>
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                    <span style="font-size: 14px">下单人手机:</span>
+                    <span style="float:right">
+                        <input name="phoneQuery" style="width:170px"/>
+                    </span>
+                </span>
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                    <span style="font-size: 14px">下单人姓名:</span>
+                    <span style="float:right">
+                        <input name="realnameQuery" style="width:170px"/>
+                    </span>
+                </span>
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                    <span style="font-size: 14px">下单人医院:</span>
+                    <span style="float:right">
+                        <input name="hospitalNameQuery" style="width:170px"/>
+                    </span>
+                </span>
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                    <span style="font-size: 14px">状态:</span>
+                    <span style="float:right">
+                        <select name="statusQuery" style="width:170px">
+                            <option value="">请选择</option>
+                            <option value="0">审核中</option>
+                            <option value="3">审核通过</option>
+                            <option value="4">审核失败</option>
+                            <option value="1">待收货</option>
+                            <option value="2">已完成</option>
+                        </select>
+                    </span>
+                </span>
+        <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                    <span style="font-size: 14px">下单时间起:</span>
+                    <span style="float:right">
+                        <input type="date" name="addTimeStart" style="width:170px">
+                    </span>
+                </span>
+
+        <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                    <span style="font-size: 14px">下单时间止:</span>
+                    <span style="float:right">
+                        <input type="date" name="addTimeEnd" style="width:170px">
                     </span>
                 </span>
 </div>
@@ -97,23 +153,29 @@
 <div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
     <div class="row-title">
         <span class="cell cell1">选择</span>
-        <span class="cell cell2">器械名</span>
-        <span class="cell cell3">封面</span>
-        <span class="cell cell7">库存<span id="stockSort" class="sortBtn" style="cursor: pointer" onclick="sortItems('stock')">-</span></span>
-        <span class="cell cell4">联系电话</span>
-        <span class="cell cell5">排序<span  id="sortNoSort"  class="sortBtn"  style="cursor: pointer" onclick="sortItems('sortNo')">-</span></span>
-        <span class="cell cell6">操作</span>
+        <span class="cell cell2">订单号</span>
+        <span class="cell cell3"  style="cursor: pointer" onclick="sortItems('addTime')">下单时间<span  id="addTimeSort"  class="sortBtn" >-</span></span>
+        <span class="cell cell4"  style="cursor: pointer" onclick="sortItems('totalPrice')">总金额<span id="totalPriceSort" class="sortBtn">-</span></span>
+        <span class="cell cell5">物流号</span>
+        <span class="cell cell6">下单人</span>
+        <span class="cell cell7">下单手机</span>
+        <span class="cell cell8">下单医院</span>
+        <span class="cell cell9">状态</span>
+        <span class="cell cell10">操作</span>
     </div>
     <div name="itemExample" class="row" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
-        <span class="cell cell2" name="name"></span>
-        <span class="cell cell3" ><img name="cover" style="width:30px;vertical-align: middle"/></span>
-        <span class="cell cell7" name="stock"></span>
-        <span class="cell cell4" name="contactTel"></span>
-        <span class="cell cell5" name="sortNo"></span>
-        <span class="cell cell6" ><button name="deviceEntDoor">详情</button><button name="delEntDoor">删除</button></span>
+        <span class="cell cell2" name="orderId"></span>
+        <span class="cell cell3" name="addTime"></span>
+        <span class="cell cell4" name="totalPrice"></span>
+        <span class="cell cell5" name="expressNo"></span>
+        <span class="cell cell6" name="realname"></span>
+        <span class="cell cell7" name="phone"></span>
+        <span class="cell cell8" name="hospitalName"></span>
+        <span class="cell cell9" name="status"></span>
+        <span class="cell cell10" ><button name="deviceEntDoor">详情</button></span>
     </div>
-    <div name="itemsShowPad" style="max-height:300px;">
+    <div name="itemsShowPad" style="max-height:400px;">
         <div name="itemsShow">
 
         </div>
@@ -130,12 +192,14 @@
 </body>
 <script>
     rxw1.relativePath = '../../libs/'
-    var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort;
+    var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,localPath;
     sort={}
     token = $.cookie('login-token');
     queryString = rxw1.parseQueryStr(location.search.substr(1));
+    localPath=queryString.localPath;
     queryParams = {token: token}
 
+    $('#localPath').text('当前路径: '+localPath)
     initData();
     function initData() {
         rxw1.waitLock()
@@ -171,8 +235,23 @@
     function query(){
         sort={};
         $('.sortBtn').text('-')
-        queryParams.name=$('[name=nameQuery]').val();
-        queryParams.contactTel=$('[name=contactTelQuery]').val();
+        queryParams.expressNo=$('[name=expressNoQuery]').val().trim();
+        queryParams.orderId=$('[name=orderIdQuery]').val().trim();
+        queryParams.phone=$('[name=phoneQuery]').val().trim();
+        queryParams.realname=$('[name=realnameQuery]').val().trim();
+        queryParams.hospitalName=$('[name=hospitalNameQuery]').val().trim();
+        queryParams.status=$('[name=statusQuery]').val();
+
+        var addTimeStart =   $('[name=addTimeStart]').val()
+        if(addTimeStart)
+            queryParams.addTimeStart=new Date(addTimeStart).getTime();
+        else
+            queryParams.addTimeStart = '';
+        var addTimeEnd = $('[name=addTimeEnd]').val();
+        if(addTimeEnd)
+            queryParams.addTimeEnd=new Date(addTimeEnd).getTime()+24*60*60*1000;
+        else
+            queryParams.addTimeEnd = '';
         initData();
     }
     function loadMore(){
@@ -197,7 +276,7 @@
             queryParams.order= queryParams.order+sort[sortColumn]+','
         }
         $.ajax({
-            url: "/zaylt/mm/devicemg/devicelist" ,
+            url: "/zaylt/mm/deviceordermg/orders" ,
             type: 'post',
             async: false,
             data: queryParams,
@@ -218,32 +297,33 @@
                         hasMoreItems = true;
                     }
                     $(res.data.items).each(function(index,item){
-                        items[item.id]=item;
+                        items[item.orderId]=item;
                         var newItemRow = $('[name=itemExample]').clone(true)
-                        renderItemRow(newItemRow,item)
-                        eventToItemRow(newItemRow,item.deviceId)
+
+                        setItemRow(newItemRow,item)
                         newItemRow.css('display', '');
                         $('[name=itemsShow]').append(newItemRow)
                     })
+
                 } else {
                     rxw1.errorpad(res.codeMsg)
                 }
             }
         })
     }
-
+    eventToRows()
 
     function refreshItemRow(itemRow,itemId){
         $.ajax({
-            url: "/zaylt/mm/devicemg/deviceinfo",
+            url: "/zaylt/mm/deviceordermg/orderinfo",
             type: 'post',
             async: false,
-            data: {deviceId:itemId,token:token},
+            data: {orderId:itemId,token:token},
             success: function (res) {
                 if(res.code==0){
                     var item = res.data;
                     items[itemId]= item;
-                    renderItemRow(itemRow,item)
+                    setItemRow(itemRow,item)
                 }else{
                     rxw1.errorpad(res.codeMsg)
                 }
@@ -251,68 +331,72 @@
         })
     }
 
+function parseDeviceOrderStatus(value){
+    if(value==0)
+        return '审核中'
+    else  if(value==1)
+        return '待收货'
+    else  if(value==2)
+        return '已完成'
+    else  if(value==3)
+        return '审核通过'
+    else  if(value=4)
+        return '审核不通过'
+    else
+        return '未知'
+}
 
-    function renderItemRow(itemRow,item) {
-        itemRow.attr('name','')
-        itemRow.attr('itemId',item.id)
-        itemRow.find('[name=name]').text(item.name).attr('title',item.name)
-        itemRow.find('[name=contactTel]').text(item.contactTel).attr('title',item.contactTel)
-        itemRow.find('[name=sortNo]').text(item.sortNo)
-        itemRow.find('[name=cover]').attr('src',item.cover)
-        itemRow.find('[name=stock]').text(item.stock)
+    function strongKeyword(){
+        if(arguments.length==0)
+            return '';
+        var srcText=arguments[0];
+        if(arguments.length==1)
+            return srcText;
+        for(var a in arguments){
+            if(a>0){
+                var keyword = arguments[a];
+                if(!keyword)
+                    continue;
+                var index = srcText.indexOf(keyword);
+                if(index<0)
+                    continue;
+                var aaa = srcText.substr(index,keyword.length);
+                var bbb = '<span style="color:red">'+aaa+'</span>'
+                srcText = srcText.replace(aaa,bbb)
+            }
+        }
+        return srcText;
     }
 
-    function eventToItemRow(itemRow,itemId){
-        itemRow.find('[name=deviceEntDoor]').click(function(){
-            rxw1.waitLock()
-            rxw1.layer({init:function(layer){
-                layer.style['background-color']='white';
-                $(layer).append('<div style="height:30px"><button style="margin:0 10px;display:inline-block;margin-top:5px;width:60px;height:25px" name="closeLayer">关闭</button></div>')
-                $(layer).append('<iframe frameborder="no" style="width: 100%;height:100%" src="'+'detail.html?deviceId='+itemId+'"></iframe>')
-                $(layer).find('[name=closeLayer]').click(function(){
-                    refreshItemRow(itemRow,itemId)
-                    $(layer).remove();
-                })
-            }})
-            rxw1.waitLock.remove()
+    function setItemRow(itemRow,item) {
+        itemRow.attr('name','')
+        itemRow.attr('id','item'+item.orderId)
+        itemRow.find('[name=orderId]').html(strongKeyword(item.orderId,queryParams.orderId)).attr('title',item.orderId)
+        itemRow.find('[name=expressNo]').html(strongKeyword(item.expressNo,queryParams.expressNo)).attr('title',item.expressNo)
+        itemRow.find('[name=status]').text(parseDeviceOrderStatus(item.status))
+        itemRow.find('[name=addTime]').text(rxw1.formatTime(item.addTime))
+        itemRow.find('[name=totalPrice]').text(item.totalPrice)
+        itemRow.find('[name=expressNo]').html(strongKeyword(item.expressNo,queryParams.expressNo)).attr('title',item.expressNo)
+        itemRow.find('[name=realname]').html(strongKeyword(item.realname,queryParams.realname)).attr('title',item.realname)
+        itemRow.find('[name=phone]').html(strongKeyword(item.phone,queryParams.phone)).attr('title',item.phone)
+        itemRow.find('[name=hospitalName]').html(strongKeyword(item.hospitalName,queryParams.hospitalName)).attr('title',item.hospitalName)
+    }
+
+    function eventToRows(){
+
+        $('.row [name=deviceEntDoor]').click(function(){
+           location.href="detail.html?orderId="+$(this).parents('.row').attr('id').substr(4)+'&localPath='+localPath+' / 订单详情'
         })
-        itemRow.find('[name=delEntDoor]').click(function(){
-            if (confirm('确认删除吗')==true){
-                $.ajax({
-                    url: "/zaylt/mm/devicemg/devicedel",
-                    type: 'post',
-                    async: false,
-                    data: {deviceId:itemId,token:token},
-                    success: function (res) {
-                        if(res.code==0){
-                            itemRow.remove()
-                        }else{
-                            rxw1.errorpad(res.codeMsg)
-                        }
-                    }
-                })
-                return true;
-            }else{
-                return false;
-            }
-        })
-        itemRow.find('[name=deviceEntDoor]').click(function(){
-           location.href="detail.html?deviceId="+itemId
-        })
-        itemRow.find('[name=cover]').click(function(){
+        $('.row [name=cover]').click(function(){
             rxw1.imgPreview(this.src)
         }).css('cursor','pointer')
-        itemRow.click(function(){
+        $('.row').click(function(){
             $('.row [name=itemChosen] ').prop("checked",false);
             $(this).find('[name=itemChosen]').prop("checked",true);
             $('.row').css('background-color','')
             $(this).css('background-color','#e8e8e8')
         })
     }
-
-function addDevice(){
-   location.href='add.html'
-}
 
 
 </script>

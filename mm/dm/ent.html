@@ -73,23 +73,24 @@
 </head>
 
 <body style="margin:0;">
-
+<div id="localPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
+<hr/>
 <div style="width:100%;margin-top:5px;">
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()">查询</button>
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="addDevice()">新增器械</button>
 </div>
 
 <div style="width:100%;margin-top:10px;">
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;">
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
                     <span style="font-size: 14px">器械名:</span>
-                    <span>
-                        <input name="nameQuery"/>
+                    <span style="float:right">
+                        <input name="nameQuery" style="width:170px"/>
                     </span>
                 </span>
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;">
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
                     <span style="font-size: 14px">联系电话:</span>
-                    <span>
-                        <input name="contactTelQuery"/>
+                    <span style="float:right">
+                        <input name="contactTelQuery" style="width:170px"/>
                     </span>
                 </span>
 </div>
@@ -99,9 +100,9 @@
         <span class="cell cell1">选择</span>
         <span class="cell cell2">器械名</span>
         <span class="cell cell3">封面</span>
-        <span class="cell cell7">库存<span id="stockSort" class="sortBtn" style="cursor: pointer" onclick="sortItems('stock')">-</span></span>
+        <span class="cell cell7"  style="cursor: pointer" onclick="sortItems('stock')">库存<span id="stockSort" class="sortBtn" >-</span></span>
         <span class="cell cell4">联系电话</span>
-        <span class="cell cell5">排序<span  id="sortNoSort"  class="sortBtn"  style="cursor: pointer" onclick="sortItems('sortNo')">-</span></span>
+        <span class="cell cell5" style="cursor: pointer" onclick="sortItems('sortNo')">排序<span  id="sortNoSort"  class="sortBtn"  >-</span></span>
         <span class="cell cell6">操作</span>
     </div>
     <div name="itemExample" class="row" style="display:none">
@@ -113,7 +114,7 @@
         <span class="cell cell5" name="sortNo"></span>
         <span class="cell cell6" ><button name="deviceEntDoor">详情</button><button name="delEntDoor">删除</button></span>
     </div>
-    <div name="itemsShowPad" style="max-height:300px;">
+    <div name="itemsShowPad" style="max-height:400px;">
         <div name="itemsShow">
 
         </div>
@@ -130,12 +131,13 @@
 </body>
 <script>
     rxw1.relativePath = '../../libs/'
-    var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort;
+    var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,localPath;
     sort={}
     token = $.cookie('login-token');
     queryString = rxw1.parseQueryStr(location.search.substr(1));
     queryParams = {token: token}
-
+    localPath=queryString.localPath;
+    $('#localPath').text('当前路径: '+localPath)
     initData();
     function initData() {
         rxw1.waitLock()
@@ -171,8 +173,8 @@
     function query(){
         sort={};
         $('.sortBtn').text('-')
-        queryParams.name=$('[name=nameQuery]').val();
-        queryParams.contactTel=$('[name=contactTelQuery]').val();
+        queryParams.name=$('[name=nameQuery]').val().trim();
+        queryParams.contactTel=$('[name=contactTelQuery]').val().trim();
         initData();
     }
     function loadMore(){
@@ -220,7 +222,6 @@
                     $(res.data.items).each(function(index,item){
                         items[item.deviceId]=item;
                         var newItemRow = $('[name=itemExample]').clone(true)
-                        newItemRow.attr('id','item'+item.deviceId)
                         setItemRow(newItemRow,item)
                         newItemRow.css('display', '');
                         $('[name=itemsShow]').append(newItemRow)
@@ -253,30 +254,39 @@
     }
 
 
+    function strongKeyword(){
+        if(arguments.length==0)
+            return '';
+        var srcText=arguments[0];
+        if(arguments.length==1)
+            return srcText;
+        for(var a in arguments){
+            if(a>0){
+                var keyword = arguments[a];
+                if(!keyword)
+                    continue;
+                var index = srcText.indexOf(keyword);
+                if(index<0)
+                    continue;
+                var aaa = srcText.substr(index,keyword.length);
+                var bbb = '<span style="color:red">'+aaa+'</span>'
+                srcText = srcText.replace(aaa,bbb)
+            }
+        }
+        return srcText;
+    }
+
     function setItemRow(itemRow,item) {
         itemRow.attr('name','')
-        itemRow.attr('itemId',item.id)
-        itemRow.find('[name=name]').text(item.name).attr('title',item.name)
-        itemRow.find('[name=contactTel]').text(item.contactTel).attr('title',item.contactTel)
+        itemRow.attr('id','item'+item.deviceId)
+        itemRow.find('[name=name]').html(strongKeyword(item.name,queryParams.name)).attr('title',item.name)
+        itemRow.find('[name=contactTel]').html(strongKeyword(item.contactTel,queryParams.contactTel)).attr('title',item.contactTel)
         itemRow.find('[name=sortNo]').text(item.sortNo)
         itemRow.find('[name=cover]').attr('src',item.cover)
         itemRow.find('[name=stock]').text(item.stock)
     }
 
     function eventToRows(){
-        $('.row [name=deviceEntDoor]').click(function(){
-            var itemId = $(this).parents('.row').attr('id').substr(4)
-            rxw1.layer({init:function(layer){
-                layer.style['background-color']='white';
-                $(layer).append('<div style="height:30px"><button style="margin:0 10px;display:inline-block;margin-top:5px;width:60px;height:25px" name="closeLayer">关闭</button></div>')
-                $(layer).append('<iframe frameborder="no" style="width: 100%;height:100%" src="'+'detail.html?deviceId='+itemId+'"></iframe>')
-                $(layer).find('[name=closeLayer]').click(function(){
-                    refreshItemRow(itemRow,itemId)
-                    $(layer).remove();
-                })
-            }})
-        })
-
         $('.row [name=delEntDoor]').click(function(){
             var row = $(this).parents('.row');
             var itemId = row.attr('id').substr(4)
@@ -300,7 +310,7 @@
             }
         })
         $('.row [name=deviceEntDoor]').click(function(){
-           location.href="detail.html?deviceId="+$(this).parents('.row').attr('id').substr(4)
+           location.href="detail.html?deviceId="+$(this).parents('.row').attr('id').substr(4)+'&localPath='+localPath+' / 器械详情'
         })
         $('.row [name=cover]').click(function(){
             rxw1.imgPreview(this.src)
@@ -314,7 +324,7 @@
     }
 
 function addDevice(){
-   location.href='add.html'
+   location.href='add.html?localPath='+localPath+' / 新增器械'
 }
 
 
