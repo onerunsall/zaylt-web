@@ -258,6 +258,8 @@
         if(arguments.length==0)
             return '';
         var srcText=arguments[0];
+        if(!srcText)
+            return srcText
         if(arguments.length==1)
             return srcText;
         for(var a in arguments){
