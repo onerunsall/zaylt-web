@@ -41,7 +41,7 @@
             border-left: 1px solid #7d7d7d;
         }
         .cell5 {
-            width:100px;
+            width:150px;
             border-left: 1px solid #7d7d7d;
         }
         .cell6 {
@@ -102,6 +102,12 @@
                     <span style="font-size: 14px">运单号:</span>
                     <span style="float:right">
                         <input name="expressNoQuery" style="width:170px"/>
+                    </span>
+                </span>
+<span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                    <span style="font-size: 14px">货运公司:</span>
+                    <span style="float:right">
+                        <input name="expressCoQuery" style="width:170px"/>
                     </span>
                 </span>
                 <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
@@ -236,6 +242,7 @@
         sort={};
         $('.sortBtn').text('-')
         queryParams.expressNo=$('[name=expressNoQuery]').val().trim();
+        queryParams.expressCo=$('[name=expressCoQuery]').val().trim();
         queryParams.orderId=$('[name=orderIdQuery]').val().trim();
         queryParams.phone=$('[name=phoneQuery]').val().trim();
         queryParams.realname=$('[name=realnameQuery]').val().trim();

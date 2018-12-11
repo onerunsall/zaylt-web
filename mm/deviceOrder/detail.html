@@ -105,6 +105,10 @@
         <fieldset id="expressInfoPad" style="display: none">
             <legend style="color: #595959">物流信息</legend>
             <div style="margin:15px 0;">
+                <div class="title">公司</div>
+                <div id="expressCo"></div>
+            </div>
+            <div style="margin:15px 0;">
                 <div class="title">单号</div>
                 <div id="expressNo"></div>
             </div>
@@ -157,6 +161,7 @@
                     $('#phone').text(item.phone);
                     $('#hospitalName').text(item.hospitalName);
                     $('#expressNo').text(item.expressNo);
+                    $('#expressCo').text(item.expressCo);
                 } else {
                     rxw1.errorpad(res.codeMsg)
                 }
