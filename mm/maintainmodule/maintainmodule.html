@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>运维模块管理</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <script src="../../libs/rxw/rxw.js"></script>
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../libs/jquery.cookie.js"></script>
+
+
+    <style>
+        .cell {
+            text-align: center;
+            display: inline-block;
+            padding:0 5px;
+            overflow: hidden;
+            height:100%;
+            white-space:nowrap;
+            text-overflow:ellipsis;
+            cursor: default;
+        }
+        .cell1 {
+            width:60px;
+        }
+        .cell2 {
+            width:200px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell3 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell4 {
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+
+        .row {
+            border-top: 1px solid #7d7d7d;
+            padding:3px 0;
+            height:20px;
+            font-size:15px;
+            min-width:1000px;
+        }
+
+        .row:hover{
+            background-color:#e8e8e8;
+        }
+        .row-title {
+            padding:2px 0;
+            min-width:1000px;
+            background-color:#e8e8e8;
+        }
+
+    </style>
+</head>
+
+<body style="margin:0;">
+<div id="currentPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
+<hr/>
+<div style="width:100%;margin-top:5px;">
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()">查询</button>
+</div>
+
+<div style="width:100%;margin-top:10px;">
+                <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                    <span style="font-size: 14px">模块:</span>
+                    <span style="float:right">
+                        <input name="nameQuery" style="width:170px"/>
+                    </span>
+                </span>
+
+</div>
+
+<div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
+    <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
+    <div class="row-title">
+        <span class="cell cell1">选择</span>
+        <span class="cell cell2">模块名</span>
+        <span class="cell cell3" style="cursor: pointer" onclick="sortItems('orderNo')">排序号<span  id="orderNoSort"  class="sortBtn"  >-</span></span>
+        <span class="cell cell4">操作</span>
+    </div>
+    <div name="itemExample" class="row" style="display:none">
+        <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
+        <span class="cell cell2" name="name"></span>
+        <span class="cell cell3" name="orderNo"></span>
+        <span class="cell cell4" ><button name="detailEnt">详情</button></span>
+    </div>
+    <div name="itemsShowPad" style="max-height:400px;">
+        <div name="itemsShow">
+
+        </div>
+        <div name="pagingBottomPad" style="text-align: center;margin:5px  0;">
+            <span name="noitem" style="display:none;position: relative;z-index: 2;background:white;padding:0 5px;color:#7d7d7d">无数据</span>
+            <span name="more" style="display:none;cursor:pointer;position: relative;z-index: 2;background:white;padding:0 5px;color:#7d7d7d" onclick="loadMore()">点击加载更多</span>
+            <span name="finish" style="cursor: default;;display:none;position: relative;z-index: 2;background:white;padding:0 5px;color:#7d7d7d">加载完毕</span>
+            <div style="margin:auto;position: relative; left: 0;top: -10px;width: 95%;height: 1px;background: #DCDCDC;z-index: 1;"></div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+<script>
+    var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,currentPath;
+    sort={}
+    token = $.cookie('login-token');
+    queryString = rxw1.parseQueryStr(location.search.substr(1));
+    queryParams = {token: token}
+    currentPath=queryString.currentPath;
+    $('#currentPath').text('当前路径: '+currentPath)
+    initPage();
+    initQuery();
+    loadItems();
+
+    function initPage() {
+        page_no = 1;
+        page_size = 30;
+        hasMoreItems = true;
+        $('[name=itemsShow]').html('');
+        $('[name=pagingBottomPad] [name=noitem]').css('display', '');
+        $('[name=pagingBottomPad] [name=more]').css('display', 'none');
+        $('[name=pagingBottomPad] [name=finish]').css('display', 'none');
+
+    }
+
+    function sortItems(sortColumn){
+        if(sort[sortColumn]=='desc'){
+            sort[sortColumn]='asc'
+            $('#'+sortColumn+'Sort').text('↑')
+        } else if(sort[sortColumn]=='asc'){
+            delete sort[sortColumn]
+            $('#'+sortColumn+'Sort').text('-')
+        }else if(!sort[sortColumn]) {
+            sort[sortColumn] = 'desc'
+            $('#'+sortColumn+'Sort').text('↓')
+        }
+        else{
+            sort[sortColumn]='desc'
+            $('#'+sortColumn+'Sort').text('↓')
+        }
+
+        initPage();
+        loadItems();
+    }
+    function query(){
+        initPage();
+        initQuery();
+        loadItems();
+    }
+    function initQuery(){
+        sort={};
+        $('.sortBtn').text('-')
+        queryParams.name=$('[name=nameQuery]').val().trim();
+    }
+    function loadMore(){
+        page_no++;
+        loadItems();
+    }
+    rxw1.scrollEvent($('#itemsContainer').get(0), function () {
+        if (hasMoreItems) {
+            page_no++;
+            loadItems();
+        }
+    })
+    function loadItems(){
+        queryParams.pn=page_no;
+        queryParams.ps=page_size;
+        queryParams.sort=''
+        queryParams.order=''
+        for(sortColumn in sort){
+            queryParams.sort=queryParams.sort + sortColumn+','
+            queryParams.order= queryParams.order+sort[sortColumn]+','
+        }
+        $.ajax({
+            url: "/zaylt/mm/maintainmodule/modules" ,
+            type: 'post',
+            async: false,
+            data: queryParams,
+            success: function (res) {
+                if (res.code == 0) {
+                    var totalPageCount=res.data.totalCount%res.data.pageSize==0?res.data.totalCount/res.data.pageSize:parseInt(res.data.totalCount/res.data.pageSize)+1;
+                    $('#sum').text('总计 '+res.data.totalCount+' 条记录,每页展示 '+res.data.pageSize+' 条，共 '+totalPageCount+' 页，当前第 '+page_no+' 页')
+                    var itemsLength = res.data.items.length;
+                    if(itemsLength==0 && page_no ==1){
+                        hasMoreItems=false;
+                    }else if(itemsLength>= 0 && itemsLength<page_size && page_no>=1){
+                        $('[name=pagingBottomPad] [name=noitem]').css('display', 'none');
+                        $('[name=pagingBottomPad] [name=more]').css('display', 'none');
+                        $('[name=pagingBottomPad] [name=finish]').css('display', '');
+                        hasMoreItems=false;
+                    }else if(itemsLength==page_size){
+                        $('[name=pagingBottomPad] [name=noitem]').css('display', 'none');
+                        $('[name=pagingBottomPad] [name=finish]').css('display', 'none');
+                        $('[name=pagingBottomPad] [name=more]').css('display', '');
+                        hasMoreItems = true;
+                    }
+                    $(res.data.items).each(function(index,item){
+                        items[item.moduleId]=item;
+                        var newItemRow = $('[name=itemExample]').clone(true)
+                        setItemRow(newItemRow,item)
+                        newItemRow.css('display', '');
+                        $('[name=itemsShow]').append(newItemRow)
+                    })
+
+                } else {
+                    rxw1.errorpad(res.codeMsg)
+                }
+            }
+        })
+    }
+    eventToRows()
+
+
+    function strongKeyword(){
+        if(arguments.length==0)
+            return '';
+        var srcText=arguments[0];
+        if(srcText==null || srcText==undefined)
+            return srcText
+        srcText = srcText+''
+        if(arguments.length==1)
+            return srcText;
+        for(var a in arguments){
+            if(a>0){
+                var keyword = arguments[a];
+                if(!keyword)
+                    continue;
+                var index = srcText.indexOf(keyword);
+                if(index<0)
+                    continue;
+                var aaa = srcText.substr(index,keyword.length);
+                var bbb = '<span style="color:red">'+aaa+'</span>'
+                srcText = srcText.replace(aaa,bbb)
+            }
+        }
+        return srcText;
+    }
+
+    function setItemRow(itemRow,item) {
+        itemRow.attr('name','')
+        itemRow.attr('id','item'+item.moduleId)
+        itemRow.find('[name=name]').html(strongKeyword(item.name,queryParams.name)).attr('title',item.name)
+        itemRow.find('[name=orderNo]').text(item.orderNo)
+    }
+
+    function eventToRows(){
+
+        $('.row [name=detailEnt]').click(function(){
+           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 模块详情'
+        })
+
+        $('.row').click(function(){
+            $('.row [name=itemChosen] ').prop("checked",false);
+            $(this).find('[name=itemChosen]').prop("checked",true);
+            $('.row').css('background-color','')
+            $(this).css('background-color','#e8e8e8')
+        })
+    }
+
+
+
+</script>
+
+</html>

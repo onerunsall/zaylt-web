@@ -12,7 +12,9 @@
     <script src="../../libs/rxw/rxw.js"></script>
     <script src="../../libs/jquery.min.js"></script>
     <script src="../../libs/jquery.cookie.js"></script>
-
+    <script src="../../libs/giveup2.js"></script>
+    <script src="../../libs/jquery.growl/javascripts/jquery.growl.js" type="text/javascript"></script>
+    <link href="../../libs/jquery.growl/stylesheets/jquery.growl.css" rel="stylesheet" type="text/css" />
 
     <style>
         .cell {
@@ -85,7 +87,7 @@
 </head>
 
 <body style="margin:0;">
-<div id="localPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
+<div id="currentPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
 <hr/>
 <div style="width:100%;margin-top:5px;">
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()">查询</button>
@@ -104,7 +106,7 @@
                         <input name="expressNoQuery" style="width:170px"/>
                     </span>
                 </span>
-<span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+    <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
                     <span style="font-size: 14px">货运公司:</span>
                     <span style="float:right">
                         <input name="expressCoQuery" style="width:170px"/>
@@ -157,6 +159,7 @@
 </div>
 
 <div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
+    <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
     <div class="row-title">
         <span class="cell cell1">选择</span>
         <span class="cell cell2">订单号</span>
@@ -197,18 +200,20 @@
 
 </body>
 <script>
-    rxw1.relativePath = '../../libs/'
-    var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,localPath;
+    var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,currentPath;
     sort={}
     token = $.cookie('login-token');
     queryString = rxw1.parseQueryStr(location.search.substr(1));
-    localPath=queryString.localPath;
+    currentPath=queryString.currentPath;
     queryParams = {token: token}
 
-    $('#localPath').text('当前路径: '+localPath)
-    initData();
-    function initData() {
-        rxw1.waitLock()
+    $('#currentPath').text('当前路径: '+currentPath)
+
+    initPage();
+    initQuery();
+    loadItems();
+
+    function initPage() {
         page_no = 1;
         page_size = 30;
         hasMoreItems = true;
@@ -216,8 +221,6 @@
         $('[name=pagingBottomPad] [name=noitem]').css('display', '');
         $('[name=pagingBottomPad] [name=more]').css('display', 'none');
         $('[name=pagingBottomPad] [name=finish]').css('display', 'none');
-        loadItems();
-        rxw1.waitLock.remove()
     }
 
     function sortItems(sortColumn){
@@ -236,9 +239,15 @@
             $('#'+sortColumn+'Sort').text('↓')
         }
 
-        initData();
+        initPage();
+        loadItems();
     }
     function query(){
+        initPage();
+        initQuery();
+        loadItems();
+    }
+    function initQuery(){
         sort={};
         $('.sortBtn').text('-')
         queryParams.expressNo=$('[name=expressNoQuery]').val().trim();
@@ -259,13 +268,11 @@
             queryParams.addTimeEnd=new Date(addTimeEnd).getTime()+24*60*60*1000;
         else
             queryParams.addTimeEnd = '';
-        initData();
     }
+
     function loadMore(){
-        rxw1.waitLock()
         page_no++;
         loadItems();
-        rxw1.waitLock.remove()
     }
     rxw1.scrollEvent($('#itemsContainer').get(0), function () {
         if (hasMoreItems) {
@@ -273,6 +280,7 @@
             loadItems();
         }
     })
+
     function loadItems(){
         queryParams.pn=page_no;
         queryParams.ps=page_size;
@@ -289,6 +297,8 @@
             data: queryParams,
             success: function (res) {
                 if (res.code == 0) {
+                    var totalPageCount=res.data.totalCount%res.data.pageSize==0?res.data.totalCount/res.data.pageSize:parseInt(res.data.totalCount/res.data.pageSize)+1;
+                    $('#sum').text('总计 '+res.data.totalCount+' 条记录,每页展示 '+res.data.pageSize+' 条，共 '+totalPageCount+' 页，当前第 '+page_no+' 页')
                     var itemsLength = res.data.items.length;
                     if(itemsLength==0 && page_no ==1){
                         hasMoreItems=false;
@@ -313,30 +323,13 @@
                     })
 
                 } else {
-                    rxw1.errorpad(res.codeMsg)
+                    $.growl.error({ title:'', message: res.codeMsg });
                 }
             }
         })
     }
     eventToRows()
 
-    function refreshItemRow(itemRow,itemId){
-        $.ajax({
-            url: "/zaylt/mm/deviceordermg/orderinfo",
-            type: 'post',
-            async: false,
-            data: {orderId:itemId,token:token},
-            success: function (res) {
-                if(res.code==0){
-                    var item = res.data;
-                    items[itemId]= item;
-                    setItemRow(itemRow,item)
-                }else{
-                    rxw1.errorpad(res.codeMsg)
-                }
-            }
-        })
-    }
 
 function parseDeviceOrderStatus(value){
     if(value==0)
@@ -353,48 +346,25 @@ function parseDeviceOrderStatus(value){
         return '未知'
 }
 
-    function strongKeyword(){
-        if(arguments.length==0)
-            return '';
-        var srcText=arguments[0];
-        if(!srcText)
-            return srcText
-        if(arguments.length==1)
-            return srcText;
-        for(var a in arguments){
-            if(a>0){
-                var keyword = arguments[a];
-                if(!keyword)
-                    continue;
-                var index = srcText.indexOf(keyword);
-                if(index<0)
-                    continue;
-                var aaa = srcText.substr(index,keyword.length);
-                var bbb = '<span style="color:red">'+aaa+'</span>'
-                srcText = srcText.replace(aaa,bbb)
-            }
-        }
-        return srcText;
-    }
+
 
     function setItemRow(itemRow,item) {
         itemRow.attr('name','')
         itemRow.attr('id','item'+item.orderId)
-        itemRow.find('[name=orderId]').html(strongKeyword(item.orderId,queryParams.orderId)).attr('title',item.orderId)
-        itemRow.find('[name=expressNo]').html(strongKeyword(item.expressNo,queryParams.expressNo)).attr('title',item.expressNo)
+        itemRow.find('[name=orderId]').html(giveup2.otherUtils.strongKeyword(item.orderId,queryParams.orderId)).attr('title',item.orderId)
+        itemRow.find('[name=expressNo]').html(giveup2.otherUtils.strongKeyword(item.expressNo,queryParams.expressNo)).attr('title',item.expressNo)
         itemRow.find('[name=status]').text(parseDeviceOrderStatus(item.status))
-        itemRow.find('[name=addTime]').text(rxw1.formatTime(item.addTime))
+        itemRow.find('[name=addTime]').text(giveup2.dateUtils.formatToDateTime(item.addTime))
         itemRow.find('[name=totalPrice]').text(item.totalPrice)
-        itemRow.find('[name=expressNo]').html(strongKeyword(item.expressNo,queryParams.expressNo)).attr('title',item.expressNo)
-        itemRow.find('[name=realname]').html(strongKeyword(item.realname,queryParams.realname)).attr('title',item.realname)
-        itemRow.find('[name=phone]').html(strongKeyword(item.phone,queryParams.phone)).attr('title',item.phone)
-        itemRow.find('[name=hospitalName]').html(strongKeyword(item.hospitalName,queryParams.hospitalName)).attr('title',item.hospitalName)
+        itemRow.find('[name=expressNo]').html(giveup2.otherUtils.strongKeyword(item.expressNo,queryParams.expressNo)).attr('title',item.expressNo)
+        itemRow.find('[name=realname]').html(giveup2.otherUtils.strongKeyword(item.realname,queryParams.realname)).attr('title',item.realname)
+        itemRow.find('[name=phone]').html(giveup2.otherUtils.strongKeyword(item.phone,queryParams.phone)).attr('title',item.phone)
+        itemRow.find('[name=hospitalName]').html(giveup2.otherUtils.strongKeyword(item.hospitalName,queryParams.hospitalName)).attr('title',item.hospitalName)
     }
 
     function eventToRows(){
-
         $('.row [name=deviceEntDoor]').click(function(){
-           location.href="detail.html?orderId="+$(this).parents('.row').attr('id').substr(4)+'&localPath='+localPath+' / 订单详情'
+           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 订单详情'
         })
         $('.row [name=cover]').click(function(){
             rxw1.imgPreview(this.src)

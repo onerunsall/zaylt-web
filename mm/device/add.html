@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <script>
-    var item,detailUE,token,queryString,localPath;
+    var item,detailUE,token,queryString,currentPath;
 </script>
 <head>
     <title>医院详情</title>
@@ -20,7 +20,7 @@
         rxw1.relativePath = '../../libs/'
         token = $.cookie('login-token');
 
-        localPath=queryString.localPath;
+        currentPath=queryString.currentPath;
     </script>
     <script src="../../libs/upload.js"></script>
     <script src="../../libs/cropper/cropper.js"></script>
@@ -48,7 +48,7 @@
 </head>
 
 <body style="margin:0;">
-<div id="localPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
+<div id="currentPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
 <hr/>
 <div style="width:100%;">
     <form id="detailPad" style="line-height: 20px;text-align: center">
@@ -86,11 +86,11 @@
             </div>
             <div style="margin:15px 0;">
                 <div class="title">类型</div>
-                <div ><select id="typeName"></select></div>
+                <div ><select id="typeId"></select></div>
             </div>
             <div style="margin:15px 0;">
                 <div class="title">排序号</div>
-                <div ><input id="sortNo" type="number" style="text-align: center" placeholder="越小排名越前，默认99999"/></div>
+                <div ><input id="orderNo" type="number" style="text-align: center" placeholder="越小排名越前，默认99999"/></div>
             </div>
         </fieldset>
     </form>
@@ -103,11 +103,11 @@
 </div>
 </body>
 <script>
-    $('#localPath').text('当前路径: '+localPath)
+    $('#currentPath').text('当前路径: '+currentPath)
         detailUE= UE.getEditor('detail',{autoHeightEnabled:false});
 
-        renderTypeNameSelect();
-        function renderTypeNameSelect(){
+    renderTypeIdSelect();
+        function renderTypeIdSelect(){
             $.ajax({
                 url: "/zaylt/other/devicetypes",
                 type: 'post',
@@ -115,9 +115,9 @@
                 data:{ps:100} ,
                 success: function (res) {
                     if (res.code == 0) {
-                        $('#typeName').append('<option value="">请选择</option>')
+                        $('#typeId').append('<option value="">请选择</option>')
                         $(res.data.items).each(function(index,ele){
-                            $('#typeName').append('<option value="'+ele.name+'">'+ele.name+'</option>');
+                            $('#typeId').append('<option value="'+ele.typeId+'">'+ele.name+'</option>');
                         })
                     } else {
                         rxw1.errorpad(res.codeMsg)
@@ -131,9 +131,9 @@
             param.name=$('#detailPad #name').val();
             param.cover= $('#coverPad [name=cover]').attr('src')
             param.brief= $('#detailPad #brief').val();
-            param.sortNo= $('#detailPad #sortNo').val();
+            param.orderNo= $('#detailPad #orderNo').val();
             param.stock= $('#detailPad #stock').val();
-            param.typeName= $('#detailPad #typeName').val();
+            param.typeId= $('#detailPad #typeId').val();
             var leadPics = ""
             $('#leadPicsPad [name=leadPic]').each(function(index,ele){
                 leadPics= leadPics+","+$(ele).attr('src');
@@ -151,7 +151,7 @@
                 success: function (res) {
                     if (res.code == 0) {
                         rxw1.errorpad('成功');
-                        location.href='ent.html'
+                        history.back()
                     } else {
                         rxw1.errorpad(res.codeMsg)
                     }
@@ -178,7 +178,7 @@
                     $('#coverAlter').before(imgPad)
                     $('#coverAlter').hide();
                 }
-            },xRadio:180,yRadio:140})
+            },xRadio:132,yRadio:132})
         })
 
 
@@ -195,7 +195,7 @@
                     })
                     $('#leadPicAddBtn').before(imgPad)
                 }
-            },xRadio:750,yRadio:350})
+            },xRadio:132,yRadio:132})
         })
 
 
