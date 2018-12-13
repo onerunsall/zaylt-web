@@ -60,15 +60,13 @@
             padding:3px 0;
             height:20px;
             font-size:15px;
-            min-width:1000px;
         }
 
-        .row:hover{
+        .row-item:hover{
             background-color:#e8e8e8;
         }
+
         .row-title {
-            padding:2px 0;
-            min-width:1000px;
             background-color:#e8e8e8;
         }
 
@@ -84,47 +82,49 @@
 </div>
 
 <div style="width:100%;margin-top:10px;">
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">用户名:</span>
-                    <span style="float:right">
+                    <span >
                         <input name="usernameQuery" style="width:170px"/>
                     </span>
-                </span>
-    <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                </div>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">手机:</span>
-                    <span style="float:right">
+                    <span >
                         <input name="phoneQuery" style="width:170px"/>
                     </span>
-                </span>
-<span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                </div>
+<div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">姓名:</span>
-                    <span style="float:right">
+                    <span >
                         <input name="realnameQuery" style="width:170px"/>
                     </span>
-                </span>
-    <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                </div>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">角色:</span>
-                    <span style="float:right">
+                    <span >
                         <select name="roleQuery" style="width:170px">
                             <option value="">全部</option>
                             <option value="1">超级管理员</option>
                             <option value="2">管理员</option>
                         </select>
                     </span>
-                </span>
-     <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                </div>
+     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">拥有模块:</span>
-                    <span style="float:right">
+                    <span >
                         <select name="moduleIdQuery" style="width:170px">
                             <option value="">不限</option>
                         </select>
                     </span>
-                </span>
+                </div>
 </div>
+<div style="clear: both"></div>
 
 <div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
-    <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
-    <div class="row-title">
+    <div name="itemsTable" style=";width:2000px">
+        <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
+        <div class="row-title">
         <span class="cell cell1">选择</span>
         <span class="cell cell2">用户名</span>
         <span class="cell cell3">手机</span>
@@ -134,7 +134,7 @@
         <span class="cell cell7" style="cursor: pointer" onclick="sortItems('lastAliveTime')">活跃时间<span  id="lastAliveTimeSort"  class="sortBtn"  >-</span></span>
         <span class="cell cell8">操作</span>
     </div>
-    <div name="itemExample" class="row" style="display:none">
+    <div name="itemExample" class="row row-item" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
         <span class="cell cell2" name="username"></span>
         <span class="cell cell3" name="phone"></span>
@@ -144,7 +144,7 @@
         <span class="cell cell7" name="lastAliveTime"></span>
         <span class="cell cell8" ><button name="detailEnt">详情</button><button name="delEnt">删除</button></span>
     </div>
-    <div name="itemsShowPad" style="max-height:400px;">
+        <div name="itemsShowPad" style="max-height:400px;overflow: auto;">
         <div name="itemsShow">
 
         </div>
@@ -155,7 +155,7 @@
             <div style="margin:auto;position: relative; left: 0;top: -10px;width: 95%;height: 1px;background: #DCDCDC;z-index: 1;"></div>
         </div>
     </div>
-
+    </div>
 </div>
 
 </body>

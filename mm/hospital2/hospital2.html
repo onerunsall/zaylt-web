@@ -99,18 +99,21 @@
                 <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
                     <span style="font-size: 14px">医院名:</span>
                     <span style="float:right">
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="nameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="nameQueryFuzzyIf">模糊</label></span>
                         <input name="nameQuery" style="width:170px"/>
                     </span>
                 </span>
                 <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
                     <span style="font-size: 14px">医院电话:</span>
                     <span style="float:right">
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="telQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="telQueryFuzzyIf">模糊</label></span>
                         <input name="telQuery" style="width:170px"/>
                     </span>
                 </span>
         <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
                     <span style="font-size: 14px">院长姓名:</span>
                     <span style="float:right">
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="headmanNameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="headmanNameQueryFuzzyIf">模糊</label></span>
                         <input name="headmanNameQuery" style="width:170px"/>
                     </span>
                 </span>
@@ -123,18 +126,21 @@
             <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
                     <span style="font-size: 14px">用户手机号:</span>
                     <span style="float:right">
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="userPhoneQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="userPhoneQueryFuzzyIf">模糊</label></span>
                         <input name="userPhoneQuery" style="width:170px"/>
                     </span>
                 </span>
             <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
                     <span style="font-size: 14px">开发者姓名:</span>
                     <span style="float:right">
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="developerRealnameFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="developerRealnameFuzzyIf">模糊</label></span>
                         <input name="developerRealnameQuery" style="width:170px"/>
                     </span>
                 </span>
      <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
                     <span style="font-size: 14px">开发者手机:</span>
                     <span style="float:right">
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="developerPhoneQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="developerPhoneQueryFuzzyIf">模糊</label></span>
                         <input name="developerPhoneQuery" style="width:170px"/>
                     </span>
                 </span>
@@ -234,13 +240,19 @@
         sort={};
         $('.sortBtn').text('-')
         queryParams.name=$('[name=nameQuery]').val().trim();
+        queryParams.nameFuzzyIf=$('#nameQueryFuzzyIf:checked').val();
         queryParams.tel=$('[name=telQuery]').val().trim();
+        queryParams.telFuzzyIf=$('#telQueryFuzzyIf:checked').val();
         queryParams.headmanName=$('[name=headmanNameQuery]').val().trim();
+        queryParams.headmanNameFuzzyIf=$('#headmanNameQueryFuzzyIf:checked').val();
         queryParams.address=$('[name=addressQuery]').val().trim();
         queryParams.developerId=$('[name=developerIdQuery]').val().trim();
         queryParams.developerRealname=$('[name=developerRealnameQuery]').val().trim();
+        queryParams.developerRealnameFuzzyIf=$('#developerRealnameQueryFuzzyIf:checked').val();
         queryParams.developerPhone=$('[name=developerPhoneQuery]').val().trim();
+        queryParams.developerPhoneFuzzyIf=$('#developerPhoneQueryFuzzyIf:checked').val();
         queryParams.userPhone=$('[name=userPhoneQuery]').val().trim();
+        queryParams.userPhoneFuzzyIf=$('#userPhoneQueryFuzzyIf:checked').val();
     }
     function loadMore(){
         page_no++;

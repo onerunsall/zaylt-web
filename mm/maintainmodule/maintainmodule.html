@@ -12,7 +12,7 @@
     <script src="../../libs/rxw/rxw.js"></script>
     <script src="../../libs/jquery.min.js"></script>
     <script src="../../libs/jquery.cookie.js"></script>
-
+    <script src="../../libs/giveup2.js"></script>
 
     <style>
         .cell {
@@ -46,15 +46,13 @@
             padding:3px 0;
             height:20px;
             font-size:15px;
-            min-width:1000px;
         }
 
-        .row:hover{
+        .row-item:hover{
             background-color:#e8e8e8;
         }
+
         .row-title {
-            padding:2px 0;
-            min-width:1000px;
             background-color:#e8e8e8;
         }
 
@@ -69,30 +67,32 @@
 </div>
 
 <div style="width:100%;margin-top:10px;">
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">模块:</span>
-                    <span style="float:right">
+                    <span >
                         <input name="nameQuery" style="width:170px"/>
                     </span>
-                </span>
+                </div>
 
 </div>
 
+<div style="clear: both"></div>
 <div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
-    <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
-    <div class="row-title">
+    <div name="itemsTable" style=";width:2000px">
+        <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
+        <div class="row-title">
         <span class="cell cell1">选择</span>
         <span class="cell cell2">模块名</span>
         <span class="cell cell3" style="cursor: pointer" onclick="sortItems('orderNo')">排序号<span  id="orderNoSort"  class="sortBtn"  >-</span></span>
         <span class="cell cell4">操作</span>
     </div>
-    <div name="itemExample" class="row" style="display:none">
+    <div name="itemExample" class="row row-item" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
         <span class="cell cell2" name="name"></span>
         <span class="cell cell3" name="orderNo"></span>
         <span class="cell cell4" ><button name="detailEnt">详情</button></span>
     </div>
-    <div name="itemsShowPad" style="max-height:400px;">
+    <div name="itemsShowPad" style="max-height:400px;overflow: auto;">
         <div name="itemsShow">
 
         </div>
@@ -103,7 +103,7 @@
             <div style="margin:auto;position: relative; left: 0;top: -10px;width: 95%;height: 1px;background: #DCDCDC;z-index: 1;"></div>
         </div>
     </div>
-
+</div>
 </div>
 
 </body>
@@ -118,7 +118,6 @@
     initPage();
     initQuery();
     loadItems();
-
     function initPage() {
         page_no = 1;
         page_size = 30;
@@ -127,7 +126,6 @@
         $('[name=pagingBottomPad] [name=noitem]').css('display', '');
         $('[name=pagingBottomPad] [name=more]').css('display', 'none');
         $('[name=pagingBottomPad] [name=finish]').css('display', 'none');
-
     }
 
     function sortItems(sortColumn){
@@ -149,6 +147,7 @@
         initPage();
         loadItems();
     }
+
     function query(){
         initPage();
         initQuery();
@@ -218,42 +217,17 @@
     eventToRows()
 
 
-    function strongKeyword(){
-        if(arguments.length==0)
-            return '';
-        var srcText=arguments[0];
-        if(srcText==null || srcText==undefined)
-            return srcText
-        srcText = srcText+''
-        if(arguments.length==1)
-            return srcText;
-        for(var a in arguments){
-            if(a>0){
-                var keyword = arguments[a];
-                if(!keyword)
-                    continue;
-                var index = srcText.indexOf(keyword);
-                if(index<0)
-                    continue;
-                var aaa = srcText.substr(index,keyword.length);
-                var bbb = '<span style="color:red">'+aaa+'</span>'
-                srcText = srcText.replace(aaa,bbb)
-            }
-        }
-        return srcText;
-    }
-
     function setItemRow(itemRow,item) {
         itemRow.attr('name','')
         itemRow.attr('id','item'+item.moduleId)
-        itemRow.find('[name=name]').html(strongKeyword(item.name,queryParams.name)).attr('title',item.name)
+        itemRow.find('[name=name]').html(giveup2.otherUtils.strongKeyword(item.name,queryParams.name)).attr('title',item.name)
         itemRow.find('[name=orderNo]').text(item.orderNo)
     }
 
     function eventToRows(){
 
         $('.row [name=detailEnt]').click(function(){
-           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 模块详情'
+           location.href="detail.html?moduleId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 模块详情'
         })
 
         $('.row').click(function(){
