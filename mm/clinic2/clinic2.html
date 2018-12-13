@@ -93,7 +93,6 @@
     <input name="clinicIdQuery" style="display: none"/>
     <input name="userIdQuery" style="display: none"/>
     <input name="hospitalIdQuery" style="display: none"/>
-    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;"><span ><input style="cursor: pointer"  id="buildExcelIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="buildExcelIf">生成excel</label></span></div>
     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">门诊名:</span>
                     <span>
@@ -135,7 +134,12 @@
                         <input name="userPhoneQuery" style="width:170px"/>
                     </span>
                 </div>
-
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+        <span >
+            <input style="cursor: pointer;"  id="buildExcelIf"  type="checkbox" value="1" />
+            <label style="cursor: pointer;"  for="buildExcelIf">生成excel</label>
+        </span>
+    </div>
 </div>
 
 <div style="clear: both"></div>
@@ -319,7 +323,7 @@
                 if(res.data.excelUrl)
                 {
                     $('#downloadExcelEnt').show();
-                    $('#downloadExcelEnt').click(function(){
+                    $('#downloadExcelEnt').unbind('click').click(function(){
                         window.open(res.data.excelUrl)
                     })
                 }
