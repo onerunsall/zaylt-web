@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>医院管理</title>
+    <title>病人管理</title>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -55,15 +55,11 @@
             border-left: 1px solid #7d7d7d;
         }
         .cell8 {
-            width:60px;
+            width:150px;
             border-left: 1px solid #7d7d7d;
         }
         .cell9 {
             width:150px;
-            border-left: 1px solid #7d7d7d;
-        }
-        .cell10 {
-            width:60px;
             border-left: 1px solid #7d7d7d;
         }
         .row {
@@ -90,60 +86,66 @@
 <hr/>
 <div style="width:100%;margin-top:5px;">
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()">查询</button>
+    <button id="downloadExcelEnt" style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px;display: none" >下载EXCEL</button>
+
 </div>
 
 <div style="width:100%;margin-top:10px;">
-    <input name="userIdQuery" style="display: none"/>
-    <input name="developerIdQuery" style="display: none"/>
+    <input name="clinicIdQuery" style="display: none"/>
+    <input name="patientIdQuery" style="display: none"/>
     <input name="hospitalIdQuery" style="display: none"/>
-                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">医院名:</span>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;"><span ><input style="cursor: pointer"  id="buildExcelIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="buildExcelIf">生成excel</label></span></div>
+
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+                    <span style="font-size: 14px">病人名:</span>
                     <span>
-                        <span style="font-size: 10px"><input style="cursor: pointer"  id="nameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="nameQueryFuzzyIf">模糊</label></span>
-                        <input name="nameQuery" style="width:170px"/>
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="realnameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="realnameQueryFuzzyIf">模糊</label></span>
+                        <input name="realnameQuery" style="width:170px"/>
                     </span>
                 </div>
                 <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">医院电话:</span>
+                    <span style="font-size: 14px">医院名:</span>
+                                <span>
+                                    <span style="font-size: 10px"><input style="cursor: pointer"  id="hospitalNameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="hospitalNameQueryFuzzyIf">模糊</label></span>
+                                    <input name="hospitalNameQuery" style="width:170px"/>
+                                </span>
+                </div>
+                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+                    <span style="font-size: 14px">病人电话:</span>
                     <span>
                         <span style="font-size: 10px"><input style="cursor: pointer"  id="telQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="telQueryFuzzyIf">模糊</label></span>
                         <input name="telQuery" style="width:170px"/>
                     </span>
                 </div>
         <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">院长姓名:</span>
+                    <span style="font-size: 14px">病症:</span>
                     <span>
-                        <span style="font-size: 10px"><input style="cursor: pointer"  id="headmanNameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="headmanNameQueryFuzzyIf">模糊</label></span>
-                        <input name="headmanNameQuery" style="width:170px"/>
+                        <input name="sicknessQuery" style="width:170px"/>
                     </span>
                 </div>
             <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">地址:</span>
+                    <span style="font-size: 14px">状态:</span>
                     <span>
-                        <input name="addressQuery" style="width:170px"/>
+                        <select name="statusQuery" style="width:170px">
+                            <option value="">全部</option>
+                            <option value="1">待接收</option>
+                            <option value="3">已转诊</option>
+                            <option value="4">医院已确认</option>
+                        </select>
                     </span>
                 </div>
-            <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">用户手机号:</span>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+        <span style="font-size: 14px">添加时间起:</span>
                     <span>
-                        <span style="font-size: 10px"><input style="cursor: pointer"  id="userPhoneQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="userPhoneQueryFuzzyIf">模糊</label></span>
-                        <input name="userPhoneQuery" style="width:170px"/>
+                        <input type="date" name="addTimeStartQuery" />
                     </span>
-                </div>
-            <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">开发者姓名:</span>
+    </div>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+        <span style="font-size: 14px">添加时间止:</span>
                     <span>
-                        <span style="font-size: 10px"><input style="cursor: pointer"  id="developerRealnameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="developerRealnameQueryFuzzyIf">模糊</label></span>
-                        <input name="developerRealnameQuery" style="width:170px"/>
+                        <input type="date" name="addTimeEndQuery" />
                     </span>
-                </div>
-     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">开发者手机:</span>
-                    <span>
-                        <span style="font-size: 10px"><input style="cursor: pointer"  id="developerPhoneQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="developerPhoneQueryFuzzyIf">模糊</label></span>
-                        <input name="developerPhoneQuery" style="width:170px"/>
-                    </span>
-                </div>
+    </div>
 </div>
 
 <div style="clear: both"></div>
@@ -152,27 +154,25 @@
         <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
         <div class="row-title">
         <span class="cell cell1">选择</span>
-        <span class="cell cell2">医院名</span>
-        <span class="cell cell3">封面</span>
-        <span class="cell cell4">医院电话</span>
-        <span class="cell cell5">院长姓名</span>
-        <span class="cell cell6">用户手机</span>
-        <span class="cell cell7">开发者姓名</span>
-        <span class="cell cell8" style="cursor: pointer" onclick="sortItems('orderNo')">排序号<span  id="orderNoSort"  class="sortBtn"  >-</span></span>
-        <span class="cell cell9" style="cursor: pointer" onclick="sortItems('addTime')">添加时间<span  id="addTimeSort"  class="sortBtn"  >-</span></span>
-        <span class="cell cell10">操作</span>
+        <span class="cell cell2">病人名</span>
+        <span class="cell cell3">电话</span>
+        <span class="cell cell4">状态</span>
+        <span class="cell cell5">病症</span>
+            <span class="cell cell6">医院</span>
+            <span class="cell cell7">门诊</span>
+        <span class="cell cell8" style="cursor: pointer" onclick="sortItems('addTime')">添加时间<span  id="addTimeSort"  class="sortBtn"  >-</span></span>
+        <span class="cell cell9">操作</span>
     </div>
     <div name="itemExample" class="row row-item" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
-        <span class="cell cell2" name="name"></span>
-        <span class="cell cell3" ><img name="cover" style="width:30px;vertical-align: middle"/></span>
-        <span class="cell cell4" name="tel"></span>
-        <span class="cell cell5" name="headmanName"></span>
-        <span class="cell cell6" name="userPhone"></span>
-        <span class="cell cell7" name="developerRealname"></span>
-        <span class="cell cell8" name="orderNo"></span>
-        <span class="cell cell9" name="addTime"></span>
-        <span class="cell cell10" ><button name="deviceEntDoor">详情</button></span>
+        <span class="cell cell2" name="realname"></span>
+        <span class="cell cell3" name="tel"></span>
+        <span class="cell cell4" name="status"></span>
+        <span class="cell cell5" name="sickness"></span>
+        <span class="cell cell6" name="hospitalName"></span>
+        <span class="cell cell7" name="clinicName"></span>
+        <span class="cell cell8" name="addTime"></span>
+        <span class="cell cell9" ><button name="detailEnt">详情</button></span>
     </div>
     <div name="itemsShowPad" style="max-height:400px;overflow: auto;">
         <div name="itemsShow">
@@ -185,9 +185,9 @@
             <div style="margin:auto;position: relative; left: 0;top: -10px;width: 95%;height: 1px;background: #DCDCDC;z-index: 1;"></div>
         </div>
     </div>
+</div>
+</div>
 
-</div>
-</div>
 </body>
 <script>
     var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,currentPath;
@@ -197,28 +197,19 @@
     queryParams = {token: token}
     currentPath=queryString.currentPath;
     $('#currentPath').text('当前路径: '+(currentPath?currentPath:''))
+    $('[name=patientIdQuery]').val(queryString.patientIdQuery)
+    $('[name=clinicIdQuery]').val(queryString.clinicIdQuery)
     $('[name=hospitalIdQuery]').val(queryString.hospitalIdQuery)
-    $('[name=userIdQuery]').val(queryString.userIdQuery)
-    $('[name=developerIdQuery]').val(queryString.developerIdQuery)
-    $('[name=nameQuery]').val(queryString.nameQuery)
-    if(queryString.nameQueryFuzzyIf == 1)
-        $('#nameQueryFuzzyIf').attr("checked", true);
+    $('[name=realnameQuery]').val(queryString.realnameQuery)
+    if(queryString.realnameQueryFuzzyIf == 1)
+        $('#realnameQueryFuzzyIf').attr("checked", true);
     $('[name=telQuery]').val(queryString.telQuery)
     if(queryString.telQueryFuzzyIf == 1)
         $('#telQueryFuzzyIf').attr("checked", true);
-    $('[name=headmanNameQuery]').val(queryString.headmanNameQuery)
-    if(queryString.headmanNameQueryFuzzyIf == 1)
-        $('#headmanNameQueryFuzzyIf').attr("checked", true);
-    $('[name=addressQuery]').val(queryString.addressQuery)
-    $('[name=userPhoneQuery]').val(queryString.userPhoneQuery)
-    if(queryString.userPhoneQueryFuzzyIf == 1)
-        $('#userPhoneQueryFuzzyIf').attr("checked", true);
-    $('[name=developerRealnameQuery]').val(queryString.developerRealnameQuery)
-    if(queryString.developerRealnameQueryFuzzyIf == 1)
-        $('#developerRealnameQueryFuzzyIf').attr("checked", true);
-    $('[name=developerPhoneQuery]').val(queryString.developerPhoneQuery)
-    if(queryString.developerPhoneQueryFuzzyIf == 1)
-        $('#developerPhoneQueryFuzzyIf').attr("checked", true);
+    $('[name=sicknessQuery]').val(queryString.sicknessQuery)
+    $('[name=hospitalNameQuery]').val(queryString.hospitalNameQuery)
+    if(queryString.hospitalNameQueryFuzzyIf == 1)
+        $('#hospitalNameQueryFuzzyIf').attr("checked", true);
 
     initPage();
     initQuery();
@@ -262,23 +253,30 @@
     function initQuery(){
         sort={};
         $('.sortBtn').text('-')
+        queryParams.clinicId=$('[name=clinicIdQuery]').val().trim();
+        queryParams.patientId=$('[name=patientIdQuery]').val().trim();
         queryParams.hospitalId=$('[name=hospitalIdQuery]').val().trim();
-        queryParams.userId=$('[name=userIdQuery]').val().trim();
-        queryParams.developerId=$('[name=developerIdQuery]').val().trim();
-        queryParams.name=$('[name=nameQuery]').val().trim();
-        queryParams.nameFuzzyIf=$('#nameQueryFuzzyIf:checked').val();
+        queryParams.realname=$('[name=realnameQuery]').val().trim();
+        queryParams.realnameFuzzyIf=$('#realnameQueryFuzzyIf:checked').val();
         queryParams.tel=$('[name=telQuery]').val().trim();
         queryParams.telFuzzyIf=$('#telQueryFuzzyIf:checked').val();
-        queryParams.headmanName=$('[name=headmanNameQuery]').val().trim();
-        queryParams.headmanNameFuzzyIf=$('#headmanNameQueryFuzzyIf:checked').val();
-        queryParams.address=$('[name=addressQuery]').val().trim();
-        queryParams.developerId=$('[name=developerIdQuery]').val().trim();
-        queryParams.developerRealname=$('[name=developerRealnameQuery]').val().trim();
-        queryParams.developerRealnameFuzzyIf=$('#developerRealnameQueryFuzzyIf:checked').val();
-        queryParams.developerPhone=$('[name=developerPhoneQuery]').val().trim();
-        queryParams.developerPhoneFuzzyIf=$('#developerPhoneQueryFuzzyIf:checked').val();
-        queryParams.userPhone=$('[name=userPhoneQuery]').val().trim();
-        queryParams.userPhoneFuzzyIf=$('#userPhoneQueryFuzzyIf:checked').val();
+        queryParams.sickness=$('[name=sicknessQuery]').val().trim();
+        queryParams.hospitalName=$('[name=hospitalNameQuery]').val().trim();
+        queryParams.hospitalNameFuzzyIf=$('#hospitalNameQueryFuzzyIf:checked').val();
+        queryParams.status=$('[name=statusQuery]').val().trim();
+        var addTimeStart =   $('[name=addTimeStartQuery]').val()
+        if(addTimeStart)
+            queryParams.addTimeStart=new Date(addTimeStart).getTime();
+        else
+            queryParams.addTimeStart = '';
+        var addTimeEnd = $('[name=addTimeEndQuery]').val();
+        if(addTimeEnd)
+            queryParams.addTimeEnd=new Date(addTimeEnd).getTime()+24*60*60*1000;
+        else
+            queryParams.addTimeEnd = '';
+        queryParams.buildExcelIf=$('#buildExcelIf:checked').val();
+        $('#downloadExcelEnt').hide()
+        $('#buildExcelIf').prop('checked',false)
     }
     function loadMore(){
         page_no++;
@@ -300,7 +298,7 @@
             queryParams.order= queryParams.order+sort[sortColumn]+','
         }
         $.ajax({
-            url: "/zaylt/mm/hospital2/hospitals" ,
+            url: "/zaylt/mm/patient2/patients" ,
             type: 'post',
             async: false,
             data: queryParams,
@@ -323,13 +321,19 @@
                         hasMoreItems = true;
                     }
                     $(res.data.items).each(function(index,item){
-                        items[item.hospitalId]=item;
+                        items[item.patientId]=item;
                         var newItemRow = $('[name=itemExample]').clone(true)
                         setItemRow(newItemRow,item)
                         newItemRow.css('display', '');
                         $('[name=itemsShow]').append(newItemRow)
                     })
-
+                    if(res.data.excelUrl)
+                    {
+                        $('#downloadExcelEnt').show();
+                        $('#downloadExcelEnt').click(function(){
+                            window.open(res.data.excelUrl)
+                        })
+                    }
                 } else {
                     $.growl.error({ title:'', message: res.codeMsg });
                 }
@@ -339,29 +343,23 @@
     eventToRows()
 
 
-
     function setItemRow(itemRow,item) {
         itemRow.attr('name','')
-        itemRow.attr('id','item'+item.hospitalId)
-        itemRow.find('[name=name]').html(giveup2.otherUtils.strongKeyword(item.name,queryParams.name)).attr('title',item.name)
+        itemRow.attr('id','item'+item.patientId)
+        itemRow.find('[name=realname]').html(giveup2.otherUtils.strongKeyword(item.realname,queryParams.realname)).attr('title',item.realname)
         itemRow.find('[name=tel]').html(giveup2.otherUtils.strongKeyword(item.tel,queryParams.tel)).attr('title',item.tel)
-        itemRow.find('[name=headmanName]').html(giveup2.otherUtils.strongKeyword(item.headmanName,queryParams.headmanName)).attr('title',item.headmanName)
-        itemRow.find('[name=userPhone]').html(giveup2.otherUtils.strongKeyword(item.userPhone,queryParams.userPhone)).attr('title',item.userPhone)
-        itemRow.find('[name=orderNo]').text(item.orderNo)
-        itemRow.find('[name=cover]').attr('src',item.cover)
+        itemRow.find('[name=sickness]').html(giveup2.otherUtils.strongKeyword(item.sickness,queryParams.sickness)).attr('title',item.sickness)
+        itemRow.find('[name=hospitalName]').html(giveup2.otherUtils.strongKeyword(item.hospitalName,queryParams.hospitalName)).attr('title',item.hospitalName)
+        itemRow.find('[name=clinicName]').html(giveup2.otherUtils.strongKeyword(item.clinicName,queryParams.clinicName)).attr('title',item.clinicName)
+        itemRow.find('[name=status]').text(parsePatientStatus(item.status))
         itemRow.find('[name=addTime]').text(giveup2.dateUtils.formatToDateTime(item.addTime))
-        itemRow.find('[name=developerRealname]').html(giveup2.otherUtils.strongKeyword(item.developerRealname,queryParams.developerRealname)).attr('title',item.developerRealname)
-
     }
 
     function eventToRows(){
-
-        $('.row [name=deviceEntDoor]').click(function(){
-           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 医院详情'
+        $('.row [name=detailEnt]').click(function(){
+            var itemId = $(this).parents('.row').attr('id').substr(4);
+           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 病人详情 / '+items[itemId].realname
         })
-        $('.row [name=cover]').click(function(){
-            rxw1.imgPreview(this.src)
-        }).css('cursor','pointer')
         $('.row').click(function(){
             $('.row [name=itemChosen] ').prop("checked",false);
             $(this).find('[name=itemChosen]').prop("checked",true);
@@ -372,6 +370,14 @@
 
 
 
+    function parsePatientStatus(value){
+        if(value==1)
+            return '待接收'
+        else if(value == 3)
+            return '已转诊'
+        else if(value == 4)
+            return '医院已确认'
+    }
 </script>
 
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>器械管理</title>
+    <title>门诊管理</title>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -51,7 +51,15 @@
             border-left: 1px solid #7d7d7d;
         }
         .cell7 {
-            width:60px;
+            width:100px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell8 {
+            width:150px;
+            border-left: 1px solid #7d7d7d;
+        }
+        .cell9 {
+            width:150px;
             border-left: 1px solid #7d7d7d;
         }
         .row {
@@ -69,6 +77,7 @@
             background-color:#e8e8e8;
         }
 
+
     </style>
 </head>
 
@@ -77,22 +86,56 @@
 <hr/>
 <div style="width:100%;margin-top:5px;">
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()">查询</button>
-    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="add()">新增器械</button>
+    <button id="downloadExcelEnt" style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px;display: none" >下载EXCEL</button>
 </div>
 
 <div style="width:100%;margin-top:10px;">
+    <input name="clinicIdQuery" style="display: none"/>
+    <input name="userIdQuery" style="display: none"/>
+    <input name="hospitalIdQuery" style="display: none"/>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;"><span ><input style="cursor: pointer"  id="buildExcelIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="buildExcelIf">生成excel</label></span></div>
     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">器械名:</span>
-                    <span >
+                    <span style="font-size: 14px">门诊名:</span>
+                    <span>
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="nameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="nameQueryFuzzyIf">模糊</label></span>
                         <input name="nameQuery" style="width:170px"/>
                     </span>
                 </div>
     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">联系电话:</span>
-                    <span >
+        <span style="font-size: 14px">医院名:</span>
+                    <span>
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="hospitalNameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="hospitalNameQueryFuzzyIf">模糊</label></span>
+                        <input name="hospitalNameQuery" style="width:170px"/>
+                    </span>
+    </div>
+                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+                    <span style="font-size: 14px">门诊电话:</span>
+                    <span>
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="contactTelQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="contactTelQueryFuzzyIf">模糊</label></span>
                         <input name="contactTelQuery" style="width:170px"/>
                     </span>
                 </div>
+        <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+                    <span style="font-size: 14px">主任姓名:</span>
+                    <span>
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="headmanNameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="headmanNameQueryFuzzyIf">模糊</label></span>
+                        <input name="headmanNameQuery" style="width:170px"/>
+                    </span>
+                </div>
+            <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+                    <span style="font-size: 14px">地址:</span>
+                    <span>
+                        <input name="addressQuery" style="width:170px"/>
+                    </span>
+                </div>
+            <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+                    <span style="font-size: 14px">用户手机号:</span>
+                    <span>
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="userPhoneQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="userPhoneQueryFuzzyIf">模糊</label></span>
+                        <input name="userPhoneQuery" style="width:170px"/>
+                    </span>
+                </div>
+
 </div>
 
 <div style="clear: both"></div>
@@ -101,23 +144,27 @@
         <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
         <div class="row-title">
         <span class="cell cell1">选择</span>
-        <span class="cell cell2">器械名</span>
-        <span class="cell cell3">封面</span>
-        <span class="cell cell7"  style="cursor: pointer" onclick="sortItems('stock')">库存<span id="stockSort" class="sortBtn" >-</span></span>
-        <span class="cell cell4">联系电话</span>
-        <span class="cell cell5" style="cursor: pointer" onclick="sortItems('orderNo')">排序<span  id="orderNoSort"  class="sortBtn"  >-</span></span>
-        <span class="cell cell6">操作</span>
+        <span class="cell cell2">门诊名</span>
+        <span class="cell cell3">电话</span>
+        <span class="cell cell4">医院</span>
+        <span class="cell cell5">主任名</span>
+        <span class="cell cell6">用户手机</span>
+        <span class="cell cell7" style="cursor: pointer" onclick="sortItems('orderNo')">排序号<span  id="orderNoSort"  class="sortBtn"  >-</span></span>
+        <span class="cell cell8" style="cursor: pointer" onclick="sortItems('addTime')">添加时间<span  id="addTimeSort"  class="sortBtn"  >-</span></span>
+        <span class="cell cell9">操作</span>
     </div>
     <div name="itemExample" class="row row-item" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
         <span class="cell cell2" name="name"></span>
-        <span class="cell cell3" ><img name="cover" style="width:30px;vertical-align: middle"/></span>
-        <span class="cell cell7" name="stock"></span>
-        <span class="cell cell4" name="contactTel"></span>
-        <span class="cell cell5" name="orderNo"></span>
-        <span class="cell cell6" ><button name="deviceEntDoor">详情</button><button name="delEntDoor">删除</button></span>
+        <span class="cell cell3" name="contactTel"></span>
+        <span class="cell cell4" name="hospitalName"></span>
+        <span class="cell cell5" name="headmanName"></span>
+        <span class="cell cell6" name="userPhone"></span>
+        <span class="cell cell7" name="orderNo"></span>
+        <span class="cell cell8" name="addTime"></span>
+        <span class="cell cell9" ><button name="deviceEntDoor">详情</button></span>
     </div>
-        <div name="itemsShowPad" style="max-height:400px;overflow: auto;">
+    <div name="itemsShowPad" style="max-height:400px;overflow: auto;">
         <div name="itemsShow">
 
         </div>
@@ -130,7 +177,7 @@
     </div>
 
 </div>
-
+</div>
 </body>
 <script>
     var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,currentPath;
@@ -139,8 +186,26 @@
     queryString = rxw1.parseQueryStr(location.search.substr(1));
     queryParams = {token: token}
     currentPath=queryString.currentPath;
-    $('#currentPath').text('当前路径: '+currentPath)
-
+    $('#currentPath').text('当前路径: '+(currentPath?currentPath:''))
+    $('[name=clinicIdQuery]').val(queryString.clinicIdQuery)
+    $('[name=userIdQuery]').val(queryString.userIdQuery)
+    $('[name=hospitalIdQuery]').val(queryString.hospitalIdQuery)
+    $('[name=nameQuery]').val(queryString.nameQuery)
+    if(queryString.nameQueryFuzzyIf == 1)
+        $('#nameQueryFuzzyIf').attr("checked", true);
+    $('[name=contactTelQuery]').val(queryString.contactTelQuery)
+    if(queryString.contactTelQueryFuzzyIf == 1)
+        $('#contactTelQueryFuzzyIf').attr("checked", true);
+    $('[name=headmanNameQuery]').val(queryString.headmanNameQuery)
+    if(queryString.headmanNameQueryFuzzyIf == 1)
+        $('#headmanNameQueryFuzzyIf').attr("checked", true);
+    $('[name=addressQuery]').val(queryString.addressQuery)
+    $('[name=userPhoneQuery]').val(queryString.userPhoneQuery)
+    if(queryString.userPhoneQueryFuzzyIf == 1)
+        $('#userPhoneQueryFuzzyIf').attr("checked", true);
+    $('[name=hospitalNameQuery]').val(queryString.hospitalNameQuery)
+    if(queryString.hospitalNameQueryFuzzyIf == 1)
+        $('#hospitalNameQueryFuzzyIf').attr("checked", true);
 
     initPage();
     initQuery();
@@ -184,8 +249,23 @@
     function initQuery(){
         sort={};
         $('.sortBtn').text('-')
+        queryParams.clinicId=$('[name=clinicIdQuery]').val().trim();
+        queryParams.userId=$('[name=userIdQuery]').val().trim();
+        queryParams.hospitalId=$('[name=hospitalIdQuery]').val().trim();
         queryParams.name=$('[name=nameQuery]').val().trim();
+        queryParams.nameFuzzyIf=$('#nameQueryFuzzyIf:checked').val();
         queryParams.contactTel=$('[name=contactTelQuery]').val().trim();
+        queryParams.contactTelFuzzyIf=$('#contactTelQueryFuzzyIf:checked').val();
+        queryParams.headmanName=$('[name=headmanNameQuery]').val().trim();
+        queryParams.headmanNameFuzzyIf=$('#headmanNameQueryFuzzyIf:checked').val();
+        queryParams.address=$('[name=addressQuery]').val().trim();
+        queryParams.hospitalName=$('[name=hospitalNameQuery]').val().trim();
+        queryParams.hospitalNameFuzzyIf=$('#hospitalNameQueryFuzzyIf:checked').val();
+        queryParams.userPhone=$('[name=userPhoneQuery]').val().trim();
+        queryParams.userPhoneFuzzyIf=$('#userPhoneQueryFuzzyIf:checked').val();
+        queryParams.buildExcelIf=$('#buildExcelIf:checked').val();
+        $('#downloadExcelEnt').hide()
+        $('#buildExcelIf').prop('checked',false)
     }
     function loadMore(){
         page_no++;
@@ -207,7 +287,7 @@
             queryParams.order= queryParams.order+sort[sortColumn]+','
         }
         $.ajax({
-            url: "/zaylt/mm/devicemg/devicelist" ,
+            url: "/zaylt/mm/clinic2/clinics" ,
             type: 'post',
             async: false,
             data: queryParams,
@@ -230,13 +310,19 @@
                         hasMoreItems = true;
                     }
                     $(res.data.items).each(function(index,item){
-                        items[item.deviceId]=item;
+                        items[item.clinicId]=item;
                         var newItemRow = $('[name=itemExample]').clone(true)
                         setItemRow(newItemRow,item)
                         newItemRow.css('display', '');
                         $('[name=itemsShow]').append(newItemRow)
                     })
-
+                if(res.data.excelUrl)
+                {
+                    $('#downloadExcelEnt').show();
+                    $('#downloadExcelEnt').click(function(){
+                        window.open(res.data.excelUrl)
+                    })
+                }
                 } else {
                     $.growl.error({ title:'', message: res.codeMsg });
                 }
@@ -249,43 +335,22 @@
 
     function setItemRow(itemRow,item) {
         itemRow.attr('name','')
-        itemRow.attr('id','item'+item.deviceId)
+        itemRow.attr('id','item'+item.clinicId)
         itemRow.find('[name=name]').html(giveup2.otherUtils.strongKeyword(item.name,queryParams.name)).attr('title',item.name)
         itemRow.find('[name=contactTel]').html(giveup2.otherUtils.strongKeyword(item.contactTel,queryParams.contactTel)).attr('title',item.contactTel)
+        itemRow.find('[name=headmanName]').html(giveup2.otherUtils.strongKeyword(item.headmanName,queryParams.headmanName)).attr('title',item.headmanName)
+        itemRow.find('[name=hospitalName]').html(giveup2.otherUtils.strongKeyword(item.hospitalName,queryParams.hospitalName)).attr('title',item.hospitalName)
+        itemRow.find('[name=userPhone]').html(giveup2.otherUtils.strongKeyword(item.userPhone,queryParams.userPhone)).attr('title',item.userPhone)
         itemRow.find('[name=orderNo]').text(item.orderNo)
-        itemRow.find('[name=cover]').attr('src',item.cover)
-        itemRow.find('[name=stock]').text(item.stock)
+        itemRow.find('[name=addTime]').text(giveup2.dateUtils.formatToDateTime(item.addTime))
     }
 
     function eventToRows(){
-        $('.row [name=delEntDoor]').click(function(){
-            var row = $(this).parents('.row');
-            var itemId = row.attr('id').substr(4)
-            if (confirm('确认删除吗')==true){
-                $.ajax({
-                    url: "/zaylt/mm/devicemg/devicedel",
-                    type: 'post',
-                    async: false,
-                    data: {deviceId:itemId,token:token},
-                    success: function (res) {
-                        if(res.code==0){
-                            row.remove()
-                        }else{
-                            $.growl.error({ title:'', message: res.codeMsg });
-                        }
-                    }
-                })
-                return true;
-            }else{
-                return false;
-            }
-        })
+
         $('.row [name=deviceEntDoor]').click(function(){
-           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 器械详情'
+            var itemId = $(this).parents('.row').attr('id').substr(4);
+           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 门诊详情 / '+items[itemId].name
         })
-        $('.row [name=cover]').click(function(){
-            rxw1.imgPreview(this.src)
-        }).css('cursor','pointer')
         $('.row').click(function(){
             $('.row [name=itemChosen] ').prop("checked",false);
             $(this).find('[name=itemChosen]').prop("checked",true);
@@ -294,9 +359,6 @@
         })
     }
 
-function add(){
-   location.href='add.html?currentPath='+currentPath+' / 新增器械'
-}
 
 
 </script>

@@ -52,17 +52,14 @@
             padding:3px 0;
             height:20px;
             font-size:15px;
-            min-width:1000px;
         }
 
-        .row:hover{
+        .row-item:hover{
             background-color:#e8e8e8;
         }
+
         .row-title {
-            padding:2px 0;
-            min-width:1000px;
             background-color:#e8e8e8;
-            overflow: auto;
         }
 
     </style>
@@ -77,25 +74,27 @@
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="add()">新增类型</button>
 </div>
 <div style="width:100%;margin-top:10px;">
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+            <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">类型名:</span>
-                    <span style="float:right">
+                    <span>
                         <input name="nameQuery" style="width:170px"/>
                     </span>
-                </span>
+                </div>
 </div>
 
 
-<div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px" >
-    <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
-    <div class="row-title">
+<div style="clear: both"></div>
+<div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
+    <div name="itemsTable" style=";width:2000px">
+        <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
+        <div class="row-title">
         <span class="cell cell1">选择</span>
         <span class="cell cell2">类型名</span>
         <span class="cell cell3" style="cursor: pointer" onclick="sortItems('orderNo')">排序号<span  id="orderNoSort"  class="sortBtn"  >-</span></span>
         <span class="cell cell4" style="cursor: pointer" onclick="sortItems('addTime')">添加时间<span  id="addTimeSort"  class="sortBtn"  >-</span></span>
         <span class="cell cell5">操作</span>
     </div>
-    <div name="itemExample" class="row" style="display:none">
+    <div name="itemExample" class="row row-item" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
         <span class="cell cell2" name="name"></span>
         <span class="cell cell3" name="orderNo"></span>

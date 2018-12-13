@@ -71,15 +71,13 @@
             padding:3px 0;
             height:20px;
             font-size:15px;
-            min-width:1000px;
         }
 
-        .row:hover{
+        .row-item:hover{
             background-color:#e8e8e8;
         }
+
         .row-title {
-            padding:2px 0;
-            min-width:1000px;
             background-color:#e8e8e8;
         }
 
@@ -94,45 +92,45 @@
 </div>
 
 <div style="width:100%;margin-top:10px;">
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">订单号:</span>
-                    <span style="float:right">
+                    <span>
                         <input name="orderIdQuery" style="width:170px"/>
                     </span>
-                </span>
-     <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                </div>
+     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">运单号:</span>
-                    <span style="float:right">
+                    <span>
                         <input name="expressNoQuery" style="width:170px"/>
                     </span>
-                </span>
-    <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                </div>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">货运公司:</span>
-                    <span style="float:right">
+                    <span>
                         <input name="expressCoQuery" style="width:170px"/>
                     </span>
-                </span>
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                </div>
+                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">下单人手机:</span>
-                    <span style="float:right">
+                    <span>
                         <input name="phoneQuery" style="width:170px"/>
                     </span>
-                </span>
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                </div>
+                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">下单人姓名:</span>
-                    <span style="float:right">
+                    <span>
                         <input name="realnameQuery" style="width:170px"/>
                     </span>
-                </span>
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                </div>
+                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">下单人医院:</span>
-                    <span style="float:right">
+                    <span>
                         <input name="hospitalNameQuery" style="width:170px"/>
                     </span>
-                </span>
-                <span style="margin:0 5px;display:inline-block;margin-top:5px;;width:20%">
+                </div>
+                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">状态:</span>
-                    <span style="float:right">
+                    <span >
                         <select name="statusQuery" style="width:170px">
                             <option value="">请选择</option>
                             <option value="0">审核中</option>
@@ -142,25 +140,27 @@
                             <option value="2">已完成</option>
                         </select>
                     </span>
-                </span>
-        <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+                </div>
+        <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">下单时间起:</span>
-                    <span style="float:right">
+                    <span >
                         <input type="date" name="addTimeStart" style="width:170px">
                     </span>
-                </span>
+                </div>
 
-        <span style="margin:0 5px;display:inline-block;margin-top:5px;width:20%">
+        <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
                     <span style="font-size: 14px">下单时间止:</span>
-                    <span style="float:right">
+                    <span >
                         <input type="date" name="addTimeEnd" style="width:170px">
                     </span>
-                </span>
+                </div>
 </div>
 
+<div style="clear: both"></div>
 <div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
-    <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
-    <div class="row-title">
+    <div name="itemsTable" style=";width:2000px">
+        <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
+        <div class="row-title">
         <span class="cell cell1">选择</span>
         <span class="cell cell2">订单号</span>
         <span class="cell cell3"  style="cursor: pointer" onclick="sortItems('addTime')">下单时间<span  id="addTimeSort"  class="sortBtn" >-</span></span>
@@ -172,7 +172,7 @@
         <span class="cell cell9">状态</span>
         <span class="cell cell10">操作</span>
     </div>
-    <div name="itemExample" class="row" style="display:none">
+    <div name="itemExample" class="row row-item" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
         <span class="cell cell2" name="orderId"></span>
         <span class="cell cell3" name="addTime"></span>
@@ -184,7 +184,7 @@
         <span class="cell cell9" name="status"></span>
         <span class="cell cell10" ><button name="deviceEntDoor">详情</button></span>
     </div>
-    <div name="itemsShowPad" style="max-height:400px;">
+    <div name="itemsShowPad" style="max-height:400px;overflow: auto;">
         <div name="itemsShow">
 
         </div>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<script>
+    var token,queryString,item,itemId,currentPath;
+</script>
+<head>
+    <title>用户详情</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../libs/jquery.cookie.js"></script>
+    <script src="../../libs/rxw/rxw.js"></script>
+    <script src="../../libs/giveup2.js"></script>
+    <script src="../../libs/jquery.growl/javascripts/jquery.growl.js" type="text/javascript"></script>
+    <link href="../../libs/jquery.growl/stylesheets/jquery.growl.css" rel="stylesheet" type="text/css" />
+    <script>
+        queryString = rxw1.parseQueryStr(location.search.substr(1));
+        itemId= queryString.itemId;
+        currentPath=queryString.currentPath;
+        token = $.cookie('login-token');
+
+    </script>
+    <script src="../../libs/upload.js"></script>
+    <script src="../../libs/cropper/cropper.js"></script>
+    <link href="../../libs/cropper/cropper.css" rel="stylesheet" />
+    <style>
+
+        .title {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body style="margin:0;">
+<div id="currentPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
+<hr/>
+<div style="width:100%;">
+    <div id="detailPad" style="line-height: 20px;text-align: center">
+        <fieldset>
+            <legend style="color: #595959">详细信息</legend>
+            <div style="margin:15px 0;">
+                <div class="title">姓名</div>
+                <div ><input id="realname" type="text"  style="text-align: center" readonly /></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">手机</div>
+                <div ><input id="phone" type="text"  style="text-align: center" readonly /></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">可登陆</div>
+                <div id="ifLoginable"></div>
+            </div>
+            <div id="loginunableReasonPad" style="margin:15px 0;display: none">
+                <div class="title">不可登陆原因</div>
+                <div id="loginunableReason" ></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">类型</div>
+                <div id="type"></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">积分</div>
+                <div id="bonusPoint" ></div>
+            </div>
+            <div id="pwdPad" style="margin:15px 0;display:none">
+                <div class="title">密码</div>
+                <div ><input id="pwd" type="text"  style="text-align: center;" readonly /></div>
+            </div>
+            <div id="pwdConfirmPad" style="margin:15px 0;display:none">
+                <div class="title">确认密码</div>
+                <div ><input id="pwdConfirm" type="text"  style="text-align: center;" readonly /></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">权限：添加医院</div>
+                <div id="powerAddhospital"></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">权限：查看所有医院</div>
+                <div id="powerLookallhospitals"></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">注册时间</div>
+                <div id="registerTime"></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">活跃时间</div>
+                <div id="lastAliveTime"></div>
+            </div>
+        </fieldset>
+        <fieldset id="userClinicPad" style="display: none">
+            <legend style="color: #595959">门诊用户信息</legend>
+            <div style="margin:15px 0;">
+                <div class="title">门诊</div>
+                <div id="userClinicName"></div>
+            </div>
+            <button onclick="lookUserClinic()">查看门诊</button>
+        </fieldset>
+        <fieldset id="userHospitalPad" style="display: none">
+            <legend style="color: #595959">医院用户信息</legend>
+            <div style="margin:15px 0;">
+                <div class="title">医院名</div>
+                <div id="userHospitalName"></div>
+            </div>
+            <button onclick="lookUserHospital()" >查看医院</button>
+            <button onclick="lookHospitalClinic()" >查看门诊</button>
+        </fieldset>
+        <fieldset id="developerHospitalPad" style="display: none">
+            <legend style="color: #595959">开发者下属医院信息</legend>
+            <button onclick="lookDeveloperHospital()" >查看医院</button>
+        </fieldset>
+    </div>
+
+
+    <div style="margin-top:20px;text-align: center">
+        <button id="alterBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">修改</button>
+        <button id="alterCancelBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">取消修改</button>
+        <button id="alterCompleteBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">完成修改</button>
+        <button id="addBonusPointBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display:none;">增加积分</button>
+        <button id="subBonusPointBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display:none;">扣除积分</button>
+    </div>
+    <div style="margin-top:20px;"></div>
+</div>
+</body>
+<script>
+
+    $('#currentPath').text('当前路径: '+currentPath)
+        $.ajax({
+            url: "/zaylt/mm/clientuser2/userinfo",
+            type: 'post',
+            async: false,
+            data: {userId: itemId, token: token},
+            success: function (res) {
+                if (res.code == 0) {
+                    item = res.data;
+                    $('#realname').val(item.realname);
+                    $('#phone').val(item.phone);
+                    $('#type').text(parseUserType(item.type));
+                    $('#ifLoginable').text(item.ifLoginable?'是':'否');
+                    if(item.ifLoginable){
+                        $('#loginunableReason').text(item.loginunableReason)
+                        $('#loginunableReasonPad').show()
+                    }
+                    $('#registerTime').text(giveup2.dateUtils.formatToDateTime(item.registerTime));
+                    $('#lastAliveTime').text(giveup2.dateUtils.formatToDateTime(item.lastAliveTime));
+                    $('#bonusPoint').text(item.bonusPoint);
+
+                    $('#powerAddhospital').text(item.powerAddhospital?'有':'无');
+                    $('#powerLookallhospitals').text(item.powerLookallhospitals?'有':'无');
+                    if(item.type==1){
+                        $('#userHospitalName').text(item.hospitalName)
+                        $('#userHospitalPad').show()
+                        $('#addBonusPointBtn').show()
+                        $('#subBonusPointBtn').show()
+                    }else if(item.type==2){
+                        $('#userClinicName').text(item.clinicName)
+                        $('#userClinicPad').show()
+                    }else if(item.type==3){
+                        $('#developerHospitalPad').show()
+                    }
+
+                }
+            }
+        })
+
+
+    
+    function alter(){
+        if($('#pwd').val() && $('#pwd').val() != $('#pwdConfirm').val()){
+            $.growl.error({ title:'', message: '两次密码不一致' });
+            return;
+        }
+
+        var param = {};
+        param.userId=itemId;
+        param.token=token;
+        param.realname= $('#realname').val()
+        param.phone= $('#phone').val()
+        param.password= $('#pwd').val()
+
+        $.ajax({
+            url: "/zaylt/mm/clientuser2/useralter",
+            type: 'post',
+            async: false,
+            data:param ,
+            success: function (res) {
+                if (res.code == 0) {
+                    rxw1.errorpad('成功');
+                    location.reload()
+                } else {
+                    rxw1.errorpad(res.codeMsg)
+                }
+            }
+        })
+    }
+
+    $('#alterBtn').click(function(){
+        $('#alterCompleteBtn').show();
+        $('#alterCancelBtn').show();
+        $('#alterBtn').hide();
+        $('#realname').attr("readonly",false);
+        $('#phone').attr("readonly",false);
+        $('#pwd').attr("readonly",false);
+        $('#pwdConfirm').attr("readonly",false);
+        $('#pwdPad').show();
+        $('#pwdConfirmPad').show();
+
+
+        $('#realname').attr('placeholder','最大长度32')
+        $('#phone').attr('placeholder','最大长度32')
+        $('#pwd').attr('placeholder','最大长度32')
+        $('#pwdConfirm').attr('placeholder','最大长度32')
+
+    })
+
+    $('#alterCompleteBtn').click(function(){
+        alter();
+    })
+
+        $('#alterCancelBtn').click(function(){
+            location.reload()
+        })
+
+    function lookUserHospital(){
+        var toCurrentPath = currentPath +' / 医院:'+item.hospitalName+'(id:'+item.hospitalId+')';
+       location.href='/zaylt/mm/hospital2/hospital2.html?currentPath='+toCurrentPath+'&hospitalIdQuery='+item.hospitalId;
+    }
+
+    function lookUserClinic(){
+        var toCurrentPath = currentPath +' / 门诊:'+item.clinicName+'(id:'+item.clinicId+')';
+        location.href='/zaylt/mm/clinic2/clinic2.html?currentPath='+toCurrentPath+'&clinicIdQuery='+item.clinicId;
+    }
+    function lookHospitalClinic(){
+        var toCurrentPath = currentPath +' / 医院:'+item.hospitalName+'(id:'+item.hospitalId+') / 门诊管理';
+        location.href='/zaylt/mm/clinic2/clinic2.html?currentPath='+toCurrentPath+'&hospitalIdQuery='+item.hospitalId;
+    }
+    function lookDeveloperHospital(){
+        var toCurrentPath = currentPath +' / 开发者:'+item.realname+'(手机:'+item.phone+') / 医院管理';
+        location.href='/zaylt/mm/hospital2/hospital2.html?currentPath='+toCurrentPath+'&developerIdQuery='+item.userId;
+    }
+
+    $('#addBonusPointBtn').click(function(){
+        var amount = prompt('输出要增加的积分数量');
+        $.ajax({
+            url: "/zaylt/mm/clientuser2/addbonuspoint",
+            type: 'post',
+            async: false,
+            data:{token:token,amount:amount,userId:item.userId} ,
+            success: function (res) {
+                if (res.code == 0) {
+                    rxw1.errorpad('成功');
+                    location.reload()
+                } else {
+                    rxw1.errorpad(res.codeMsg)
+                }
+            }
+        })
+    })
+    $('#subBonusPointBtn').click(function(){
+        var amount = prompt('输出要扣除的积分数量');
+        $.ajax({
+            url: "/zaylt/mm/clientuser2/subbonuspoint",
+            type: 'post',
+            async: false,
+            data:{token:token,amount:amount,userId:item.userId} ,
+            success: function (res) {
+                if (res.code == 0) {
+                    rxw1.errorpad('成功');
+                    location.reload()
+                } else {
+                    rxw1.errorpad(res.codeMsg)
+                }
+            }
+        })
+    })
+
+    function parseUserType(value){
+        if(value==1)
+            return '医院'
+        else if(value == 2)
+            return '门诊'
+        else if(value == 3)
+            return '开发者'
+    }
+</script>
+
+</html>
