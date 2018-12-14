@@ -9,6 +9,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <title></title>
+    <script src="../libs/public.js"></script>
+    <script src="../../libs/giveup2.js"></script>
     <script src="../../libs/rxw/rxw.js"></script>
     <script src="../../libs/jquery.min.js"></script>
     <script src="../../libs/jquery.cookie.js"></script>
@@ -39,21 +41,11 @@
                 async:false,
                 success:function(res){
                     if(res.code == 0) {
-                        $.cookie('login-token',res.data.token,{path:'/'});
-                        $.cookie('login-username',res.data.username,{path:'/'});
-                        $.cookie('login-realname',res.data.realname,{path:'/'});
-                        $.cookie('login-moduleIds',res.data.moduleIds,{path:'/'});
-                        $.cookie('login-email',res.data.email,{path:'/'});
-                        $.cookie('login-phone',res.data.phone,{path:'/'});
+                        saveLoginStatus(res.data)
                         location.href='../index/index.html';
                     }
                     else{
-                        $.removeCookie('login-token');
-                        $.removeCookie('login-username');
-                        $.removeCookie('login-realname');
-                        $.removeCookie('login-moduleIds');
-                        $.removeCookie('login-email');
-                        $.removeCookie('login-phone');
+                       clearLoginStatus()
                     }
                 }
             })
@@ -78,21 +70,11 @@
                         async:false,
                         success:function(res){
                             if(res.code == 0) {
-                                $.cookie('login-token',res.data.token,{path:'/'});
-                                $.cookie('login-username',res.data.username,{path:'/'});
-                                $.cookie('login-realname',res.data.realname,{path:'/'});
-                                $.cookie('login-moduleIds',res.data.moduleIds,{path:'/'});
-                                $.cookie('login-email',res.data.email,{path:'/'});
-                                $.cookie('login-phone',res.data.phone,{path:'/'});
+                                saveLoginStatus(res.data)
                                 location.href='../index/index.html';
                             }
                             else{
-                                $.removeCookie('login-token');
-                                $.removeCookie('login-username');
-                                $.removeCookie('login-realname');
-                                $.removeCookie('login-moduleIds');
-                                $.removeCookie('login-email');
-                                $.removeCookie('login-phone');
+                              clearLoginStatus()
                             }
                         }
                     })

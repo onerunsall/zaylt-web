@@ -120,13 +120,34 @@
                                     <input name="phoneQuery" style="width:170px"/>
                                 </span>
                 </div>
-
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+        <span style="font-size: 14px">来源:</span>
+                    <span>
+                        <select name="sourceQuery" style="width:170px">
+                            <option value="">全部</option>
+                            <option value="1">购买器械使用</option>
+                            <option value="2">管理员操作</option>
+                            <option value="3">每月购买器械没满目标扣除</option>
+                        </select>
+                    </span>
+    </div>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+        <span style="font-size: 14px">获取/扣除:</span>
+                    <span>
+                        <select name="addOrSubQuery" style="width:170px">
+                            <option value="">全部</option>
+                            <option value="1">获得</option>
+                            <option value="-1">扣除</option>
+                        </select>
+                    </span>
+    </div>
 </div>
 
 <div style="clear: both"></div>
 <div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
     <div name="itemsTable" style=";width:2000px">
         <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
+        <div id="statistics" style="border-bottom: 1px solid black;font-size: 15px;"><span>统计 : </span><input id="statisticsAmount" class="column" type="checkbox" value="amount"  style="margin-left:10px;"/><label for="statisticsAmount">总积分</label><span name="totalAmount" class="result"></span></div>
         <div class="row-title">
         <span class="cell cell1">选择</span>
         <span class="cell cell2">医院</span>
@@ -181,7 +202,8 @@
     $('[name=hospitalNameQuery]').val(queryString.hospitalNameQuery)
     if(queryString.hospitalNameQueryFuzzyIf == 1)
         $('#hospitalNameQueryFuzzyIf').attr("checked", true);
-
+    $('[name=sourceQuery]').val(queryString.sourceQuery)
+    $('[name=addOrSubQuery]').val(queryString.addOrSubQuery)
 
     initPage();
     initQuery();
@@ -233,6 +255,9 @@
         queryParams.phoneFuzzyIf=$('#phoneQueryFuzzyIf:checked').val();
         queryParams.hospitalName=$('[name=hospitalNameQuery]').val().trim();
         queryParams.hospitalNameFuzzyIf=$('#hospitalNameQueryFuzzyIf:checked').val();
+        queryParams.source=$('[name=sourceQuery]').val();
+        queryParams.addOrSub=$('[name=addOrSubQuery]').val();
+        queryParams.statistics=giveup2.splitUtils.toSplit(giveup2.otherUtils.getAttrInPerObj($('#statistics .column:checked'),'value'))
         var addTimeStart =   $('[name=addTimeStartQuery]').val()
         if(addTimeStart)
             queryParams.addTimeStart=new Date(addTimeStart).getTime();
@@ -273,6 +298,12 @@
                 if (res.code == 0) {
                     var totalPageCount=res.data.totalCount%res.data.pageSize==0?res.data.totalCount/res.data.pageSize:parseInt(res.data.totalCount/res.data.pageSize)+1;
                     $('#sum').text('总计 '+res.data.totalCount+' 条记录,每页展示 '+res.data.pageSize+' 条，共 '+totalPageCount+' 页，当前第 '+page_no+' 页')
+
+                    $($('#statistics .result')).each(function(index,ele){
+                        var value = res.data[$(ele).attr('name')];
+                     $(ele).text(value==null||value==undefined?'':('='+value))
+                    })
+
                     var itemsLength = res.data.items.length;
                     if(itemsLength==0 && page_no ==1){
                         hasMoreItems=false;
@@ -311,7 +342,7 @@
         itemRow.find('[name=phone]').html(giveup2.otherUtils.strongKeyword(item.phone,queryParams.phone)).attr('title',item.phone)
         itemRow.find('[name=amount]').html(item.amount)
         itemRow.find('[name=hospitalName]').html(giveup2.otherUtils.strongKeyword(item.hospitalName,queryParams.hospitalName)).attr('title',item.hospitalName)
-        itemRow.find('[name=note]').html(item.note)
+        itemRow.find('[name=note]').html(item.note).attr('title',item.note)
         itemRow.find('[name=addTime]').text(giveup2.dateUtils.formatToDateTime(item.addTime))
     }
 

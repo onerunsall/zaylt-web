@@ -51,7 +51,7 @@
             border-left: 1px solid #7d7d7d;
         }
         .cell7 {
-            width:60px;
+            width:150px;
             border-left: 1px solid #7d7d7d;
         }
         .row {
@@ -103,19 +103,19 @@
         <span class="cell cell1">选择</span>
         <span class="cell cell2">器械名</span>
         <span class="cell cell3">封面</span>
-        <span class="cell cell7"  style="cursor: pointer" onclick="sortItems('stock')">库存<span id="stockSort" class="sortBtn" >-</span></span>
-        <span class="cell cell4">联系电话</span>
-        <span class="cell cell5" style="cursor: pointer" onclick="sortItems('orderNo')">排序<span  id="orderNoSort"  class="sortBtn"  >-</span></span>
-        <span class="cell cell6">操作</span>
+        <span class="cell cell4"  style="cursor: pointer" onclick="sortItems('stock')">库存<span id="stockSort" class="sortBtn" >-</span></span>
+        <span class="cell cell5">联系电话</span>
+        <span class="cell cell6" style="cursor: pointer" onclick="sortItems('orderNo')">排序<span  id="orderNoSort"  class="sortBtn"  >-</span></span>
+        <span class="cell cell7">操作</span>
     </div>
     <div name="itemExample" class="row row-item" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
         <span class="cell cell2" name="name"></span>
         <span class="cell cell3" ><img name="cover" style="width:30px;vertical-align: middle"/></span>
-        <span class="cell cell7" name="stock"></span>
-        <span class="cell cell4" name="contactTel"></span>
-        <span class="cell cell5" name="orderNo"></span>
-        <span class="cell cell6" ><button name="deviceEntDoor">详情</button><button name="delEntDoor">删除</button></span>
+        <span class="cell cell4" name="stock"></span>
+        <span class="cell cell5" name="contactTel"></span>
+        <span class="cell cell6" name="orderNo"></span>
+        <span class="cell cell7" ><button name="deviceEntDoor">详情</button><button name="copyIdEnd">复制ID</button><button name="delEntDoor">删除</button></span>
     </div>
         <div name="itemsShowPad" style="max-height:400px;overflow: auto;">
         <div name="itemsShow">
@@ -279,6 +279,10 @@
             }else{
                 return false;
             }
+        })
+        $('.row [name=copyIdEnd]').click(function(){
+            var itemId = $(this).parents('.row').attr('id').substr(4);
+            alert('器械 : '+items[itemId].name+'  ID : '+itemId)
         })
         $('.row [name=deviceEntDoor]').click(function(){
            location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 器械详情'

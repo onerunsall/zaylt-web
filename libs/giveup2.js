@@ -4,14 +4,28 @@
 var splitUtils = {};
 var dateUtils = {};
 var otherUtils = {};
+var stringUtils = {};
 
 var giveup2 = {
     splitUtils:splitUtils,
     dateUtils:dateUtils,
-    otherUtils:otherUtils
+    otherUtils:otherUtils,
+    stringUtils:stringUtils
 }
 
+stringUtils.trimToEmpty = function(value){
+    if(value == null || value == undefined)
+        return '';
+    else
+        return value;
+}
 
+stringUtils.isNumber = function(value){
+    if(value == NaN)
+        return false;
+    else
+        return true;
+}
 
 splitUtils.toSplit=function(arr,separator,clearEmpty){
     if (arr == null || arr.length == 0)

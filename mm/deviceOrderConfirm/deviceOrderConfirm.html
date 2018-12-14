@@ -205,8 +205,9 @@
     token = $.cookie('login-token');
     queryString = rxw1.parseQueryStr(location.search.substr(1));
     currentPath=queryString.currentPath;
-    queryParams = {token: token}
     $('[name=statusQuery]').val(queryString.statusQuery)
+    queryParams = {token: token}
+
     $('#currentPath').text('当前路径: '+currentPath)
 
     initPage();

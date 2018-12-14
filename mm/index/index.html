@@ -9,6 +9,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <title></title>
+    <script src="../libs/public.js"></script>
+    <script src="../../libs/giveup2.js"></script>
     <script src="../../libs/rxw/rxw.js"></script>
     <script src="../../libs/jquery.min.js"></script>
     <script src="../../libs/jquery.cookie.js"></script>
@@ -55,20 +57,10 @@
             async:false,
             success:function(res){
                 if(res.code == 0) {
-                    $.cookie('login-token',res.data.token,{path:'/'});
-                    $.cookie('login-username',res.data.username,{path:'/'});
-                    $.cookie('login-realname',res.data.realname,{path:'/'});
-                    $.cookie('login-moduleIds',res.data.moduleIds,{path:'/'});
-                    $.cookie('login-email',res.data.email,{path:'/'});
-                    $.cookie('login-phone',res.data.phone,{path:'/'});
+                    saveLoginStatus(res.data)
                 }else  if(res.code == 20) {
                     $.growl.error({ title:'', message: res.codeMsg });
-                    $.removeCookie('login-token');
-                    $.removeCookie('login-username');
-                    $.removeCookie('login-realname');
-                    $.removeCookie('login-moduleIds');
-                    $.removeCookie('login-email');
-                    $.removeCookie('login-phone');
+                   clearLoginStatus()
                     location.href='../login/login.html'
                 } else{
                     $.growl.error({ title:'', message: res.codeMsg });
@@ -108,7 +100,7 @@
                 else  if(ele.moduleId == 6)
                     uurl='../device/device.html?currentPath=/ 设备管理'
                 else  if(ele.moduleId == 7)
-                    uurl='../deviceOrder/deviceOrder.html?currentPath=/ 设备订单管理'
+                    uurl='../deviceOrder/deviceOrder.html?currentPath=/ 订单总管理'
                 else  if(ele.moduleId == 8)
                     uurl='../maintainmodule/maintainmodule.html?currentPath=/ 运维模块管理'
                 else  if(ele.moduleId == 9)
@@ -123,6 +115,16 @@
                     uurl='../clientuser2/clientuser2.html?currentPath=/ 用户管理2'
                 else  if(ele.moduleId == 14)
                     uurl='../userbonuspointbill/userbonuspointbill.html?currentPath=/ 积分账单管理'
+                else  if(ele.moduleId == 15)
+                    uurl='../deviceOrderConfirm/deviceOrderConfirm.html?currentPath=/ 订单确认&statusQuery=0'
+                else  if(ele.moduleId == 16)
+                    uurl='../deviceOrderAudit/deviceOrderAudit.html?currentPath=/ 订单审核&statusQuery=0'
+                else  if(ele.moduleId == 17)
+                    uurl='../deviceOrderDeliver/deviceOrderDeliver.html?currentPath=/ 订单发货&statusQuery=3'
+                else  if(ele.moduleId == 18)
+                    uurl='../mycenter/mycenter.html?currentPath=/ 个人中心'
+                else  if(ele.moduleId == 19)
+                    uurl='../ad/ad.html?currentPath=/ 广告管理'
                 var a = {name:ele.name,uurl:uurl}
                 zNodes.push(a)
             }
@@ -151,12 +153,7 @@
 
 
     function logout(){
-        $.removeCookie('login-token');
-        $.removeCookie('login-username');
-        $.removeCookie('login-realname');
-        $.removeCookie('login-moduleIds');
-        $.removeCookie('login-email');
-        $.removeCookie('login-phone');
+        clearLoginStatus()
         $.ajax({
             url:'/zaylt/mm/useraction/logout',
             data:{token:token},

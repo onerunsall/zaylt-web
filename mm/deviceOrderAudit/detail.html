@@ -118,37 +118,12 @@
 
 
     <div style="margin-top:20px;text-align: center">
-        <button id="alterBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">修改</button>
-        <button id="alterCancelBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">取消修改</button>
-        <button id="alterCompleteBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">完成修改</button>
         <button id="auditPassBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">审核通过</button>
         <button id="auditFailBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">审核拒绝</button>
-        <button id="deliverBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">发货</button>
-        <button id="receiveBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick="receive()">收货</button>
     </div>
     <div style="margin-top:20px;"></div>
 </div>
 
-
-<div id="deliverPage" style="padding-top:100px;top:0;left:0;bottom:0;right:0;overflow:auto;z-index:999999999;display: none;position:fixed;background-color: rgba(0, 0, 0, 0.3)">
-    <div style="width:30%;background-color: white;text-align:center;margin:auto;padding:15px 0;">
-        <div >
-            <div class="title">运单号</div>
-            <div><input type="text" id="deliverExpressNo"></div>
-        </div>
-        <div style="margin-top:15px;">
-            <div class="title">货运公司</div>
-            <div><select id="deliverExpressCo">
-                <option id="" disabled selected>请选择</option>
-                <option id="aae">aae全球专递</option>
-                <option id="anjie">安捷快递</option>
-            </select></div>
-        </div>
-        <div style="margin-top: 15px">
-            <button onclick="deliver()">确认</button><button onclick="$('#deliverPage').hide()" style="margin-left:15px;">取消</button>
-        </div>
-    </div>
-</div>
 
 </body>
 <script>

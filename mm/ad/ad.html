@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>器械订单管理</title>
+    <title>广告管理</title>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -28,18 +28,18 @@
             cursor: default;
         }
         .cell1 {
-            width:40px;
+            width:60px;
         }
         .cell2 {
-            width:150px;
+            width:200px;
             border-left: 1px solid #7d7d7d;
         }
         .cell3 {
-            width:150px;
+            width:50px;
             border-left: 1px solid #7d7d7d;
         }
         .cell4 {
-            width:100px;
+            width:150px;
             border-left: 1px solid #7d7d7d;
         }
         .cell5 {
@@ -51,19 +51,11 @@
             border-left: 1px solid #7d7d7d;
         }
         .cell7 {
-            width:100px;
+            width:150px;
             border-left: 1px solid #7d7d7d;
         }
         .cell8 {
             width:100px;
-            border-left: 1px solid #7d7d7d;
-        }
-        .cell9 {
-            width:100px;
-            border-left: 1px solid #7d7d7d;
-        }
-        .cell10 {
-            width:60px;
             border-left: 1px solid #7d7d7d;
         }
         .row {
@@ -81,6 +73,7 @@
             background-color:#e8e8e8;
         }
 
+
     </style>
 </head>
 
@@ -89,71 +82,57 @@
 <hr/>
 <div style="width:100%;margin-top:5px;">
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()">查询</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="add()">添加广告</button>
 </div>
 
 <div style="width:100%;margin-top:10px;">
-                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">订单号:</span>
-                    <span>
-                        <input name="orderIdQuery" style="width:170px"/>
-                    </span>
-                </div>
-     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">运单号:</span>
-                    <span>
-                        <input name="expressNoQuery" style="width:170px"/>
-                    </span>
-                </div>
+    <input name="adIdQuery" style="display: none"/>
     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">货运公司:</span>
+        <span style="font-size: 14px">标题:</span>
                     <span>
-                        <input name="expressCoQuery" style="width:170px"/>
+                        <input name="titleQuery" style="width:170px"/>
                     </span>
-                </div>
-                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">下单人手机:</span>
+    </div>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+        <span style="font-size: 14px">添加时间起:</span>
                     <span>
-                        <input name="phoneQuery" style="width:170px"/>
+                        <input type="date" name="addTimeStartQuery" />
                     </span>
-                </div>
-                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">下单人姓名:</span>
+    </div>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+        <span style="font-size: 14px">添加时间止:</span>
                     <span>
-                        <input name="realnameQuery" style="width:170px"/>
+                        <input type="date" name="addTimeEndQuery" />
                     </span>
-                </div>
+    </div>
                 <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">下单人医院:</span>
+                    <span style="font-size: 14px">备注:</span>
                     <span>
-                        <input name="hospitalNameQuery" style="width:170px"/>
-                    </span>
-                </div>
-                <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">状态:</span>
-                    <span >
-                        <select name="statusQuery" style="width:170px">
-                            <option value="">请选择</option>
-                            <option value="0">审核中</option>
-                            <option value="3">审核通过</option>
-                            <option value="4">审核失败</option>
-                            <option value="1">待收货</option>
-                            <option value="2">已收货</option>
-                        </select>
-                    </span>
-                </div>
-        <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">下单时间起:</span>
-                    <span >
-                        <input type="date" name="addTimeStart" style="width:170px">
+                        <input name="remarkQuery" style="width:170px"/>
                     </span>
                 </div>
 
-        <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">下单时间止:</span>
-                    <span >
-                        <input type="date" name="addTimeEnd" style="width:170px">
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+        <span style="font-size: 14px">类型:</span>
+                    <span>
+                        <select name="typeQuery" style="width:170px">
+                            <option value="">全部</option>
+                            <option value="0">广告位指定</option>
+                            <option value="1">网页</option>
+                            <option value="2">图片</option>
+                            <option value="3">文字</option>
+                            <option value="4">文章详情</option>
+                        </select>
                     </span>
-                </div>
+    </div>
+    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
+        <span style="font-size: 14px">广告位:</span>
+                    <span>
+                        <select name="placeCodeQuery" style="width:170px">
+                            <option value="">全部</option>
+                        </select>
+                    </span>
+    </div>
 </div>
 
 <div style="clear: both"></div>
@@ -162,27 +141,23 @@
         <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
         <div class="row-title">
         <span class="cell cell1">选择</span>
-        <span class="cell cell2">订单号</span>
-        <span class="cell cell3"  style="cursor: pointer" onclick="sortItems('addTime')">下单时间<span  id="addTimeSort"  class="sortBtn" >-</span></span>
-        <span class="cell cell4"  style="cursor: pointer" onclick="sortItems('totalPrice')">总金额<span id="totalPriceSort" class="sortBtn">-</span></span>
-        <span class="cell cell5">物流号</span>
-        <span class="cell cell6">下单人</span>
-        <span class="cell cell7">下单手机</span>
-        <span class="cell cell8">下单医院</span>
-        <span class="cell cell9">状态</span>
-        <span class="cell cell10">操作</span>
+            <span class="cell cell2">标题</span>
+            <span class="cell cell3">封面</span>
+            <span class="cell cell4" style="cursor: pointer" onclick="sortItems('placeCode')">广告位<span  id="placeCodeSort"  class="sortBtn"  >-</span></span>
+            <span class="cell cell5"  style="cursor: pointer" onclick="sortItems('type')">类型<span  id="typeSort"  class="sortBtn"  >-</span></span>
+            <span class="cell cell6" style="cursor: pointer" onclick="sortItems('orderNo')">排序号<span  id="orderNoSort"  class="sortBtn"  >-</span></span>
+        <span class="cell cell7" style="cursor: pointer" onclick="sortItems('addTime')">添加时间<span  id="addTimeSort"  class="sortBtn"  >-</span></span>
+        <span class="cell cell8">操作</span>
     </div>
     <div name="itemExample" class="row row-item" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
-        <span class="cell cell2" name="orderId"></span>
-        <span class="cell cell3" name="addTime"></span>
-        <span class="cell cell4" name="totalPrice"></span>
-        <span class="cell cell5" name="expressNo"></span>
-        <span class="cell cell6" name="realname"></span>
-        <span class="cell cell7" name="phone"></span>
-        <span class="cell cell8" name="hospitalName"></span>
-        <span class="cell cell9" name="status"></span>
-        <span class="cell cell10" ><button name="deviceEntDoor">详情</button></span>
+        <span class="cell cell2" name="title"></span>
+        <span class="cell cell3" ><img name="cover" style="width:30px;vertical-align: middle"/></span>
+        <span class="cell cell4" name="placeName"></span>
+        <span class="cell cell5" name="type"></span>
+        <span class="cell cell6" name="orderNo"></span>
+        <span class="cell cell7" name="addTime"></span>
+        <span class="cell cell8" ><button name="detailEnt">详情</button><button name="delEnt">删除</button></span>
     </div>
     <div name="itemsShowPad" style="max-height:400px;overflow: auto;">
         <div name="itemsShow">
@@ -195,23 +170,26 @@
             <div style="margin:auto;position: relative; left: 0;top: -10px;width: 95%;height: 1px;background: #DCDCDC;z-index: 1;"></div>
         </div>
     </div>
+</div>
+</div>
 
-</div>
-</div>
 </body>
 <script>
     var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,currentPath;
     sort={}
     token = $.cookie('login-token');
     queryString = rxw1.parseQueryStr(location.search.substr(1));
-    currentPath=queryString.currentPath;
     queryParams = {token: token}
-    $('[name=statusQuery]').val(queryString.statusQuery)
-    $('#currentPath').text('当前路径: '+currentPath)
-
+    currentPath=queryString.currentPath;
+    $('#currentPath').text('当前路径: '+(currentPath?currentPath:''))
+    $('[name=titleQuery]').val(queryString.titleQuery)
+    $('[name=adIdQuery]').val(queryString.adIdQuery)
+    $('[name=remarkQuery]').val(queryString.remarkQuery)
+    $('[name=typeQuery]').val(queryString.typeQuery)
     initPage();
     initQuery();
     loadItems();
+    renderAdPlaceSelect();
 
     function initPage() {
         page_no = 1;
@@ -221,6 +199,7 @@
         $('[name=pagingBottomPad] [name=noitem]').css('display', '');
         $('[name=pagingBottomPad] [name=more]').css('display', 'none');
         $('[name=pagingBottomPad] [name=finish]').css('display', 'none');
+
     }
 
     function sortItems(sortColumn){
@@ -250,26 +229,22 @@
     function initQuery(){
         sort={};
         $('.sortBtn').text('-')
-        queryParams.expressNo=$('[name=expressNoQuery]').val().trim();
-        queryParams.expressCo=$('[name=expressCoQuery]').val().trim();
-        queryParams.orderId=$('[name=orderIdQuery]').val().trim();
-        queryParams.phone=$('[name=phoneQuery]').val().trim();
-        queryParams.realname=$('[name=realnameQuery]').val().trim();
-        queryParams.hospitalName=$('[name=hospitalNameQuery]').val().trim();
-        queryParams.status=$('[name=statusQuery]').val();
-
-        var addTimeStart =   $('[name=addTimeStart]').val()
+        queryParams.adId=$('[name=adIdQuery]').val().trim();
+        queryParams.title=$('[name=titleQuery]').val().trim();
+        queryParams.type=$('[name=typeQuery]').val().trim();
+        queryParams.placeCode=$('[name=placeCodeQuery]').val();
+        queryParams.remark=$('[name=remarkQuery]').val().trim();
+        var addTimeStart =   $('[name=addTimeStartQuery]').val()
         if(addTimeStart)
             queryParams.addTimeStart=new Date(addTimeStart).getTime();
         else
             queryParams.addTimeStart = '';
-        var addTimeEnd = $('[name=addTimeEnd]').val();
+        var addTimeEnd = $('[name=addTimeEndQuery]').val();
         if(addTimeEnd)
             queryParams.addTimeEnd=new Date(addTimeEnd).getTime()+24*60*60*1000;
         else
             queryParams.addTimeEnd = '';
     }
-
     function loadMore(){
         page_no++;
         loadItems();
@@ -280,7 +255,6 @@
             loadItems();
         }
     })
-
     function loadItems(){
         queryParams.pn=page_no;
         queryParams.ps=page_size;
@@ -291,7 +265,7 @@
             queryParams.order= queryParams.order+sort[sortColumn]+','
         }
         $.ajax({
-            url: "/zaylt/mm/deviceordermg/orders" ,
+            url: "/zaylt/mm/ad/ads" ,
             type: 'post',
             async: false,
             data: queryParams,
@@ -299,6 +273,13 @@
                 if (res.code == 0) {
                     var totalPageCount=res.data.totalCount%res.data.pageSize==0?res.data.totalCount/res.data.pageSize:parseInt(res.data.totalCount/res.data.pageSize)+1;
                     $('#sum').text('总计 '+res.data.totalCount+' 条记录,每页展示 '+res.data.pageSize+' 条，共 '+totalPageCount+' 页，当前第 '+page_no+' 页')
+
+                    //统计
+//                    $($('#statistics .result')).each(function(index,ele){
+//                        var value = res.data[$(ele).attr('name')];
+//                     $(ele).text(value==null||value==undefined?'':('='+value))
+//                    })
+
                     var itemsLength = res.data.items.length;
                     if(itemsLength==0 && page_no ==1){
                         hasMoreItems=false;
@@ -314,9 +295,8 @@
                         hasMoreItems = true;
                     }
                     $(res.data.items).each(function(index,item){
-                        items[item.orderId]=item;
+                        items[item.adId]=item;
                         var newItemRow = $('[name=itemExample]').clone(true)
-
                         setItemRow(newItemRow,item)
                         newItemRow.css('display', '');
                         $('[name=itemsShow]').append(newItemRow)
@@ -331,40 +311,44 @@
     eventToRows()
 
 
-function parseDeviceOrderStatus(value){
-    if(value==0)
-        return '审核中'
-    else  if(value==1)
-        return '待收货'
-    else  if(value==2)
-        return '已收货'
-    else  if(value==3)
-        return '审核通过'
-    else  if(value=4)
-        return '审核不通过'
-    else
-        return '未知'
-}
-
-
-
     function setItemRow(itemRow,item) {
         itemRow.attr('name','')
-        itemRow.attr('id','item'+item.orderId)
-        itemRow.find('[name=orderId]').html(giveup2.otherUtils.strongKeyword(item.orderId,queryParams.orderId)).attr('title',item.orderId)
-        itemRow.find('[name=expressNo]').html(giveup2.otherUtils.strongKeyword(item.expressNo,queryParams.expressNo)).attr('title',item.expressNo)
-        itemRow.find('[name=status]').text(parseDeviceOrderStatus(item.status))
+        itemRow.attr('id','item'+item.adId)
+        itemRow.find('[name=title]').html(giveup2.otherUtils.strongKeyword(item.title,queryParams.title)).attr('title',item.title)
+        itemRow.find('[name=remark]').html(giveup2.otherUtils.strongKeyword(item.remark,queryParams.remark)).attr('title',item.remark)
+        itemRow.find('[name=type]').html(parseAdType(item.type))
+        itemRow.find('[name=placeName]').html(giveup2.otherUtils.strongKeyword(item.placeName,queryParams.placeName)).attr('title',item.placeName)
+        itemRow.find('[name=cover]').attr('src',item.cover)
         itemRow.find('[name=addTime]').text(giveup2.dateUtils.formatToDateTime(item.addTime))
-        itemRow.find('[name=totalPrice]').text(item.totalPrice)
-        itemRow.find('[name=expressNo]').html(giveup2.otherUtils.strongKeyword(item.expressNo,queryParams.expressNo)).attr('title',item.expressNo)
-        itemRow.find('[name=realname]').html(giveup2.otherUtils.strongKeyword(item.realname,queryParams.realname)).attr('title',item.realname)
-        itemRow.find('[name=phone]').html(giveup2.otherUtils.strongKeyword(item.phone,queryParams.phone)).attr('title',item.phone)
-        itemRow.find('[name=hospitalName]').html(giveup2.otherUtils.strongKeyword(item.hospitalName,queryParams.hospitalName)).attr('title',item.hospitalName)
+        itemRow.find('[name=orderNo]').text(item.orderNo)
+
     }
 
     function eventToRows(){
-        $('.row [name=deviceEntDoor]').click(function(){
-           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 订单详情'
+        $('.row [name=detailEnt]').click(function(){
+            location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 广告详情'
+        })
+        $('.row [name=delEnt]').click(function(){
+            var row = $(this).parents('.row');
+            var itemId = row.attr('id').substr(4)
+            if (confirm('确认删除吗')==true){
+                $.ajax({
+                    url: "/zaylt/mm/ad/addel",
+                    type: 'post',
+                    async: false,
+                    data: {adId:itemId,token:token},
+                    success: function (res) {
+                        if(res.code==0){
+                            row.remove()
+                        }else{
+                            $.growl.error({ title:'', message: res.codeMsg });
+                        }
+                    }
+                })
+                return true;
+            }else{
+                return false;
+            }
         })
         $('.row [name=cover]').click(function(){
             rxw1.imgPreview(this.src)
@@ -377,6 +361,42 @@ function parseDeviceOrderStatus(value){
         })
     }
 
+
+    function parseAdType(value){
+        if(value==0)
+            return '广告位指定';
+        else if(value==1)
+            return '网页';
+        else if(value==2)
+            return '图片';
+        else if(value==3)
+            return '文字';
+        else if(value==4)
+            return '文章详情';
+    }
+
+    function add(){
+        location.href='add.html?currentPath='+currentPath+' / 新增广告'
+    }
+    function renderAdPlaceSelect(){
+        $.ajax({
+            url: "/zaylt/mm/adplace/adplaces",
+            type: 'post',
+            async: true,
+            data:{ps:500,token:token} ,
+            success: function (res) {
+                if (res.code == 0) {
+                    $('[name=placeCodeQuery]').html('')
+                    $('[name=placeCodeQuery]').append('<option value="">全部</option>')
+                    $(res.data.items).each(function(index,ele){
+                        $('[name=placeCodeQuery]').append('<option value="'+ele.adPlaceCode+'">'+ele.name+'</option>');
+                    })
+                } else {
+                    $.growl.error({ title:'', message: res.codeMsg });
+                }
+            }
+        })
+    }
 
 </script>
 
