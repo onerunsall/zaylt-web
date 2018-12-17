@@ -9,7 +9,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <script src="../../libs/rxw/rxw.js"></script>
     <script src="../../libs/jquery.min.js"></script>
     <script src="../../libs/jquery.cookie.js"></script>
     <script src="../../libs/giveup2.js"></script>
@@ -94,6 +93,7 @@
 <hr/>
 <div style="width:100%;margin-top:5px;">
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()">查询</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="addDeveloperPageEnt()">新增开发者</button>
 </div>
 
 <div style="width:100%;margin-top:10px;">
@@ -213,12 +213,37 @@
 </div>
 </div>
 
+<div id="addDeveloperPage" style="padding-top:100px;top:0;left:0;bottom:0;right:0;overflow:auto;z-index:999999999;display: none;position:fixed;background-color: rgba(0, 0, 0, 0.3)">
+    <div style="width:30%;background-color: white;text-align:center;margin:auto;padding:15px 0;">
+        <div >
+            <div class="title">手机号</div>
+            <div><input type="text" name="phone"></div>
+        </div>
+        <div style="margin-top:15px;">
+            <div class="title">姓名</div>
+            <div><input type="text" name="realname"></div>
+        </div>
+        <div style="margin:15px 0;">
+            <div class="title">密码</div>
+            <div><input name="pwd"  type="password" placeholder="最大长度32"/></div>
+        </div>
+        <div style="margin:15px 0;">
+            <div class="title">确认密码</div>
+            <div><input name="pwdConfirm"  type="password" placeholder="最大长度32"/></div>
+        </div>
+        <div style="margin-top: 15px">
+            <button name="confirm" >确认</button><button name="cancel" style="margin-left:15px;">取消</button>
+        </div>
+    </div>
+</div>
+
 </body>
+
 <script>
     var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,currentPath;
     sort={}
     token = $.cookie('login-token');
-    queryString = rxw1.parseQueryStr(location.search.substr(1));
+    queryString = giveup2.otherUtils.parseQueryStr(location.search.substr(1));
     queryParams = {token: token}
     currentPath=queryString.currentPath;
     $('#currentPath').text('当前路径: '+(currentPath?currentPath:''))
@@ -317,12 +342,14 @@
         page_no++;
         loadItems();
     }
-    rxw1.scrollEvent($('#itemsContainer').get(0), function () {
+
+    giveup2.otherUtils.scrollEvent($('#itemsContainer').get(0), function () {
         if (hasMoreItems) {
             page_no++;
             loadItems();
         }
     })
+
     function loadItems(){
         queryParams.pn=page_no;
         queryParams.ps=page_size;
@@ -371,7 +398,6 @@
     }
     eventToRows()
 
-
     function setItemRow(itemRow,item) {
         itemRow.attr('name','')
         itemRow.attr('id','item'+item.userId)
@@ -409,6 +435,71 @@
         else if(value == 3)
             return '开发者'
     }
+
+
+
+
+
+
+function addDeveloperPageEnt(){
+    $('#addDeveloperPage').trigger('pageOpen')
+}
+
+
+    $('#addDeveloperPage').bind('pageLoad',function(){
+        var page = this;
+        $(this).find('[name=cancel]').click(function(){
+            $(this).trigger('pageClose')
+        })
+
+        $(this).find('[name=confirm]').click(function(){
+            if(!$(page).find('[name=pwd]').val()){
+                $.growl.error({ title:'', message: '密码不能空' });
+                return;
+            }
+            if(!$(page).find('[name=pwdConfirm]').val()){
+                $.growl.error({ title:'', message: '请输入确认密码' });
+                return;
+            }
+            if($(page).find('[name=pwd]').val() != $(page).find('[name=pwdConfirm]').val()){
+                $.growl.error({ title:'', message: '两次密码不一致' });
+                return;
+            }
+            var param={}
+            param.token=token;
+            param.phone= $(page).find('[name=phone]').val()
+            param.realname= $(page).find('[name=realname]').val()
+            param.pwd= $(page).find('[name=pwd]').val()
+            $.ajax({
+                url: "/zaylt/mm/clientuser2/adddeveloper",
+                type: 'post',
+                async: false,
+                data:param ,
+                success: function (res) {
+                    if (res.code == 0) {
+                        $(page).trigger('pageClose')
+                    } else {
+                        $.growl.error({ title:'', message: res.codeMsg });
+                    }
+                }
+            })
+        })
+    })
+
+    $('#addDeveloperPage').bind('pageOpen',function(){
+        $(this).find('[name=phone]').val('')
+        $(this).find('[name=realname]').val('')
+        $(this).find('[name=pwd]').val('')
+        $(this).find('[name=pwdConfirm]').val('')
+        $(this).show()
+    })
+
+    $('#addDeveloperPage').bind('pageClose',function(){
+        $(this).hide()
+    })
+
+    $('#addDeveloperPage').trigger('pageLoad')
+
 </script>
 
 </html>

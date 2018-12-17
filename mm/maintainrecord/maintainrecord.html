@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>积分账单管理</title>
+    <title>运维记录管理</title>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -31,7 +31,7 @@
             width:60px;
         }
         .cell2 {
-            width:200px;
+            width:100px;
             border-left: 1px solid #7d7d7d;
         }
         .cell3 {
@@ -39,7 +39,7 @@
             border-left: 1px solid #7d7d7d;
         }
         .cell4 {
-            width:150px;
+            width:250px;
             border-left: 1px solid #7d7d7d;
         }
         .cell5 {
@@ -47,19 +47,7 @@
             border-left: 1px solid #7d7d7d;
         }
         .cell6 {
-            width:150px;
-            border-left: 1px solid #7d7d7d;
-        }
-        .cell7 {
             width:100px;
-            border-left: 1px solid #7d7d7d;
-        }
-        .cell8 {
-            width:50px;
-            border-left: 1px solid #7d7d7d;
-        }
-        .cell9 {
-            width:50px;
             border-left: 1px solid #7d7d7d;
         }
         .row {
@@ -90,12 +78,10 @@
 
 <div style="width:100%;margin-top:10px;">
     <input name="userIdQuery" style="display: none"/>
-    <input name="hospitalIdQuery" style="display: none"/>
     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-        <span style="font-size: 14px">医院:</span>
+        <span style="font-size: 14px">关键字:</span>
                     <span>
-                        <span style="font-size: 10px"><input style="cursor: pointer"  id="hospitalNameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="hospitalNameQueryFuzzyIf">模糊</label></span>
-                        <input name="hospitalNameQuery" style="width:170px"/>
+                        <input name="kwQuery" style="width:170px"/>
                     </span>
     </div>
     <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
@@ -111,68 +97,41 @@
                     </span>
     </div>
                 <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">用户姓名:</span>
+                    <span style="font-size: 14px">用户名:</span>
                     <span>
-                        <span style="font-size: 10px"><input style="cursor: pointer"  id="realnameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="realnameQueryFuzzyIf">模糊</label></span>
-                        <input name="realnameQuery" style="width:170px"/>
+                        <span style="font-size: 10px"><input style="cursor: pointer"  id="usernameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="usernameQueryFuzzyIf">模糊</label></span>
+                        <input name="usernameQuery" style="width:170px"/>
                     </span>
                 </div>
                 <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-                    <span style="font-size: 14px">用户手机:</span>
+                    <span style="font-size: 14px">姓名:</span>
                                 <span>
-                                    <span style="font-size: 10px"><input style="cursor: pointer"  id="phoneQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="phoneQueryFuzzyIf">模糊</label></span>
-                                    <input name="phoneQuery" style="width:170px"/>
+                                    <span style="font-size: 10px"><input style="cursor: pointer"  id="realnameQueryFuzzyIf"  type="checkbox" value="1" /><label style="cursor: pointer"  for="realnameQueryFuzzyIf">模糊</label></span>
+                                    <input name="realnameQuery" style="width:170px"/>
                                 </span>
                 </div>
-    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-        <span style="font-size: 14px">来源:</span>
-                    <span>
-                        <select name="sourceQuery" style="width:170px">
-                            <option value="">全部</option>
-                            <option value="1">购买器械使用</option>
-                            <option value="2">管理员操作</option>
-                            <option value="3">每月购买器械没满目标扣除</option>
-                        </select>
-                    </span>
-    </div>
-    <div style="float:left;margin:0 10px;;margin-top:5px;height:25px;">
-        <span style="font-size: 14px">获取/扣除:</span>
-                    <span>
-                        <select name="addOrSubQuery" style="width:170px">
-                            <option value="">全部</option>
-                            <option value="1">获得</option>
-                            <option value="-1">扣除</option>
-                        </select>
-                    </span>
-    </div>
 </div>
 
 <div style="clear: both"></div>
 <div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
     <div name="itemsTable" style=";width:2000px">
         <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
-        <div id="statistics" style="border-bottom: 1px solid black;font-size: 15px;"><span>统计 : </span><input id="statisticsAmount" class="column" type="checkbox" value="amount"  style="margin-left:10px;"/><label for="statisticsAmount">总积分</label><span name="totalAmount" class="result"></span></div>
+        <!--<div id="statistics" style="border-bottom: 1px solid black;font-size: 15px;"><span>统计 : </span><input id="statisticsAmount" class="column" type="checkbox" value="amount"  style="margin-left:10px;"/><label for="statisticsAmount">总积分</label><span name="totalAmount" class="result"></span></div>-->
         <div class="row-title">
         <span class="cell cell1">选择</span>
-        <span class="cell cell2">医院</span>
-            <span class="cell cell3" style="cursor: pointer" onclick="sortItems('amount')">积分<span  id="amountSort"  class="sortBtn"  >-</span></span>
-            <span class="cell cell4" style="cursor: pointer" onclick="sortItems('remain')">剩余<span  id="remainSort"  class="sortBtn"  >-</span></span>
-        <span class="cell cell5">记录</span>
-        <span class="cell cell6" style="cursor: pointer" onclick="sortItems('addTime')">时间<span  id="addTimeSort"  class="sortBtn"  >-</span></span>
-            <span class="cell cell7">用户手机</span>
-            <span class="cell cell8">用户姓名</span>
-        <span class="cell cell9">操作</span>
+        <span class="cell cell2"  style="cursor: pointer" onclick="sortItems('username')">用户名<span  id="usernameSort"  class="sortBtn"  >-</span></span>
+        <span class="cell cell3" >姓名</span>
+            <span class="cell cell4">操作记录</span>
+            <span class="cell cell5" style="cursor: pointer" onclick="sortItems('addTime')">时间<span  id="addTimeSort"  class="sortBtn"  >-</span></span>
+        <span class="cell cell6">操作</span>
     </div>
     <div name="itemExample" class="row row-item" style="display:none">
         <span class="cell cell1"><input type="radio" name="itemChosen" style="margin:0"></span>
-        <span class="cell cell2" name="hospitalName"></span>
-        <span class="cell cell3" name="amount"></span>
-        <span class="cell cell4" name="remain"></span>
-        <span class="cell cell5" name="note"></span>
-        <span class="cell cell6" name="addTime"></span>
-        <span class="cell cell7" name="phone"></span>
-        <span class="cell cell8" name="realname"></span>
-        <span class="cell cell9" ><button name="detailEnt">详情</button></span>
+        <span class="cell cell2" name="username"></span>
+        <span class="cell cell3" name="realname"></span>
+        <span class="cell cell4" name="note"></span>
+        <span class="cell cell5" name="addTime"></span>
+        <span class="cell cell6" ><button name="detailEnt">详情</button></span>
     </div>
     <div name="itemsShowPad" style="max-height:400px;overflow: auto;">
         <div name="itemsShow">
@@ -198,18 +157,13 @@
     currentPath=queryString.currentPath;
     $('#currentPath').text('当前路径: '+(currentPath?currentPath:''))
     $('[name=userIdQuery]').val(queryString.userIdQuery)
-    $('[name=hospitalIdQuery]').val(queryString.hospitalIdQuery)
     $('[name=realnameQuery]').val(queryString.realnameQuery)
     if(queryString.realnameQueryFuzzyIf == 1)
         $('#realnameQueryFuzzyIf').attr("checked", true);
-    $('[name=phoneQuery]').val(queryString.phoneQuery)
-    if(queryString.phoneQueryFuzzyIf == 1)
-        $('#phoneQueryFuzzyIf').attr("checked", true);
-    $('[name=hospitalNameQuery]').val(queryString.hospitalNameQuery)
-    if(queryString.hospitalNameQueryFuzzyIf == 1)
-        $('#hospitalNameQueryFuzzyIf').attr("checked", true);
-    $('[name=sourceQuery]').val(queryString.sourceQuery)
-    $('[name=addOrSubQuery]').val(queryString.addOrSubQuery)
+    $('[name=usernameQuery]').val(queryString.usernameQuery)
+    if(queryString.usernameQueryFuzzyIf == 1)
+        $('#usernameQueryFuzzyIf').attr("checked", true);
+    $('[name=kwQuery]').val(queryString.kwQuery)
 
     initPage();
     initQuery();
@@ -254,16 +208,12 @@
         sort={};
         $('.sortBtn').text('-')
         queryParams.userId=$('[name=userIdQuery]').val().trim();
-        queryParams.hospitalId=$('[name=hospitalIdQuery]').val().trim();
         queryParams.realname=$('[name=realnameQuery]').val().trim();
         queryParams.realnameFuzzyIf=$('#realnameQueryFuzzyIf:checked').val();
-        queryParams.phone=$('[name=phoneQuery]').val().trim();
-        queryParams.phoneFuzzyIf=$('#phoneQueryFuzzyIf:checked').val();
-        queryParams.hospitalName=$('[name=hospitalNameQuery]').val().trim();
-        queryParams.hospitalNameFuzzyIf=$('#hospitalNameQueryFuzzyIf:checked').val();
-        queryParams.source=$('[name=sourceQuery]').val();
-        queryParams.addOrSub=$('[name=addOrSubQuery]').val();
-        queryParams.statistics=giveup2.splitUtils.toSplit(giveup2.otherUtils.getAttrInPerObj($('#statistics .column:checked'),'value'))
+        queryParams.username=$('[name=usernameQuery]').val().trim();
+        queryParams.usernameFuzzyIf=$('#usernameQueryFuzzyIf:checked').val();
+        queryParams.kw=$('[name=kwQuery]').val();
+        //queryParams.statistics=giveup2.splitUtils.toSplit(giveup2.otherUtils.getAttrInPerObj($('#statistics .column:checked'),'value'))
         var addTimeStart =   $('[name=addTimeStartQuery]').val()
         if(addTimeStart)
             queryParams.addTimeStart=new Date(addTimeStart).getTime();
@@ -296,7 +246,7 @@
             queryParams.order= queryParams.order+sort[sortColumn]+','
         }
         $.ajax({
-            url: "/zaylt/mm/userbonuspointbill/bills" ,
+            url: "/zaylt/mm/maintainrecord/records" ,
             type: 'post',
             async: false,
             data: queryParams,
@@ -305,10 +255,10 @@
                     var totalPageCount=res.data.totalCount%res.data.pageSize==0?res.data.totalCount/res.data.pageSize:parseInt(res.data.totalCount/res.data.pageSize)+1;
                     $('#sum').text('总计 '+res.data.totalCount+' 条记录,每页展示 '+res.data.pageSize+' 条，共 '+totalPageCount+' 页，当前第 '+page_no+' 页')
 
-                    $($('#statistics .result')).each(function(index,ele){
-                        var value = res.data[$(ele).attr('name')];
-                     $(ele).text(value==null||value==undefined?'':('='+value))
-                    })
+//                    $($('#statistics .result')).each(function(index,ele){
+//                        var value = res.data[$(ele).attr('name')];
+//                     $(ele).text(value==null||value==undefined?'':('='+value))
+//                    })
 
                     var itemsLength = res.data.items.length;
                     if(itemsLength==0 && page_no ==1){
@@ -325,7 +275,7 @@
                         hasMoreItems = true;
                     }
                     $(res.data.items).each(function(index,item){
-                        items[item.billId]=item;
+                        items[item.recordId]=item;
                         var newItemRow = $('[name=itemExample]').clone(true)
                         setItemRow(newItemRow,item)
                         newItemRow.css('display', '');
@@ -343,13 +293,10 @@
 
     function setItemRow(itemRow,item) {
         itemRow.attr('name','')
-        itemRow.attr('id','item'+item.billId)
-        itemRow.find('[name=realname]').html(giveup2.otherUtils.strongKeyword(item.realname,queryParams.realname)).attr('title',item.realname)
-        itemRow.find('[name=phone]').html(giveup2.otherUtils.strongKeyword(item.phone,queryParams.phone)).attr('title',item.phone)
-        itemRow.find('[name=amount]').html(item.amount)
-        itemRow.find('[name=remain]').html(item.remain)
-        itemRow.find('[name=hospitalName]').html(giveup2.otherUtils.strongKeyword(item.hospitalName,queryParams.hospitalName)).attr('title',item.hospitalName)
-        itemRow.find('[name=note]').html(item.note).attr('title',item.note)
+        itemRow.attr('id','item'+item.recordId)
+        itemRow.find('[name=realname]').html(giveup2.otherUtils.strongKeyword(item.realname,queryParams.kw,queryParams.realname)).attr('title',item.realname)
+        itemRow.find('[name=username]').html(giveup2.otherUtils.strongKeyword(item.username,queryParams.kw,queryParams.username)).attr('title',item.username)
+        itemRow.find('[name=note]').html(giveup2.otherUtils.strongKeyword(item.note,queryParams.kw,queryParams.note)).attr('title',item.note)
         itemRow.find('[name=addTime]').text(giveup2.dateUtils.formatToDateTime(item.addTime))
     }
 

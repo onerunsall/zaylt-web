@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<script>
+    var token,queryString,item,itemId,currentPath;
+</script>
+<head>
+    <title>积分账单详情</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../libs/giveup2.js"></script>
+    <script src="../../libs/jquery.cookie.js"></script>
+    <script src="../../libs/jquery.growl/javascripts/jquery.growl.js" type="text/javascript"></script>
+    <link href="../../libs/jquery.growl/stylesheets/jquery.growl.css" rel="stylesheet" type="text/css" />
+    <script>
+        queryString = giveup2.otherUtils.parseQueryStr(location.search.substr(1));
+        itemId= queryString.itemId;
+        currentPath=queryString.currentPath;
+        token = $.cookie('login-token');
+
+    </script>
+    <style>
+
+        .title {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body style="margin:0;">
+<div id="currentPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
+<hr/>
+<div style="width:100%;">
+    <form id="detailPad" style="line-height: 20px;text-align: center">
+        <fieldset>
+            <legend style="color: #595959">详细信息</legend>
+            <div style="margin:15px 0;">
+                <div class="title">用户手机</div>
+                <div id="phone" ></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">用户姓名</div>
+                <div id="realname" ></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">医院</div>
+                <div id="hospitalName" ></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">积分</div>
+                <div id="amount" ></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">剩余</div>
+                <div id="remain" ></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">备注</div>
+                <div id="note" ></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">完整备注</div>
+                <div id="fullNote" ></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">来源</div>
+                <div id="source" ></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">时间</div>
+                <div id="addTime" ></div>
+            </div>
+        </fieldset>
+    </form>
+
+
+
+    <div style="margin-top:20px;"></div>
+</div>
+</body>
+<script>
+
+    $('#currentPath').text('当前路径: '+currentPath)
+
+        $.ajax({
+            url: "/zaylt/mm/userbonuspointbill/billinfo",
+            type: 'post',
+            async: false,
+            data: {billId: itemId, token: token},
+            success: function (res) {
+                if (res.code == 0) {
+                    item = res.data;
+                    $('#phone').text(item.phone);
+                    $('#realname').text(item.realname);
+                    $('#hospitalName').text(item.hospitalName);
+                    $('#amount').text(item.amount);
+                    $('#remain').text(item.remain);
+                    $('#note').text(item.note);
+                    $('#fullNote').text(item.fullNote);
+                    $('#source').text(parseUserBonusPointBillSource(item.source));
+                    $('#addTime').text(giveup2.dateUtils.formatToDateTime(item.addTime));
+                } else {
+                    $.growl.error({ title:'', message: res.codeMsg });
+                }
+            }
+        })
+
+    function parseUserBonusPointBillSource(value){
+        if(value==1)
+            return '购买器械使用'
+        else if(value==2)
+            return '管理员操作'
+        else if(value==3)
+            return '每月购买器械没满目标扣除'
+    }
+</script>
+
+</html>

@@ -127,6 +127,18 @@ otherUtils.getAttrInPerObj=function(arr,attrName){
     return attrs;
 }
 
+otherUtils.scrollEvent= function (ele,down,top){
+    ele.onscroll = function() {
+        if (this.scrollTop + this.offsetHeight >= this.scrollHeight) {
+            if(down)
+                down();
+        }else if(this.scrollTop == 0){
+            if(top)
+                top()
+        }
+
+    }
+}
 
 otherUtils.parseQueryStr =function (queryStr){
     var str=decodeURIComponent(queryStr);
