@@ -15,8 +15,6 @@ var giveup2 = {
     domUtils:domUtils
 }
 
-
-
 stringUtils.trimToEmpty = function(value){
     if(value == null || value == undefined)
         return '';
@@ -219,16 +217,18 @@ otherUtils.strongKeyword=function(){
 }
 
 
-domUtils.swapDomLocation =function (dom1,dom2){
+domUtils.swapLocation =function (dom1,dom2){
     var dom1Prev = dom1.previousElementSibling;
     var dom2Prev = dom2.previousElementSibling;
 
     if(!dom1Prev || dom1Prev==dom2){
         var dom1Prev = document.createElement('span');
+        dom1Prev.style['display']='none'
         dom1.parentNode.insertBefore(dom1Prev,dom1);
     }
     if(!dom2Prev || dom2Prev==dom1){
         var dom2Prev = document.createElement('span');
+        dom2Prev.style['display']='none'
         dom2.parentNode.insertBefore(dom2Prev,dom2);
     }
     dom1.parentNode.insertBefore(dom2,dom1Prev)

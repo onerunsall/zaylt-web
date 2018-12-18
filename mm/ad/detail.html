@@ -58,6 +58,7 @@
             </div>
             <div  style="margin:15px 0;">
                 <div class="title">封面</div>
+                <div style="font-size: 12px">请自行确保尺寸与广告位要求一致</div>
                 <div><img id="coverAlter" src="../img/add.jpg" style="width:20px;margin-left:5px;" /></div>
             </div>
             <div style="margin:15px 0;">
@@ -294,17 +295,6 @@
             $('#text2Pad').hide()
             $('#text3Pad').hide()
             $('#text4Pad').hide()
-        }else if(item.type == 3){
-            $('#linkPad').hide()
-            $('#link1Pad').hide()
-            $('#link2Pad').hide()
-            $('#link3Pad').hide()
-            $('#link4Pad').hide()
-            $('#textPad').show().find('.title').text('标语')
-            $('#text1Pad').hide()
-            $('#text2Pad').hide()
-            $('#text3Pad').hide()
-            $('#text4Pad').hide()
         }else if(item.type == 4){
             $('#linkPad').show().find('.title').text('器械ID')
             $('#link1Pad').hide()
@@ -320,14 +310,10 @@
     }
 
     function parseAdType(value){
-        if(value==0)
-           return '广告位指定'
-        else if(value==1)
+         if(value==1)
             return '网页'
         else if(value==2)
             return '图片'
-        else if(value ==3)
-            return '文字'
         else if(value==4)
             return '器械详情'
     }

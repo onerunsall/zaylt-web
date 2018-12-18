@@ -50,10 +50,8 @@
             <div style="margin:15px 0;">
                 <div class="title">类型</div>
                 <div ><select id="type" onchange="showAdFace()"  style="text-align: center"><option value="">请选择</option>
-                    <option value="0" disabled>广告位指定</option>
                     <option value="1">网页</option>
                     <option value="2">图片</option>
-                    <option value="3">文字</option>
                     <option value="4">器械详情</option></select></div>
             </div>
             <div style="margin:15px 0;">
@@ -63,7 +61,7 @@
             </div>
             <div  style="margin:15px 0;">
                 <div class="title">封面</div>
-                <div style="font-size: 12px">请自行确保尺寸与界面上一致</div>
+                <div style="font-size: 12px">请自行确保尺寸与广告位要求一致</div>
                 <div><img id="coverAlter" src="../img/add.jpg" style="width:20px;margin-left:5px;" /></div>
             </div>
             <div style="margin:15px 0;">
@@ -145,17 +143,6 @@
             $('#text3Pad').hide()
             $('#text4Pad').hide()
         }else if(type == 2){
-            $('#linkPad').hide()
-            $('#link1Pad').hide()
-            $('#link2Pad').hide()
-            $('#link3Pad').hide()
-            $('#link4Pad').hide()
-            $('#textPad').show().find('.title').text('标语')
-            $('#text1Pad').hide()
-            $('#text2Pad').hide()
-            $('#text3Pad').hide()
-            $('#text4Pad').hide()
-        }else if(type == 3){
             $('#linkPad').hide()
             $('#link1Pad').hide()
             $('#link2Pad').hide()
