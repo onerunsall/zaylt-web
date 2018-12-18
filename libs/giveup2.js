@@ -27,6 +27,22 @@ stringUtils.isNumber = function(value){
         return true;
 }
 
+stringUtils.randomString=function (min, max){
+    var str = "",
+        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    if(!max)
+        max=min
+
+    range = Math.round(Math.random() * (max-min)) + min;
+
+    for(var i=0; i<range; i++){
+        pos = Math.round(Math.random() * (arr.length-1));
+        str += arr[pos];
+    }
+    return str;
+}
+
+
 splitUtils.toSplit=function(arr,separator,clearEmpty){
     if (arr == null || arr.length == 0)
         return "";
@@ -139,6 +155,44 @@ otherUtils.scrollEvent= function (ele,down,top){
 
     }
 }
+
+
+
+otherUtils.layer=function (params){
+    var layer = document.createElement('div');
+    if(params.id==undefined||params.id==null)
+        layer.id='giveup2-layer'+ giveup2.stringUtils.randomString(4)
+    else
+        layer.id=params.id;
+    layer.classList.add('giveup2-layer')
+    layer.style.position='fixed';
+    layer.style.display='none';
+    layer.style.top='0';
+    layer.style.left='0';
+    layer.style.bottom='0';
+    layer.style.right='0';
+    layer.style.overflow='auto';
+    layer.style['z-index']=9999999;
+    layer.style['background-color']='rgba(0, 0, 0, 0.3)';
+    document.body.appendChild(layer);
+    if(params.init)
+        params.init(layer);
+
+    layer.style.display='block';
+
+    if(params.clickClose){
+        $(layer).click(function(){
+                $(this).remove();
+        })
+    }
+}
+
+otherUtils.imgPreview=function(src){
+    giveup2.otherUtils.layer({init:function(layer){
+        $(layer).append('<img style="margin:50px auto;display:block;position:relative;max-width:95%" src="'+src+'">')
+    },clickClose:true})
+}
+
 
 otherUtils.parseQueryStr =function (queryStr){
     var str=decodeURIComponent(queryStr);

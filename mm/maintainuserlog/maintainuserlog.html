@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>运维记录管理</title>
+    <title>运维日志管理</title>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -121,7 +121,7 @@
         <span class="cell cell1">选择</span>
         <span class="cell cell2"  style="cursor: pointer" onclick="sortItems('username')">用户名<span  id="usernameSort"  class="sortBtn"  >-</span></span>
         <span class="cell cell3" >姓名</span>
-            <span class="cell cell4">操作记录</span>
+            <span class="cell cell4">日志</span>
             <span class="cell cell5" style="cursor: pointer" onclick="sortItems('addTime')">时间<span  id="addTimeSort"  class="sortBtn"  >-</span></span>
         <span class="cell cell6">操作</span>
     </div>
@@ -246,7 +246,7 @@
             queryParams.order= queryParams.order+sort[sortColumn]+','
         }
         $.ajax({
-            url: "/zaylt/mm/maintainrecord/records" ,
+            url: "/zaylt/mm/maintainuserlog/logs" ,
             type: 'post',
             async: false,
             data: queryParams,
@@ -275,7 +275,7 @@
                         hasMoreItems = true;
                     }
                     $(res.data.items).each(function(index,item){
-                        items[item.recordId]=item;
+                        items[item.logId]=item;
                         var newItemRow = $('[name=itemExample]').clone(true)
                         setItemRow(newItemRow,item)
                         newItemRow.css('display', '');
@@ -293,7 +293,7 @@
 
     function setItemRow(itemRow,item) {
         itemRow.attr('name','')
-        itemRow.attr('id','item'+item.recordId)
+        itemRow.attr('id','item'+item.logId)
         itemRow.find('[name=realname]').html(giveup2.otherUtils.strongKeyword(item.realname,queryParams.kw,queryParams.realname)).attr('title',item.realname)
         itemRow.find('[name=username]').html(giveup2.otherUtils.strongKeyword(item.username,queryParams.kw,queryParams.username)).attr('title',item.username)
         itemRow.find('[name=note]').html(giveup2.otherUtils.strongKeyword(item.note,queryParams.kw,queryParams.note)).attr('title',item.note)
@@ -302,7 +302,7 @@
 
     function eventToRows(){
         $('.row [name=detailEnt]').click(function(){
-            location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 账单详情'
+            location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 日志详情'
         })
         $('.row').click(function(){
             $('.row [name=itemChosen] ').prop("checked",false);

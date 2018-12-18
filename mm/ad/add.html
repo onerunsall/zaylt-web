@@ -45,7 +45,7 @@
             <legend style="color: #595959">详细信息</legend>
             <div style="margin:15px 0;">
                 <div class="title">广告位</div>
-                <div ><select id="placeCode"  onchange="showAdFace()"  style="text-align: center"><option value="">请选择</option></select></div>
+                <div ><select id="place"  onchange="showAdFace()"  style="text-align: center"><option value="">请选择</option></select></div>
             </div>
             <div style="margin:15px 0;">
                 <div class="title">类型</div>
@@ -54,14 +54,16 @@
                     <option value="1">网页</option>
                     <option value="2">图片</option>
                     <option value="3">文字</option>
-                    <option value="4">文章详情</option></select></div>
+                    <option value="4">器械详情</option></select></div>
             </div>
             <div style="margin:15px 0;">
                 <div class="title">标题</div>
+                <div style="font-size: 12px">只用来区分广告，不做业务用途</div>
                 <div><input id="title" style="text-align: center" type="text" placeholder="最大长度100"/></div>
             </div>
             <div  style="margin:15px 0;">
                 <div class="title">封面</div>
+                <div style="font-size: 12px">请自行确保尺寸与界面上一致</div>
                 <div><img id="coverAlter" src="../img/add.jpg" style="width:20px;margin-left:5px;" /></div>
             </div>
             <div style="margin:15px 0;">
@@ -128,7 +130,7 @@
 
 
     function showAdFace(){
-        var placeCode = $('#placeCode').val();
+        var placeCode = $('#place').val();
         var type = $('#type').val();
 
         if(type == 1){
@@ -137,7 +139,7 @@
             $('#link2Pad').hide()
             $('#link3Pad').hide()
             $('#link4Pad').hide()
-            $('#textPad').hide()
+            $('#textPad').show().find('.title').text('标语')
             $('#text1Pad').hide()
             $('#text2Pad').hide()
             $('#text3Pad').hide()
@@ -148,7 +150,7 @@
             $('#link2Pad').hide()
             $('#link3Pad').hide()
             $('#link4Pad').hide()
-            $('#textPad').hide()
+            $('#textPad').show().find('.title').text('标语')
             $('#text1Pad').hide()
             $('#text2Pad').hide()
             $('#text3Pad').hide()
@@ -170,7 +172,7 @@
             $('#link2Pad').hide()
             $('#link3Pad').hide()
             $('#link4Pad').hide()
-            $('#textPad').hide()
+            $('#textPad').show().find('.title').text('标语')
             $('#text1Pad').hide()
             $('#text2Pad').hide()
             $('#text3Pad').hide()
@@ -185,7 +187,7 @@
             param.orderNo=$('#orderNo').val();
             param.type=$('#type').val();
             param.cover= $('[name=cover]').attr('src')
-            param.placeCode= $('#placeCode').val();
+            param.placeCode= $('#place').val();
             param.remark= $('#remark').val();
             param.link= $('#link').val();
             param.link1= $('#link1').val();
@@ -250,10 +252,10 @@
             data:{ps:500,token:token} ,
             success: function (res) {
                 if (res.code == 0) {
-                    $('#placeCode').html('')
-                    $('#placeCode').append('<option value="">全部</option>')
+                    $('#place').html('')
+                    $('#place').append('<option value="" disabled selected>请选择</option>')
                     $(res.data.items).each(function(index,ele){
-                        $('#placeCode').append('<option value="'+ele.adPlaceCode+'">'+ele.name+'</option>');
+                        $('#place').append('<option value="'+ele.adPlaceCode+'">'+ele.name+'</option>');
                     })
                 } else {
                     $.growl.error({ title:'', message: res.codeMsg });

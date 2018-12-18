@@ -44,7 +44,16 @@
         <fieldset>
             <legend style="color: #595959">详细信息</legend>
             <div style="margin:15px 0;">
+                <div class="title">广告位</div>
+                <div id="place"></div>
+            </div>
+            <div style="margin:15px 0;">
+                <div class="title">类型</div>
+                <div id="type"></div>
+            </div>
+            <div style="margin:15px 0;">
                 <div class="title">标题</div>
+                <div style="font-size: 12px">只用来区分广告，不做业务用途</div>
                 <div><input id="title" style="text-align: center" type="text" placeholder="最大长度100" readonly/></div>
             </div>
             <div  style="margin:15px 0;">
@@ -124,6 +133,8 @@
                 if (res.code == 0) {
                     item = res.data;
                     $('#detailPad #title').val(item.title);
+                    $('#detailPad #type').text(parseAdType(item.type));
+                    $('#detailPad #place').text(item.placeName);
                     $('#detailPad #remark').val(item.remark);
                     $('#detailPad #orderNo').val(item.orderNo);
                     $('#detailPad #link').val(item.link);
@@ -267,7 +278,7 @@
             $('#link2Pad').hide()
             $('#link3Pad').hide()
             $('#link4Pad').hide()
-            $('#textPad').hide()
+            $('#textPad').show().find('.title').text('标语')
             $('#text1Pad').hide()
             $('#text2Pad').hide()
             $('#text3Pad').hide()
@@ -278,7 +289,7 @@
             $('#link2Pad').hide()
             $('#link3Pad').hide()
             $('#link4Pad').hide()
-            $('#textPad').hide()
+            $('#textPad').show().find('.title').text('标语')
             $('#text1Pad').hide()
             $('#text2Pad').hide()
             $('#text3Pad').hide()
@@ -300,12 +311,25 @@
             $('#link2Pad').hide()
             $('#link3Pad').hide()
             $('#link4Pad').hide()
-            $('#textPad').hide()
+            $('#textPad').show().find('.title').text('标语')
             $('#text1Pad').hide()
             $('#text2Pad').hide()
             $('#text3Pad').hide()
             $('#text4Pad').hide()
         }
+    }
+
+    function parseAdType(value){
+        if(value==0)
+           return '广告位指定'
+        else if(value==1)
+            return '网页'
+        else if(value==2)
+            return '图片'
+        else if(value ==3)
+            return '文字'
+        else if(value==4)
+            return '器械详情'
     }
 </script>
 

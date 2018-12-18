@@ -4,7 +4,7 @@
     var token,queryString,item,itemId,currentPath;
 </script>
 <head>
-    <title>运维记录详情</title>
+    <title>用户日志详情</title>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -40,15 +40,15 @@
         <fieldset>
             <legend style="color: #595959">详细信息</legend>
             <div style="margin:15px 0;">
-                <div class="title">用户名</div>
-                <div id="username" ></div>
+                <div class="title">手机</div>
+                <div id="phone" ></div>
             </div>
             <div style="margin:15px 0;">
                 <div class="title">用户姓名</div>
                 <div id="realname" ></div>
             </div>
             <div style="margin:15px 0;">
-                <div class="title">备注</div>
+                <div class="title">日志</div>
                 <div id="note" ></div>
             </div>
             <div style="margin:15px 0;">
@@ -66,14 +66,14 @@
     $('#currentPath').text('当前路径: '+currentPath)
 
         $.ajax({
-            url: "/zaylt/mm/maintainrecord/recordinfo",
+            url: "/zaylt/mm/userlog/loginfo",
             type: 'post',
             async: false,
-            data: {recordId: itemId, token: token},
+            data: {logId: itemId, token: token},
             success: function (res) {
                 if (res.code == 0) {
                     item = res.data;
-                    $('#username').text(item.username);
+                    $('#phone').text(item.phone);
                     $('#realname').text(item.realname);
                     $('#note').text(item.note);
                     $('#addTime').text(giveup2.dateUtils.formatToDateTime(item.addTime));
