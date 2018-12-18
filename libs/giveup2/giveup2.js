@@ -377,7 +377,8 @@ domUtils.operationPics = function (container,multiply,uploadBlob,x,y){
                 var swap = document.createElement('swap');
                 swap.classList.add('swap')
                 swap.style['cursor']='pointer';
-                swap.innerHTML='¡Ş'
+                swap.style['margin-left']='5px';
+                swap.innerHTML='âˆ'
                 if(container.data.mode=='show')
                     swap.style['display']='none';
 
@@ -439,7 +440,7 @@ domUtils.chooseFile = function (params){
     input.name='file';
     input.style.display='none';
     input.onchange=function(){
-        var file=this.files[0] // »ñÈ¡inputÉÏ´«µÄÍ¼Æ¬Êı¾İ;
+        var file=this.files[0] // è·å–inputä¸Šä¼ çš„å›¾ç‰‡æ•°æ®;
         if(params.chooseEnd)
             params.chooseEnd(this)
         document.body.removeChild(input)
@@ -452,15 +453,15 @@ domUtils.cutImg = function (params){
     domUtils.chooseFile({chooseEnd:function(input){
         var file=input.files[0];
         if(!file.type || file.type.indexOf('image') != 0){
-            throw 'Ñ¡ÔñµÄÎÄ¼ş²»ÊÇÍ¼Æ¬¸ñÊ½';
+            throw 'é€‰æ‹©çš„æ–‡ä»¶ä¸æ˜¯å›¾ç‰‡æ ¼å¼';
         }else {
             var img = new Image();
-            url = window.URL.createObjectURL(file) // µÃµ½bolb¶ÔÏóÂ·¾¶£¬¿Éµ±³ÉÆÕÍ¨µÄÎÄ¼şÂ·¾¶Ò»ÑùÊ¹ÓÃ£¬¸³Öµ¸øsrc;
+            url = window.URL.createObjectURL(file) // å¾—åˆ°bolbå¯¹è±¡è·¯å¾„ï¼Œå¯å½“æˆæ™®é€šçš„æ–‡ä»¶è·¯å¾„ä¸€æ ·ä½¿ç”¨ï¼Œèµ‹å€¼ç»™src;
 
             domUtils.layer({
                 init:function(layer){
                     layer.style.padding='30px 0';
-                    layer.innerHTML="<div style='margin:auto;width:100%;text-align: center;margin-bottom:30px'><button style='width:100px' name='cancel'>È¡Ïû</button><span style='width:30px;display: inline-block'></span><button style='width:100px' name='confirm'>È·¶¨</button></div><img name='targetImg' style='margin:30px auto;display:block;' src='"+url+"'>";
+                    layer.innerHTML="<div style='margin:auto;width:100%;text-align: center;margin-bottom:30px'><button style='width:100px' name='cancel'>å–æ¶ˆ</button><span style='width:30px;display: inline-block'></span><button style='width:100px' name='confirm'>ç¡®å®š</button></div><img name='targetImg' style='margin:30px auto;display:block;' src='"+url+"'>";
 
                     var xRadio = params.xRadio||1;
                     var yRadio = params.yRadio||1;
