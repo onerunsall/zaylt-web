@@ -75,7 +75,7 @@
                 <div class="title">手机号</div>
                 <div id="userPhone"></div>
             </div>
-            <button >查看用户</button>
+            <button onclick="lookUser()" >查看用户</button>
         </fieldset>
         <fieldset>
             <legend style="color: #595959">医院信息</legend>
@@ -179,6 +179,10 @@
     function lookHospital(){
         var toCurrentPath = currentPath +' / 医院:'+item.hospitalName+'(id:'+item.hospitalId+')';
        location.href='/zaylt/mm/hospital2/hospital2.html?currentPath='+toCurrentPath+'&hospitalIdQuery='+item.hospitalId;
+    }
+    function lookUser(){
+        var toCurrentPath = currentPath +' / 用户';
+        location.href='../clientuser2/clientuser2.html?currentPath='+toCurrentPath+'&userIdQuery='+item.userId;
     }
 </script>
 
