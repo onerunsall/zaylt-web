@@ -343,7 +343,7 @@
         loadItems();
     }
 
-    giveup2.otherUtils.scrollEvent($('#itemsContainer').get(0), function () {
+    giveup2.domUtils.scrollEvent($('#itemsContainer').get(0), function () {
         if (hasMoreItems) {
             page_no++;
             loadItems();
@@ -415,7 +415,7 @@
     function eventToRows(){
         $('.row [name=detailEnt]').click(function(){
             var itemId = $(this).parents('.row').attr('id').substr(4);
-           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 用户详情 / '+items[itemId].realname
+           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 用户:'+items[itemId].realname
         })
         $('.row').click(function(){
             $('.row [name=itemChosen] ').prop("checked",false);

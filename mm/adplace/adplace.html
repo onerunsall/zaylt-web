@@ -268,7 +268,8 @@
 
     function eventToRows(){
         $('.row [name=detailEnt]').click(function(){
-            location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 广告位详情'
+            var itemId = $(this).parents('.row').attr('id').substr(4);
+            location.href="detail.html?itemId="+itemId+'&currentPath='+currentPath+' / 广告位:'+giveup2.otherUtils.toShowOmit(items[itemId].name,0,10)
         })
         $('.row [name=descPic]').click(function(){
             rxw1.imgPreview(this.src)

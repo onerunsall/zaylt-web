@@ -357,7 +357,8 @@
     function eventToRows(){
 
         $('.row [name=deviceEntDoor]').click(function(){
-           location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 医院详情'
+            var itemId = $(this).parents('.row').attr('id').substr(4);
+           location.href="detail.html?itemId="+itemId+'&currentPath='+currentPath+' / 医院:'+items[itemId].name
         })
         $('.row [name=cover]').click(function(){
             rxw1.imgPreview(this.src)

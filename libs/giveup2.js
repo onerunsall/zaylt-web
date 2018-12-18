@@ -5,13 +5,17 @@ var splitUtils = {};
 var dateUtils = {};
 var otherUtils = {};
 var stringUtils = {};
+var domUtils = {};
 
 var giveup2 = {
     splitUtils:splitUtils,
     dateUtils:dateUtils,
     otherUtils:otherUtils,
-    stringUtils:stringUtils
+    stringUtils:stringUtils,
+    domUtils:domUtils
 }
+
+
 
 stringUtils.trimToEmpty = function(value){
     if(value == null || value == undefined)
@@ -143,57 +147,6 @@ otherUtils.getAttrInPerObj=function(arr,attrName){
     return attrs;
 }
 
-otherUtils.scrollEvent= function (ele,down,top){
-    ele.onscroll = function() {
-        if (this.scrollTop + this.offsetHeight >= this.scrollHeight) {
-            if(down)
-                down();
-        }else if(this.scrollTop == 0){
-            if(top)
-                top()
-        }
-
-    }
-}
-
-
-
-otherUtils.layer=function (params){
-    var layer = document.createElement('div');
-    if(params.id==undefined||params.id==null)
-        layer.id='giveup2-layer'+ giveup2.stringUtils.randomString(4)
-    else
-        layer.id=params.id;
-    layer.classList.add('giveup2-layer')
-    layer.style.position='fixed';
-    layer.style.display='none';
-    layer.style.top='0';
-    layer.style.left='0';
-    layer.style.bottom='0';
-    layer.style.right='0';
-    layer.style.overflow='auto';
-    layer.style['z-index']=9999999;
-    layer.style['background-color']='rgba(0, 0, 0, 0.3)';
-    document.body.appendChild(layer);
-    if(params.init)
-        params.init(layer);
-
-    layer.style.display='block';
-
-    if(params.clickClose){
-        $(layer).click(function(){
-                $(this).remove();
-        })
-    }
-}
-
-otherUtils.imgPreview=function(src){
-    giveup2.otherUtils.layer({init:function(layer){
-        $(layer).append('<img style="margin:50px auto;display:block;position:relative;max-width:95%" src="'+src+'">')
-    },clickClose:true})
-}
-
-
 otherUtils.parseQueryStr =function (queryStr){
     var str=decodeURIComponent(queryStr);
     var arr=str.split("&");
@@ -213,6 +166,32 @@ otherUtils.convertBase64UrlToBlob=function(urlData){
     }
     return new Blob([u8arr], {type:mime});
 }
+
+otherUtils.isNaV=function(any){
+   if(any ==null || any==undefined)
+        return false;
+    else
+        return true;
+}
+
+otherUtils.toShow=function(any){
+    if(otherUtils.isNaV(any)){
+        any=any+''
+        return any.trim();
+    }
+    else
+        return '';
+}
+
+otherUtils.toShowOmit = function(any,startIndex,count){
+    any = otherUtils.toShow(any)
+    var aa =  any.slice(startIndex,count)
+    if(aa.length < any.length)
+        aa=aa+'...'
+    return aa;
+}
+
+
 
 otherUtils.strongKeyword=function(){
     if(arguments.length==0)
@@ -238,3 +217,86 @@ otherUtils.strongKeyword=function(){
     }
     return srcText;
 }
+
+
+domUtils.swapDomLocation =function (dom1,dom2){
+    var dom1Prev = dom1.previousElementSibling;
+    var dom2Prev = dom2.previousElementSibling;
+
+    if(!dom1Prev || dom1Prev==dom2){
+        var dom1Prev = document.createElement('span');
+        dom1.parentNode.insertBefore(dom1Prev,dom1);
+    }
+    if(!dom2Prev || dom2Prev==dom1){
+        var dom2Prev = document.createElement('span');
+        dom2.parentNode.insertBefore(dom2Prev,dom2);
+    }
+    dom1.parentNode.insertBefore(dom2,dom1Prev)
+    dom2.parentNode.insertBefore(dom1,dom2Prev)
+
+    dom1.parentNode.removeChild(dom1Prev)
+    dom2.parentNode.removeChild(dom2Prev)
+}
+
+domUtils.upSelectedOptions =function (select){
+    var childNodes = select.childNodes;
+    var times = 0;
+    for(var i=0;i<childNodes.length && times<childNodes.length ;times++,i++){
+        if(!childNodes[i].selected){
+            select.appendChild(childNodes[i])
+            i--;
+        }
+    }
+}
+
+
+domUtils.scrollEvent= function (ele,down,top){
+    ele.onscroll = function() {
+        if (this.scrollTop + this.offsetHeight >= this.scrollHeight) {
+            if(down)
+                down();
+        }else if(this.scrollTop == 0){
+            if(top)
+                top()
+        }
+
+    }
+}
+
+
+
+domUtils.layer=function (params){
+    var layer = document.createElement('div');
+    if(params.id==undefined||params.id==null)
+        layer.id='giveup2-layer'+ giveup2.stringUtils.randomString(4)
+    else
+        layer.id=params.id;
+    layer.classList.add('giveup2-layer')
+    layer.style.position='fixed';
+    layer.style.display='none';
+    layer.style.top='0';
+    layer.style.left='0';
+    layer.style.bottom='0';
+    layer.style.right='0';
+    layer.style.overflow='auto';
+    layer.style['z-index']=9999999;
+    layer.style['background-color']='rgba(0, 0, 0, 0.3)';
+    document.body.appendChild(layer);
+    if(params.init)
+        params.init(layer);
+
+    layer.style.display='block';
+
+    if(params.clickClose){
+        $(layer).click(function(){
+            $(this).remove();
+        })
+    }
+}
+
+domUtils.imgPreview=function(src){
+    giveup2.domUtils.layer({init:function(layer){
+        $(layer).append('<img style="margin:50px auto;display:block;position:relative;max-width:95%" src="'+src+'">')
+    },clickClose:true})
+}
+

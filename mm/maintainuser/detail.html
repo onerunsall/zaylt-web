@@ -55,13 +55,13 @@
                 <div class="title">姓名</div>
                 <div ><input readonly id="realname" style="text-align: center" type="text" /></div>
             </div>
-            <div style="margin:15px 0;">
+            <div id="pwdPad" style="margin:15px 0;display:none;">
                 <div class="title">密码</div>
                 <div><input id="pwd" style="text-align: center;" type="text" placeholder="最大长度32"/></div>
             </div>
-            <div style="margin:15px 0;">
+            <div id="pwdConfirmPad" style="margin:15px 0;display:none;">
                 <div class="title">确认密码</div>
-                <div><input id="pwdConfirm" style="text-align: center" type="text" placeholder="最大长度32"/></div>
+                <div><input id="pwdConfirm" style="text-align: center;" type="text" placeholder="最大长度32"/></div>
             </div>
             <div style="margin:15px 0;">
                 <div class="title">email</div>
@@ -122,6 +122,7 @@
                     $('#registerTime').text(giveup2.dateUtils.formatToDateTime(item.registerTime));
                     $('#lastAliveTime').text(giveup2.dateUtils.formatToDateTime(item.lastAliveTime));
                     $('#moduleId').val(giveup2.splitUtils.toArray(item.moduleIds)).change()
+                    giveup2.domUtils.upSelectedOptions($('#moduleId').get(0))
                 } else {
                     $.growl.error({ title:'', message: res.codeMsg });
                 }
@@ -171,6 +172,9 @@
         $('#email').attr("readonly",false);
         $('#role').attr("disabled",false);
         $('#moduleId').attr("disabled",false);
+        $('#pwdPad').show();
+        $('#pwdConfirmPad').show();
+
 
         $('#username').attr('placeholder','最大长度50')
         $('#phone').attr('placeholder','最大长度32')
