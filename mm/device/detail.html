@@ -14,15 +14,13 @@
     <meta name="format-detection" content="telephone=no">
     <script src="../../libs/jquery.min.js"></script>
     <script src="../../libs/jquery.cookie.js"></script>
-    <script src="../../libs/rxw/rxw.js"></script>
-    <script src="../../libs/giveup2.js"></script>
+    <script src="../../libs/giveup2/giveup2.js"></script>
     <script src="../../libs/jquery.growl/javascripts/jquery.growl.js" type="text/javascript"></script>
     <link href="../../libs/jquery.growl/stylesheets/jquery.growl.css" rel="stylesheet" type="text/css" />
     <script>
-        queryString = rxw1.parseQueryStr(location.search.substr(1));
+        queryString = giveup2.otherUtils.parseQueryStr(location.search.substr(1));
         itemId= queryString.itemId;
         currentPath=queryString.currentPath;
-        rxw1.relativePath = '../../libs/'
         token = $.cookie('login-token');
 
     </script>
@@ -58,7 +56,7 @@
             </div>
             <div style="margin:15px 0;">
                 <div class="title">封面</div>
-                <div><img id="coverAlter" src="../img/add.jpg" style="margin-left: 5px;;width:20px;display: none" /></div>
+                <div id="coverContainer"></div>
             </div>
             <div style="margin:15px 0;">
                 <div class="title">简介</div>
@@ -66,7 +64,7 @@
             </div>
             <div style="margin:15px 0;">
                 <div class="title">内容领航图</div>
-                <div id="leadPicsPad"><img id="leadPicAddBtn" src="../img/add.jpg" style="width:20px;margin-left:5px;display:none;" /></div>
+                <div i id="leadPicsContainer"></div>
             </div>
             <div style="margin:15px 0;">
                 <div class="title">内容</div>
@@ -106,7 +104,10 @@
 
     $('#currentPath').text('当前路径: '+currentPath)
         detailUE= UE.getEditor('detail',{autoHeightEnabled:false,readonly:true})
-
+    var coverContainer =  giveup2.domUtils.operationPics(document.getElementById('coverContainer'),false,uploadBlob,132,132)
+    coverContainer.showMode()
+    var leadPicsContainer =  giveup2.domUtils.operationPics(document.getElementById('leadPicsContainer'),true,uploadBlob,132,132)
+    leadPicsContainer.showMode()
 
 
         renderTypeIdSelect();
@@ -140,19 +141,7 @@
                     $('#detailPad #name').val(item.name);
                     $('#detailPad #stock').val(item.stock);
                     $('#detailPad #typeId').val(item.typeId);
-                    if(item.cover){
-                        var imgPad = $('<span id="coverPad" style="margin-left:5px"><img name="cover" style="margin-left:5px;width:50px" /><span name="close" class="coverX"  style="cursor:pointer;display:none">X</span></span>')
-                        imgPad.find('img[name=cover]').attr('src',item.cover).click(function(){
-                            rxw1.imgPreview(this.src)
-                        }).css('cursor','pointer')
-                        imgPad.find('[name=close]').css('cursor','pointer').click(function(){
-                            $(this).parent('#coverPad').remove()
-                            $('#coverAlter').show()
-                        })
-                        $('#coverAlter').before(imgPad)
-                        $('#coverAlter').hide();
-                    }else
-                        ('#coverAlter').show()
+                    coverContainer.addPics(item.cover)
                     $('#detailPad #brief').text(item.brief);
                     $('#detailPad #contactTel').val(item.contactTel);
                     $('#detailPad #orderNo').val(item.orderNo);
@@ -162,64 +151,14 @@
                                 detailUE.setContent(res);
                             })
                         })
-                    if(item.leadPics){
-
-                        var leadPics =  giveup2.splitUtils.toArray(item.leadPics)
-                        $(leadPics).each(function(index,ele){
-                            var imgPad = $('<span class="leadPicPad" style="margin-left:5px"><img name="leadPic" style="margin-left:5px;width:50px" /><span name="close" style="cursor:pointer;display: none">X</span></span>')
-                            imgPad.find('img[name=leadPic]').attr('src',ele).click(function(){
-                                rxw1.imgPreview(this.src)
-                            }).css('cursor','pointer')
-                            imgPad.find('[name=close]').css('cursor','pointer').click(function(){
-                                $(this).parent('.leadPicPad').remove()
-                            })
-                            $('#leadPicAddBtn').before(imgPad)
-                        })
-                    }
+                    leadPicsContainer.addPics(giveup2.splitUtils.toArray(item.leadPics));
                 } else {
                     $.growl.error({ title:'', message: res.codeMsg });
                 }
             }
         })
 
-
-    $('#coverAlter').css('cursor','pointer').click(function(){
-        var img = this;
-        rxw1.cutImg({complete:function(param){
-            var url = uploadBlob(giveup2.otherUtils.convertBase64UrlToBlob(param.canvas.toDataURL(param.input.files[0].type)),param.input.files[0].name)
-            if(url){
-                var imgPad = $('<span id="coverPad" style="margin-left:5px"><img name="cover" style="margin-left:5px;width:50px" /><span name="close" style="cursor:pointer">X</span></span>')
-                imgPad.find('img[name=cover]').attr('src',url).click(function(){
-                    rxw1.imgPreview(this.src)
-                }).css('cursor','pointer')
-                imgPad.find('[name=close]').css('cursor','pointer').click(function(){
-                    $(this).parent('#coverPad').remove()
-                    $('#coverAlter').show()
-                })
-                $('#coverAlter').before(imgPad)
-                $('#coverAlter').hide();
-            }
-        },xRadio:132,yRadio:132})
-    })
-
-    $('#leadPicAddBtn').css('cursor','pointer').click(function(){
-        rxw1.cutImg({complete:function(param){
-            var url = uploadBlob(giveup2.otherUtils.convertBase64UrlToBlob(param.canvas.toDataURL(param.input.files[0].type)),param.input.files[0].name)
-            if(url){
-                var imgPad = $('<span class="leadPicPad" style="margin-left:5px"><img name="leadPic" style="margin-left:5px;width:50px" /><span name="close" style="cursor:pointer">X</span></span>')
-                imgPad.find('img[name=leadPic]').attr('src',url).click(function(){
-                    rxw1.imgPreview(this.src)
-                }).css('cursor','pointer')
-                imgPad.find('[name=close]').css('cursor','pointer').click(function(){
-                    $(this).parent('.leadPicPad').remove()
-                })
-                $('#leadPicsPad #leadPicAddBtn').before(imgPad)
-            }
-        },xRadio:132,yRadio:132})
-    })
-
     function alter(){
-
         var param = {};
         param.deviceId=itemId;
         param.token=token;
@@ -227,7 +166,7 @@
         param.brief= $('#detailPad #brief').val()
         param.contactTel= $('#detailPad #contactTel').val()
         param.orderNo= $('#detailPad #orderNo').val()
-        param.cover= $('#coverPad [name=cover]').attr('src')
+        param.cover= coverContainer.getPicUrl()
         param.detail= detailUE.getContent();
         param.stock= $('#detailPad #stock').val();
         param.typeId= $('#detailPad #typeId').val();
@@ -238,7 +177,7 @@
 //        })
 //        if(leadPics.length>0)
 //            leadPics=leadPics.substr(1);
-        param.leadPics=giveup2.splitUtils.toSplit(giveup2.otherUtils.getAttrInPerObj($('#leadPicsPad [name=leadPic]'),'attributes.src.value'))
+        param.leadPics=giveup2.splitUtils.toSplit(leadPicsContainer.getPicUrls())
         $.ajax({
             url: "/zaylt/mm/devicemg/devicealter",
             type: 'post',
@@ -246,10 +185,9 @@
             data:param ,
             success: function (res) {
                 if (res.code == 0) {
-                    rxw1.errorpad('成功');
                     location.reload()
                 } else {
-                    rxw1.errorpad(res.codeMsg)
+                    $.growl.error({ title:'', message: res.codeMsg });
                 }
             }
         })
@@ -260,38 +198,21 @@
         $('#alterCancelBtn').show();
         $('#alterBtn').hide();
         $('#name').attr("readonly",false);
-        $('.leadPicPad [name=close]').show();
-        $('.coverX').show();
-        $('#leadPicAddBtn').show();
         $('#brief').attr("readonly",false);
         $('#contactTel').attr("readonly",false);
         $('#orderNo').attr("readonly",false);
         $('#stock').attr("readonly",false);
         $('#typeId').attr("disabled",false);
         detailUE.setEnabled()
-
+        coverContainer.alterMode()
+        leadPicsContainer.alterMode()
         $('#name').attr('placeholder','最大100字')
         $('#brief').attr('placeholder','最大500字')
         $('#contactTel').attr('placeholder','最大100字')
     })
 
     $('#alterCompleteBtn').click(function(){
-        $('#alterCompleteBtn').hide();
-        $('#alterCancelBtn').hide();
-        $('#alterBtn').show();
         alter();
-        $('#name').attr("readonly",true);
-        $('#coverAlter').hide();
-        $('.leadPicPad [name=close]').hide();
-        $('.coverX').hide();
-        $('#leadPicAddBtn').hide();
-        $('#brief').attr("readonly",true);
-        $('#contactTel').attr("readonly",true);
-        $('#orderNo').attr("readonly",true);
-        $('#stock').attr("readonly",true);
-        $('#typeId').attr("disabled",true);
-        detailUE.setDisabled()
-
     })
 
         $('#alterCancelBtn').click(function(){
