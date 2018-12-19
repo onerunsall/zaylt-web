@@ -140,7 +140,11 @@
                 }
             })
         }
+
         $('[name=addBtn]').click(function () {
+            if(this.cannotClick)
+                return;
+            this.cannotClick = true;
             var param={}
             param.token=token;
             param.name=$('#detailPad #name').val();
@@ -157,12 +161,6 @@
                 type: 'post',
                 async: false,
                 data:param ,
-                beforeSend:function(){
-                    giveup2.domUtils.locker.lock()
-                },
-                complete:function(){
-                    giveup2.domUtils.locker.unlock()
-                },
                 success: function (res) {
                     if (res.code == 0) {
                         history.back()
@@ -171,10 +169,8 @@
                     }
                 }
             })
+            this.cannotClick=false;
         })
-
-
-
 
 </script>
 

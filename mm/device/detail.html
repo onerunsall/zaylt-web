@@ -222,6 +222,9 @@
     })
 
     $('#alterCompleteBtn').click(function(){
+        if(this.cannotClick)
+            return;
+        this.cannotClick = true;
         alter();
     })
 
