@@ -160,6 +160,10 @@
 <div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
     <div name="itemsTable" style=";width:2000px">
         <div id="sum" style="border-bottom: 1px solid black;font-size: 15px;"></div>
+        <div id="statistics" style="border-bottom: 1px solid black;font-size: 15px;"><span>统计 : </span><input id="statisticsTotalPrice" class="column" type="checkbox" value="totalPrice"  style="margin-left:10px;"/><label for="statisticsTotalPrice">总金额</label><span name="totalTotalPrice" class="result"></span>
+            <input id="statisticsTotalCount" class="column" type="checkbox" value="totalCount"  style="margin-left:10px;"/><label for="statisticsTotalCount">总商品数</label><span name="totalTotalCount" class="result"></span>
+        <input id="statisticsUseBonusPoint" class="column" type="checkbox" value="useBonusPoint"  style="margin-left:10px;"/><label for="statisticsUseBonusPoint">总使用积分</label><span name="totalUseBonusPoint" class="result"></span>
+        </div>
         <div class="row-title">
         <span class="cell cell1">选择</span>
         <span class="cell cell2">订单号</span>
@@ -257,7 +261,7 @@
         queryParams.realname=$('[name=realnameQuery]').val().trim();
         queryParams.hospitalName=$('[name=hospitalNameQuery]').val().trim();
         queryParams.status=$('[name=statusQuery]').val();
-
+        queryParams.statistics=giveup2.splitUtils.toSplit(giveup2.otherUtils.getAttrInPerObj($('#statistics .column:checked'),'value'))
         var addTimeStart =   $('[name=addTimeStart]').val()
         if(addTimeStart)
             queryParams.addTimeStart=new Date(addTimeStart).getTime();
@@ -299,6 +303,11 @@
                 if (res.code == 0) {
                     var totalPageCount=res.data.totalCount%res.data.pageSize==0?res.data.totalCount/res.data.pageSize:parseInt(res.data.totalCount/res.data.pageSize)+1;
                     $('#sum').text('总计 '+res.data.totalCount+' 条记录,每页展示 '+res.data.pageSize+' 条，共 '+totalPageCount+' 页，当前第 '+page_no+' 页')
+
+                    $($('#statistics .result')).each(function(index,ele){
+                        var value = res.data[$(ele).attr('name')];
+                        $(ele).text(value==null||value==undefined?'':('='+value))
+                    })
                     var itemsLength = res.data.items.length;
                     if(itemsLength==0 && page_no ==1){
                         hasMoreItems=false;

@@ -35,7 +35,7 @@
 <div id="currentPath"  style="margin:5px 0 0 5px;font-size: 14px"></div>
 <hr/>
 <div style="width:100%;">
-    <form id="detailPad" style="line-height: 20px;text-align: center">
+    <div id="detailPad" style="line-height: 20px;text-align: center">
         <fieldset>
             <legend style="color: #595959">详细信息</legend>
             <div style="margin:15px 0;">
@@ -96,6 +96,11 @@
                     <div class="title">医院名</div>
                     <div id="hospitalName"></div>
                 </div>
+                <div style="margin:15px 0;">
+                    <div class="title">门诊名</div>
+                    <div id="clinicName"></div>
+                </div>
+                <button onclick="lookUser()">查看用户</button>
             </fieldset>
         <fieldset id="expressInfoPad" style="display: none">
             <legend style="color: #595959">物流信息</legend>
@@ -114,10 +119,13 @@
 
             </ul>
         </fieldset>
-    </form>
+    </div>
 
 
     <div style="margin-top:20px;text-align: center">
+        <button id="alterBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">修改</button>
+        <button id="alterCancelBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">取消修改</button>
+        <button id="alterCompleteBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">完成修改</button>
         <button id="auditPassBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">审核通过</button>
         <button id="auditFailBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">审核拒绝</button>
     </div>
@@ -159,7 +167,7 @@
                     $('#hospitalName').text(item.hospitalName);
                     $('#expressNo').text(item.expressNo);
                     $('#expressCo').text(item.expressCo);
-
+                    $('#clinicName').text(item.clinicName);
                     $(item.goods).each(function(index,ele){
                         $('#goodsPad').append('<li><img style="width:50px" src="'+ele.deviceCover+'"/> '+ele.deviceName+' '+ele.count+'个 <a href="../device/detail.html?currentPath=/ 设备订单管理 / 订单详情 / 设备详情&itemId='+ele.deviceId+'">查看源商品</a>'+'</li>')
                     })
@@ -312,6 +320,11 @@
         $('#alterCancelBtn').click(function(){
             location.reload()
         })
+
+    function lookUser(){
+        var toCurrentPath = currentPath +' / 用户';
+        location.href='../clientuser2/clientuser2.html?currentPath='+toCurrentPath+'&userIdQuery='+item.userId;
+    }
 </script>
 
 </html>

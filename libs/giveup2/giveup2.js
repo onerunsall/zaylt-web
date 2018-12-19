@@ -229,6 +229,27 @@ otherUtils.strongKeyword=function(){
 }
 
 
+domUtils.locker={}
+domUtils.locker.lock = function () {
+    domUtils.layer({init:function(layer){
+        layer.style['background-color']='rgba(0,0,0,0)'
+        var img=document.createElement("img");
+        img.style.width='60px';
+        img.style.position='absolute';
+        img.style.top='20%';
+        img.style.left='50%';
+        img.style.transform='translate(-50%,-50%)';
+        img.src=giveup2.root+'/resource/wait.jpg'
+        layer.classList.add('giveup2-waitLock')
+        layer.appendChild(img);
+        domUtils.locker.locker = layer
+    }})
+
+}
+domUtils.locker.unlock = function(){
+   $(domUtils.locker.locker).remove()
+}
+
 domUtils.swapLocation =function (dom1,dom2){
 
 
@@ -272,7 +293,15 @@ domUtils.scrollEvent= function (ele,down,top){
     }
 }
 
-domUtils.operationPics = function (container,multiply,uploadBlob,x,y){
+//container=dom,multiply=boolean,uploadBlob=return url function(blob,fileName),uploadFile=return url function(inputDom),xy:{x,y}
+domUtils.operationPics = function (){
+    var container = arguments[0].container;
+    var multiply = arguments[0].multiply;
+    var uploadBlob = arguments[0].uploadBlob;
+    var uploadFile = arguments[0].uploadFile;
+    var xy = arguments[0].xy;
+    var cutable = arguments[0].cutable;
+
     container.data = {count:0,mode:'show'};
 
     var picAlter = document.createElement('img');
@@ -283,14 +312,27 @@ domUtils.operationPics = function (container,multiply,uploadBlob,x,y){
     picAlter.style['cursor']='pointer';
 
     picAlter.onclick=function(){
-        domUtils.cutImg({complete:function(param){
-            var url = uploadBlob(giveup2.otherUtils.convertBase64UrlToBlob(param.canvas.toDataURL(param.input.files[0].type)),param.input.files[0].name)
-            if(url){
-                container.addPics(url)
-                if(!multiply)
-                    $(container).find('.picAlter').hide()
-            }
-        },xRadio:x,yRadio:y})
+        if(cutable){
+            domUtils.cutImg({complete:function(param){
+               var url=uploadBlob(giveup2.otherUtils.convertBase64UrlToBlob(param.canvas.toDataURL(param.input.files[0].type)),param.input.files[0].name)
+                if(url){
+                    container.addPics(url)
+                    if(!multiply)
+                        $(container).find('.picAlter').hide()
+                }
+            },xRadio:xy.x,yRadio:xy.y})
+        }else{
+               domUtils.chooseFile({chooseEnd:function(input){
+                 var url =  uploadFile(input)
+                   if(url){
+                       container.addPics(url)
+                       if(!multiply)
+                           $(container).find('.picAlter').hide()
+                   }
+             }})
+
+        }
+
     }
 
 
@@ -432,7 +474,9 @@ domUtils.imgPreview=function(src){
 }
 
 
-domUtils.chooseFile = function (params){
+//chooseEnd
+domUtils.chooseFile = function (){
+    var chooseEnd= arguments[0].chooseEnd;
     var inputId = 'giveup2-'+stringUtils.randomString(12);
     var input=document.createElement("input");
     input.type='file';
@@ -441,8 +485,8 @@ domUtils.chooseFile = function (params){
     input.style.display='none';
     input.onchange=function(){
         var file=this.files[0] // 获取input上传的图片数据;
-        if(params.chooseEnd)
-            params.chooseEnd(this)
+        if(chooseEnd)
+            chooseEnd(this)
         document.body.removeChild(input)
     }
     document.body.appendChild(input);

@@ -104,9 +104,19 @@
 
     $('#currentPath').text('当前路径: '+currentPath)
         detailUE= UE.getEditor('detail',{autoHeightEnabled:false,readonly:true})
-    var coverContainer =  giveup2.domUtils.operationPics(document.getElementById('coverContainer'),false,uploadBlob,132,132)
+    var coverContainer =  giveup2.domUtils.operationPics({
+        container:document.getElementById('coverContainer'),
+        multiply:false,
+        uploadBlob:uploadBlob,
+        xy:{x:132,y:132}
+    })
     coverContainer.showMode()
-    var leadPicsContainer =  giveup2.domUtils.operationPics(document.getElementById('leadPicsContainer'),true,uploadBlob,132,132)
+    var leadPicsContainer =  giveup2.domUtils.operationPics({
+        container:document.getElementById('leadPicsContainer'),
+        multiply:true,
+        uploadBlob:uploadBlob,
+        xy:{x:132,y:132}
+    })
     leadPicsContainer.showMode()
 
 
