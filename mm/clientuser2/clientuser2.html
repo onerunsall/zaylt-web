@@ -94,6 +94,10 @@
 <div style="width:100%;margin-top:5px;">
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="query()">查询</button>
     <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" onclick="addDeveloperPageEnt()">新增开发者</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" id="sendNotify">发送通知</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" id="sendNotifyAll">通知全体</button>
+    <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px" id="sendSms">发送短信</button>
+
 </div>
 
 <div style="width:100%;margin-top:10px;">
@@ -169,6 +173,7 @@
     </div>
 </div>
 
+
 <div style="clear: both"></div>
 <div id="itemsContainer" style="width:99%;border: 1px solid black;margin:0 auto;margin-top:10px;overflow: auto;" >
     <div name="itemsTable" style=";width:2000px">
@@ -237,10 +242,51 @@
     </div>
 </div>
 
+
+<div id="notifyPage" style="padding-top:100px;top:0;left:0;bottom:0;right:0;overflow:auto;z-index:999999999;display: none;position:fixed;background-color: rgba(0, 0, 0, 0)">
+    <div style="width:30%;background-color: white;text-align:center;margin:auto;padding:15px 0;">
+        <div name="who" style="font-size: 15px;margin-bottom:5px;"></div>
+        <div >
+            <div class="title">请输入通知内容</div>
+            <textarea  name="content"></textarea>
+        </div>
+        <div style="margin-top: 15px">
+            <button name="confirm">确认发送</button><button onclick="$('#notifyPage').hide()" style="margin-left:15px;">取消</button>
+        </div>
+    </div>
+</div>
+
+<div id="sendSmsPage" style="padding-top:100px;top:0;left:0;bottom:0;right:0;overflow:auto;z-index:999999999;display: none;position:fixed;background-color: rgba(0, 0, 0, 0)">
+    <div style="width:30%;background-color: white;text-align:center;margin:auto;padding:15px 0;">
+        <div name="who" style="font-size: 15px;margin-bottom:5px;"></div>
+        <div >
+            <div class="title">请输入短信内容</div>
+            <textarea  name="content"></textarea>
+        </div>
+        <div style="margin-top: 15px">
+            <button name="confirm">确认发送</button><button onclick="$('#sendSmsPage').hide()" style="margin-left:15px;">取消</button>
+        </div>
+    </div>
+</div>
+
+
+<div id="notifyAllPage" style="padding-top:100px;top:0;left:0;bottom:0;right:0;overflow:auto;z-index:999999999;display: none;position:fixed;background-color: rgba(0, 0, 0, 0)">
+    <div style="width:30%;background-color: white;text-align:center;margin:auto;padding:15px 0;">
+        <div name="who" style="font-size: 15px;margin-bottom:5px;">通知所有人</div>
+        <div >
+            <div class="title">请输入通知内容</div>
+            <textarea  name="content"></textarea>
+        </div>
+        <div style="margin-top: 15px">
+            <button name="confirm">确认发送</button><button onclick="$('#notifyAllPage').hide()" style="margin-left:15px;">取消</button>
+        </div>
+    </div>
+</div>
+
 </body>
 
 <script>
-    var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,currentPath;
+    var queryString,queryParams,token,page_no,page_size,items = {},hasMoreItems,sort,currentPath,checkItemId;
     sort={}
     token = $.cookie('login-token');
     queryString = giveup2.otherUtils.parseQueryStr(location.search.substr(1));
@@ -418,6 +464,7 @@
            location.href="detail.html?itemId="+$(this).parents('.row').attr('id').substr(4)+'&currentPath='+currentPath+' / 用户:'+items[itemId].realname
         })
         $('.row').click(function(){
+            checkItemId = $(this).attr('id').substr(4);
             $('.row [name=itemChosen] ').prop("checked",false);
             $(this).find('[name=itemChosen]').prop("checked",true);
             $('.row').css('background-color','')
@@ -499,6 +546,103 @@ function addDeveloperPageEnt(){
     })
 
     $('#addDeveloperPage').trigger('pageLoad')
+
+
+
+
+    $('#sendSmsPage [name=confirm]').click(function(){
+        var content = $('#sendSmsPage [name=content]').val()
+        if(!content)
+        {
+            $.growl.error({ title:'', message: '短信内容不可空' });
+            return;
+        }
+        $.ajax({
+            url: "/zaylt/mm/sms/send",
+            type: 'post',
+            async: false,
+            data:{content:content,phones:items[checkItemId].phone,token:token} ,
+            success: function (res) {
+                if (res.code == 0) {
+                    $.growl({ title:'', message: '已发送' });
+                    $('#sendSmsPage').hide();
+                } else {
+                    $.growl.error({ title:'', message: res.codeMsg });
+                }
+            }
+        })
+    })
+
+
+    $('#notifyPage [name=confirm]').click(function(){
+        var content = $('#notifyPage [name=content]').val()
+        if(!content)
+        {
+            $.growl.error({ title:'', message: '通知内容不可空' });
+            return;
+        }
+        $.ajax({
+            url: "/zaylt/mm/pushtoclient/notify",
+            type: 'post',
+            async: false,
+            data:{content:content,userIds:checkItemId,token:token} ,
+            success: function (res) {
+                if (res.code == 0) {
+                    $.growl({ title:'', message: '已发送' });
+                    $('#notifyPage').hide();
+                } else {
+                    $.growl.error({ title:'', message: res.codeMsg });
+                }
+            }
+        })
+    })
+
+
+    $('#notifyAllPage [name=confirm]').click(function(){
+        var content = $('#notifyAllPage [name=content]').val()
+        if(!content)
+        {
+            $.growl.error({ title:'', message: '通知内容不可空' });
+            return;
+        }
+        $.ajax({
+            url: "/zaylt/mm/pushtoclient/notifyall",
+            type: 'post',
+            async: false,
+            data:{content:content,token:token} ,
+            success: function (res) {
+                if (res.code == 0) {
+                    $.growl({ title:'', message: '已发送' });
+                    $('#notifyAllPage').hide();
+                } else {
+                    $.growl.error({ title:'', message: res.codeMsg });
+                }
+            }
+        })
+    })
+
+
+    $('#sendNotify').click(function(){
+        if(!checkItemId){
+            $.growl.error({ title:'', message: '请选择一条记录' });
+            return;
+        }
+        $('#notifyPage [name=who]').text('发送通知给: '+items[checkItemId].phone+' '+items[checkItemId].realname)
+        $('#notifyPage').show()
+    })
+
+    $('#sendSms').click(function(){
+        if(!checkItemId){
+            $.growl.error({ title:'', message: '请选择一条记录' });
+            return;
+        }
+        $('#sendSmsPage [name=who]').text('发送通知给: '+items[checkItemId].phone+' '+items[checkItemId].realname)
+        $('#sendSmsPage').show()
+    })
+
+    $('#sendNotifyAll').click(function(){
+        $('#notifyAllPage').show()
+    })
 
 </script>
 
