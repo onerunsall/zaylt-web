@@ -13,12 +13,12 @@ function saveLoginStatus(data){
 }
 
 function clearLoginStatus(){
-    $.removeCookie('login-token');
-    $.removeCookie('login-username');
-    $.removeCookie('login-realname');
-    $.removeCookie('login-moduleIds');
-    $.removeCookie('login-email');
-    $.removeCookie('login-phone');
-    $.removeCookie('login-role');
-    $.removeCookie('login-registerTime');
+    $.removeCookie('login-token',{path:'/'});
+    $.removeCookie('login-username',{path:'/'});
+    $.removeCookie('login-realname',{path:'/'});
+    $.removeCookie('login-moduleIds',{path:'/'});
+    $.removeCookie('login-email',{path:'/'});
+    $.removeCookie('login-phone',{path:'/'});
+    $.removeCookie('login-role',{path:'/'});
+    $.removeCookie('login-registerTime',{path:'/'});
 }
