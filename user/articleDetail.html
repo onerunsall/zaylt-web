@@ -170,9 +170,12 @@
 
 
 <div class='detail'>
-    <span>
+    <pre>
 
-    </span>
+    </pre>
+    <!--<span>-->
+
+    <!--</span>-->
 
 </div>
 
@@ -206,7 +209,7 @@
                             type:'post',
                             async:false,
                             success:function(res){
-                                $('.detail span').html(res)
+                                $('.detail pre').html(res)
                             }
                         })
             }else{
