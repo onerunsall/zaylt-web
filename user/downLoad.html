@@ -70,8 +70,9 @@
     <!--<div class="clear"></div>-->
 </body>
 <script>
-    var height=  window.screen.height
-    console.log(height)
+//    var height=  window.screen.height
+    var height=$(window).height()
+
     $('.app').css('margin-top',0.6*height+"px")
     $('.small').css('margin-top',0.6*height+"px")
     $('body').css('height',height)
