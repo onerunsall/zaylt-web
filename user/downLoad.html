@@ -12,71 +12,69 @@
             -moz-user-select: none;
             user-select:none;
             background: #fff;
+            background: url(app.png) no-repeat  fixed top;
+            /*background-size: 100% 100% !important;*/
+            background-size:cover;background-position: center;
+            font-size: 15px;
+            color: #fff;
+            text-align: center;
         }
-        input{
-            outline:none;
+
+       .app{
+            width: 32%;
+           margin-left:12% ;
+           display: inline-block;
+           float: left;
         }
-        .app,.small{
-            float: left;
-            width: 40%;
-            height: auto;
-            margin:  5%;
+        .small{
+            width: 32%;
+            border-radius: 50%;
+            margin-left: 12%;
             display: inline-block;
+            float: left;
         }
-.app img,.small img{
-    width: 100%;
-}
-        .down>div>div{
+        div>img{
             width: 100%;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .title{
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 10px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
-    <div class="top" style="background: #ffffff">
-        <img src="iconTwo/tu.png" alt=""/>
-    </div>
-    <div class="down lf">
-        <!--<div class="down_iphone lf">-->
-            <!--<img class="lf" src="iconTwo/pc_area1_2.png" alt=""/>-->
-            <!--<span class="lf">去APP Store下载</span>-->
-        <!--</div>-->
-        <!--<div class="down_android lf" style="margin-top: 24px;margin-bottom: 30px">-->
-            <!--<img class="lf" src="iconTwo/andriod.png" alt=""/>-->
-            <!--<span class="lf">Android下载</span>-->
-        <!--</div>-->
-        <div class="title">共享医连体</div>
-        <div class="app">
-            <div>app</div>
-            <img src="iconTwo/app.png" alt=""/>
+        <div class="app" style="width: 32%">
+            <span>APP下载</span>
+            <img  src="iconTwo/app.png" alt=""/>
         </div>
         <div class="small">
-            <div>微信小程序</div>
-            <img src="iconTwo/gh_177d2b4e3d1e_430.jpg" alt=""/>
+            <span>微信小程序</span>
+            <img src="iconTwo/gh_177d2b4e3d1e_430.jpg" style="border-radius: 50%;margin-top: 17px" alt=""/>
         </div>
-    </div>
-    <div class="clear"></div>
-    <!--<div class="bottom lf">-->
-        <!--<div class="lf bottom_lf">-->
-            <!--<img src="iconTwo/tu%203.png" alt=""/>-->
-            <!--&lt;!&ndash;<img style="margin-top: 140px" src="iconTwo/line_l.png" alt=""/>&ndash;&gt;-->
+    <!--<div class="down lf">-->
+        <!--&lt;!&ndash;<div class="down_iphone lf">&ndash;&gt;-->
+            <!--&lt;!&ndash;<img class="lf" src="iconTwo/pc_area1_2.png" alt=""/>&ndash;&gt;-->
+            <!--&lt;!&ndash;<span class="lf">去APP Store下载</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="down_android lf" style="margin-top: 24px;margin-bottom: 30px">&ndash;&gt;-->
+            <!--&lt;!&ndash;<img class="lf" src="iconTwo/andriod.png" alt=""/>&ndash;&gt;-->
+            <!--&lt;!&ndash;<span class="lf">Android下载</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--<div class="title">共享医连体</div>-->
+        <!--<div class="app">-->
+            <!--<div>app</div>-->
+            <!--<img src="iconTwo/app.png" alt=""/>-->
         <!--</div>-->
-        <!--<div class="rt bottom_rt">-->
-            <!--<img src="iconTwo/tu%202.png" alt=""/>-->
+        <!--<div class="small">-->
+            <!--<div>微信小程序</div>-->
+            <!--<img src="iconTwo/gh_177d2b4e3d1e_430.jpg" alt=""/>-->
         <!--</div>-->
-        <!--<div class="clear"></div>-->
-        <!--<img style="width: 28%;margin-left: 5% " src="iconTwo/line_l.png" alt=""/>-->
-        <!--<div class="clear"></div>-->
-        <!--<span class="bottom_span">医查查APP主要目的就是为了让更多的代理商、厂商进驻其中，打通了医疗行业的B2O模式、B2B模式，这样就会让医疗行业出现一个全新的规范。</span>-->
     <!--</div>-->
+    <!--<div class="clear"></div>-->
 </body>
 <script>
+    var height=  window.screen.height
+    console.log(height)
+    $('.app').css('margin-top',0.6*height+"px")
+    $('.small').css('margin-top',0.6*height+"px")
+    $('body').css('height',height)
     $().ready(function(){
         $.ajax({
             url:'/c/sysparam?sysParamId='+'androidNewestVersionUrl',
