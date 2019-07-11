@@ -80,7 +80,7 @@
                 <span class="title"  style="width:30%;display: inline-block;text-align: right">封面</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                    <img id="coverShow"  class="valueShow"  onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;display: none;" />
+                    <img id="coverShow"  class="valueShow"  onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;" />
                     <span class="valueAlter">
                         <span id="coverPad"   style="margin-right:5px;display:none;">
                             <img id="cover" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;"  columnName="封面" class=""/>
@@ -96,7 +96,7 @@
                 <span class="title"  style="width:30%;display: inline-block;text-align: right">营业执照</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                    <img id="licenseShow"  class="valueShow"  onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;display: none;" />
+                    <img id="licenseShow"  class="valueShow"  onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;" />
                     <span class="valueAlter">
                         <span id="licensePad"   style="margin-right:5px;display:none;">
                             <img id="license" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;"  columnName="营业执照" class=""/>
@@ -352,12 +352,14 @@
     function alterLicense(){
         $('<input type="file" name="file" style="display:none"/>').change(function () {
             var r = prompt('该文件大小' + Math.round(this.files[0].size / 1024) + 'KB，如需压缩，请按质量从低到高输入1-9，取消则不压缩。', '8')
+            var compressIs =false
             if(r != null){
                 r = parseInt(r);
                 if(isNaN(r) || r < 1 || r > 9){
                     alert('输入有误')
                     return;
                 }
+                 compressIs =true
             }
 
             var inputDom = this;
@@ -390,12 +392,14 @@
     function alterCover(){
         $('<input type="file" name="file" style="display:none"/>').change(function () {
             var r = prompt('该文件大小' + Math.round(this.files[0].size / 1024) + 'KB，如需压缩，请按质量从低到高输入1-9，取消则不压缩。', '8')
+            var compressIs =false
             if(r != null){
                 r = parseInt(r);
                 if(isNaN(r) || r < 1 || r > 9){
                     alert('输入有误')
                     return;
                 }
+                 compressIs =true
             }
             var inputDom = this;
             var file = inputDom.files[0];

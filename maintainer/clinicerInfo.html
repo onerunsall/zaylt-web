@@ -370,12 +370,14 @@ function  alterPwd(){
     function alterCover(){
         $('<input type="file" name="file" style="display:none"/>').change(function () {
             var r = prompt('该文件大小' + Math.round(this.files[0].size / 1024) + 'KB，如需压缩，请按质量从低到高输入1-9，取消则不压缩。', '8')
+            var compressIs =false
             if(r != null){
                 r = parseInt(r);
                 if(isNaN(r) || r < 1 || r > 9){
                     alert('输入有误')
                     return;
                 }
+                 compressIs =true
             }
             var inputDom = this;
             var file = inputDom.files[0];
