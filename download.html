@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>共享医连体</title>
+    <link rel="stylesheet" href="user/download.css"/>
+    <script src="user/jquery-3.0.0.min.js"></script>
+    <style>
+        body{
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select:none;
+            background: #fff;
+            background: url(user/app.png) no-repeat  fixed top;
+            /*background-size: 100% 100% !important;*/
+            background-size:cover;background-position: center;
+            font-size: 15px;
+            color: #fff;
+            text-align: center;
+        }
+
+       .app{
+            width: 32%;
+           margin-left:12% ;
+           display: inline-block;
+           float: left;
+        }
+        .small{
+            width: 32%;
+            border-radius: 50%;
+            margin-left: 12%;
+            display: inline-block;
+            float: left;
+        }
+        div>img{
+            width: 100%;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+        <div class="app" style="width: 32%">
+            <span>APP下载</span>
+            <img src="user/iconTwo/app.png" alt=""/>
+        </div>
+        <div class="small">
+            <span>微信小程序</span>
+            <img src="user/iconTwo/gh_177d2b4e3d1e_430.jpg" style="border-radius: 50%;margin-top: 17px" alt=""/>
+        </div>
+    <!--<div class="down lf">-->
+        <!--&lt;!&ndash;<div class="down_iphone lf">&ndash;&gt;-->
+            <!--&lt;!&ndash;<img class="lf" src="iconTwo/pc_area1_2.png" alt=""/>&ndash;&gt;-->
+            <!--&lt;!&ndash;<span class="lf">去APP Store下载</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="down_android lf" style="margin-top: 24px;margin-bottom: 30px">&ndash;&gt;-->
+            <!--&lt;!&ndash;<img class="lf" src="iconTwo/andriod.png" alt=""/>&ndash;&gt;-->
+            <!--&lt;!&ndash;<span class="lf">Android下载</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--<div class="title">共享医连体</div>-->
+        <!--<div class="app">-->
+            <!--<div>app</div>-->
+            <!--<img src="iconTwo/app.png" alt=""/>-->
+        <!--</div>-->
+        <!--<div class="small">-->
+            <!--<div>微信小程序</div>-->
+            <!--<img src="iconTwo/gh_177d2b4e3d1e_430.jpg" alt=""/>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="clear"></div>-->
+</body>
+<script>
+//    var height=  window.screen.height
+    var height=$(window).height()
+
+    $('.app').css('margin-top',0.6*height+"px")
+    $('.small').css('margin-top',0.6*height+"px")
+    $('body').css('height',height)
+    $().ready(function(){
+        $.ajax({
+            url:'/c/sysparam?sysParamId='+'androidNewestVersionUrl',
+            type:'post',
+            async:true,
+            success:function(data){
+                if(data.code==0){
+                    sysParamValue=data.data.sysParamValue;
+                }
+            }
+        })
+    })
+    $('.down_android').click(function(){
+//        alert(sysParamValue)
+        window.location.href='http://a.app.qq.com/o/simple.jsp?pkgname=loyalsafety.com.instrumentsearch';
+    })
+    $('.down_iphone').click(function(){
+        window.location.href='https://itunes.apple.com/us/app/%E5%8C%BB%E6%9F%A5%E6%9F%A5/id1234485567?l=zh&ls=1&mt=8'
+    })
+</script>
+</html>
