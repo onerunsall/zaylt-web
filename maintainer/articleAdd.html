@@ -4,7 +4,7 @@
     <script>
         var rootDis="../"
     </script>
-    <title>忠安医联体运维平台-添加医院</title>
+    <title>忠安医联体运维平台-添加文章</title>
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -22,6 +22,11 @@
     <script src="../libs/jquery.extend.giveup.js"></script>
     <script src="../libs/layer/layer.js"></script>
     <script src="../libs/moment.js"></script>
+    <link rel="stylesheet" href="../libs/kindeditor/themes/default/default.css"/>
+    <link rel="stylesheet" href="../libs/kindeditor/plugins/code/prettify.css"/>
+    <script charset="utf-8" src="../libs/kindeditor/kindeditor-all.js"></script>
+    <script charset="utf-8" src="../libs/kindeditor/lang/zh-CN.js"></script>
+    <script charset="utf-8" src="../libs/kindeditor/plugins/code/prettify.js"></script>
 
     <style>
         .title {
@@ -31,6 +36,11 @@
         button,select {
             cursor:pointer;
 
+        }
+
+
+        .entityListPad .entityPad:last-of-type .exchangePlace {
+            display:none;
         }
     </style>
     <script>
@@ -53,32 +63,39 @@
     <div style="margin-top:10px;"></div>
     <form id="detailPad" style="line-height: 20px;">
         <fieldset>
-            <legend style="color: #595959">用户信息</legend>
+            <legend style="color: #595959">文章信息</legend>
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">手机</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">标题</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="phone" class="valueAlter giveup-cache" columnName="手机"
-                           style="width:80%;padding:3px 3px" type="text" required maxlength="32" placeholder="最大长度32"/>
+                    <input id="name" class="valueAlter giveup-cache" columnName="标题"
+                           style="width:80%;padding:3px 3px" type="text" required maxlength="100" placeholder="最大长度100"/>
                 </span>
             </div>
 
+
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">姓名</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right">医院</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="name" class="valueAlter giveup-cache" columnName="姓名"
-                           style="width:80%;padding:3px 3px" type="text" required maxlength="32" placeholder="最大长度32"/>
+                <span style="width:50%;display: inline-block;;text-align: left;vertical-align: top;">
+                <span  class="valueAlter">
+                    <span id="hospitalPad">
+                     <span id="hospitalSignShow" class="giveup-cache giveup-cache-text"></span>
+                     <input id="hospitalId" class="giveup-cache" columnName="医院ID" type="text" style="display:none;"/>
+                      <span id="hospitalRemove"  style="margin-left:5px;cursor: pointer;color:#af0000;" onclick="$('#hospitalSignShow').text('');$('#hospitalId').val('');$('#hospitalPad').hide()" >X</span>
+                   </span>
+                    <div ><button  onclick="chooseHospital()" type="button" >选择</button></div>
                 </span>
+            </span>
             </div>
 
             <div style="margin:20px 0;">
-                <span class="title"  style="width:30%;display: inline-block;text-align: right">头像</span>
+                <span class="title"  style="width:30%;display: inline-block;text-align: right">封面</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;text-align: left">
                     <span class="valueAlter"  >
                         <span id="coverPad"  style="margin-right:5px;display:none;">
-                            <img id="cover" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;"  columnName="头像" class="giveup-cache"/>
+                            <img id="cover" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;"  columnName="封面" class="giveup-cache"/>
                             <span style="cursor:pointer;color:red;" onclick="$('#coverPad').hide();$('#cover').attr('src','')">X</span>
                         </span>
                         <img onclick="alterCover()"  src="resource/add.jpg" style="width:20px;cursor:pointer;" />
@@ -87,43 +104,50 @@
 
             </div>
 
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right">医院</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;;text-align: left;vertical-align: top;">
-                <span  class="valueAlter">
-                    <span id="hospitalPad">
-                    <span id="hospitalSignShow" class="giveup-cache giveup-cache-text"></span>
-                   <input id="hospitalId" class="giveup-cache" columnName="医院ID" type="text" style="display:none;"/>
-                    <span id="hospitalRemove"  style="margin-left:5px;cursor: pointer;color:#af0000;" onclick="$('#hospitalSignShow').text('');$('#hospitalId').val('');$('#hospitalPad'').hide()" >X</span>
-                    </span>
-                    <div ><button  onclick="chooseHospital()" type="button" >选择</button></div>
-                </span>
-            </span>
-            </div>
-
-
-
 
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">密码</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">基础浏览量</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="password" class="valueAlter giveup-cache" columnName="密码" required
-                           style="width:80%;padding:3px 3px" type="password" maxlength="32" placeholder="最大长度32"/>
-                </span>
+              <input id="viewCountBase" class="valueAlter giveup-cache" columnName="基础浏览量"
+                     style="padding:3px 3px;text-align: right;" type="number"   placeholder="0"/>
+             </span>
+            </div>
+
+            <div>
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top">内容</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:40%;display: inline-block;text-align: left"><textarea id="content"
+                                                                                         class="giveup-cache"
+                                                                                         style="width: 100%;height: 30px;padding:1px 4px"></textarea></span>
             </div>
 
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">密码确认</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">排序号</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="passwordConfirm" class="valueAlter giveup-cache" columnName="密码"
-                           style="width:80%;padding:3px 3px" type="password" maxlength="32" placeholder="最大长度32"/>
-                </span>
+              <input id="orderNo" class="valueAlter giveup-cache" columnName="基础浏览量"
+                     style="padding:3px 3px;text-align: right;" type="number"   placeholder="9999"/>
+             </span>
             </div>
 
+            <div style="margin:20px 0;">
+                <span class="title" style="width:30%;display: inline-block;text-align: right">添加时间</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%"><input id="addTime" class="valueAlter giveup-cache" type="datetime-local"
+                                               style="padding:3px 3px;"
+                                               columnName="添加时间"
+                                               placeholder="请使用谷歌浏览器"/></span>
+            </div>
 
+            <div style="margin:20px 0;">
+                <span class="title" style="width:30%;display: inline-block;text-align: right">更新时间</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%"><input id="alterTime" class="valueAlter giveup-cache" type="datetime-local"
+                                               style="padding:3px 3px;"
+                                               columnName="更新时间"
+                                               placeholder="请使用谷歌浏览器"/></span>
+            </div>
         </fieldset>
 
 
@@ -138,12 +162,21 @@
 </div>
 
 
+<span  class="imgPadSample entityPad" style="margin-right:5px;display:none">
+    <img  class="entity" style="width:50px;cursor:pointer" onclick="giveup.imgPreview(this.src)"/>
+    <span style="cursor:pointer;color:#af0000;" class="" onclick="$(this).parent('.entityPad').remove()">X</span>
+    <span  style="cursor:pointer;margin:0 5px" class=" exchangePlace"
+          onclick="$(this).parent('.entityPad').giveup_exchangeDom($(this).parent('.entityPad').next('.entityPad'))"><></span>
+</span>
+
 </body>
 <script>
     navim.push({url: location.href, title: currentPath})
     $('#currentPath').html('导航: ' + navim.spring())
 
-
+    var vb = new Date();
+    $('#addTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+    $('#alterTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
 
     $.ajaxSetup({
         layerIndex: -1,
@@ -154,6 +187,27 @@
             layer.close(this.layerIndex);
         }
     });
+
+    var contentKindEditor = KindEditor.create('#content', {
+        autoHeightMode : true,
+        cssPath : '../libs/kindeditor/plugins/code/prettify.css',
+        uploadJson : '../kindeditor/upload_json.jsp',
+        fileManagerJson : '../kindeditor/file_manager_json.jsp',
+        allowFileManager : true,
+        afterCreate : function() {
+            var self = this;
+            KindEditor.ctrl(document, 13, function() {
+                self.sync();
+                document.forms['example'].submit();
+            });
+            KindEditor.ctrl(self.edit.doc, 13, function() {
+                self.sync();
+                document.forms['example'].submit();
+            });
+        }
+    });
+    prettyPrint();
+
 
     function chooseHospital(){
         var r = prompt('请输入要查询的医院信息。')
@@ -175,8 +229,7 @@
                             if(confirm('已找到 "'+entitySign+'"，确定吗？')){
                                 $('#hospitalId').val(res.data.items[0].hospitalId)
                                 $('#hospitalSignShow').text(entitySign)
-                                $('#hospitalPad').show()
-                            }
+                                $('#hospitalPad').show()                            }
                         }
                     } else {
                         resCodeProcess(res.code,res.codeMsg)
@@ -187,6 +240,7 @@
     }
 
 
+
     $('[name=clearBtn]').click(function () {
         giveup.cache.clearAll()
         location.reload()
@@ -195,28 +249,9 @@
         var param = {}
         param.token = token;
         var jqDom,jqDomValue;
-        jqDom=$('#phone')
-        param.phone = jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
-            return;
-        }
-        if(!jqDomValue && jqDom.attr('required')){
-            alert('\"'+jqDom.attr('columnName')+'\"不能空')
-            return;
-        }
 
         jqDom=$('#name')
-        param.name = jqDomValue= jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
-            return;
-        }
-
-        param.cover = $('#cover').attr('src')
-
-        jqDom=$('#password')
-        param.password= jqDomValue = jqDom.val();
+        param.name = jqDomValue = jqDom.val();
         if(jqDomValue.length> jqDom.attr('maxlength')){
             alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
             return;
@@ -225,16 +260,31 @@
             alert('\"'+jqDom.attr('columnName')+'\"不能空')
             return;
         }
-        if(param.password && param.password!=$('#passwordConfirm').val()){
-            alert('两次密码不一致')
+
+        jqDom=$('#viewCountBase')
+        param.viewCountBase = jqDomValue= jqDom.val();
+
+        jqDom=$('#orderNo')
+        param.orderNo = jqDomValue= jqDom.val();
+
+
+        jqDom=$('#cover')
+        param.cover = jqDomValue= jqDom.attr('src');
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
             return;
         }
 
         jqDom=$('#hospitalId')
         param.hospitalId= jqDomValue = jqDom.val();
 
+        param.content= contentKindEditor.html()
+
+        param.alterTime= $('#alterTime').val()?new Date($('#alterTime').val()).getTime():'';
+        param.addTime= $('#addTime').val()?new Date($('#addTime').val()).getTime():'';
+
         $.ajax({
-            url: rootDis+"maintainer/hospitalerAdd",
+            url: rootDis+"maintainer/articleAdd",
             type: 'post',
             async: false,
             data: param,

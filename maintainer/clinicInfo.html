@@ -4,7 +4,7 @@
     <script>
         var rootDis="../"
     </script>
-    <title>忠安医联体运维平台-修改门诊</title>
+    <title>忠安医联体运维平台-门诊信息</title>
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -37,9 +37,7 @@
 
         }
 
-        #picsPad [name=imgPad]:last-of-type [name=exchangePlace] {
-            display:none!important
-        }
+
 
     </style>
     <script>
@@ -188,17 +186,24 @@
                 <span class="title" style="width:30%;display: inline-block;text-align: right">添加时间</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%">
-                     <span id="addTimeShow"   style="word-wrap: break-word;word-break: break-all;"></span>
-                </span>
+                     <span id="addTimeShow"  class="valueShow" style="word-wrap: break-word;word-break: break-all;" ></span>
+                    <input id="addTime" class="valueAlter giveup-cache" type="datetime-local"
+                           style="padding:3px 3px;"
+                           columnName="添加时间"
+                           placeholder="请使用谷歌浏览器"/></span>
             </div>
 
             <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right">更新时间</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%">
-                     <span id="alterTimeShow"  style="word-wrap: break-word;word-break: break-all;"></span>
-                </span>
+                      <span id="alterTimeShow"  class="valueShow" style="word-wrap: break-word;word-break: break-all;" ></span>
+                    <input id="alterTime" class="valueAlter giveup-cache" type="datetime-local"
+                           style="padding:3px 3px;"
+                           columnName="更新时间"
+                           placeholder="请使用谷歌浏览器"/></span>
             </div>
+
         </fieldset>
 
 
@@ -312,9 +317,10 @@
             if (res.code == 0) {
                 var vb =clinic= res.data;
 
+                $('#alterTime').val(moment(vb.alterTime).format('YYYY-MM-DDTHH:mm'))
                 $('#alterTimeShow').text(moment(vb.alterTime).format('YYYY-MM-DD HH:mm:ss'))
+                $('#addTime').val(moment(vb.addTime).format('YYYY-MM-DDTHH:mm'))
                 $('#addTimeShow').text(moment(vb.addTime).format('YYYY-MM-DD HH:mm:ss'))
-
 
 
 
@@ -424,7 +430,8 @@
         param.orderNo = $('#orderNo').val();
         param.hospitalId = $('#hospitalId').val();
 
-
+        param.alterTime= $('#alterTime').val()?new Date($('#alterTime').val()).getTime():'';
+        param.addTime= $('#addTime').val()?new Date($('#addTime').val()).getTime():'';
         $.ajax({
             url: rootDis+"maintainer/clinicAlter",
             type: 'post',

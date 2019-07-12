@@ -195,20 +195,20 @@
             </div>
 
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right">展示的添加时间</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right">添加时间</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%"><input id="showAddTime" class="valueAlter giveup-cache" type="datetime-local"
+                <span style="width:50%"><input id="addTime" class="valueAlter giveup-cache" type="datetime-local"
                                                style="padding:3px 3px;"
-                                               columnName="展示的添加时间"
+                                               columnName="添加时间"
                                                placeholder="请使用谷歌浏览器"/></span>
             </div>
 
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right">展示的更新时间</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right">更新时间</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%"><input id="showAlterTime" class="valueAlter giveup-cache" type="datetime-local"
+                <span style="width:50%"><input id="alterTime" class="valueAlter giveup-cache" type="datetime-local"
                                                style="padding:3px 3px;"
-                                               columnName="展示的更新时间"
+                                               columnName="更新时间"
                                                placeholder="请使用谷歌浏览器"/></span>
             </div>
         </fieldset>
@@ -231,8 +231,8 @@
     $('#currentPath').html('导航: ' + navim.spring())
 
     var vb= new Date();
-    $('#showAddTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
-    $('#showAlterTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+    $('#addTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+    $('#alterTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
 
     $.ajaxSetup({
         layerIndex: -1,
@@ -380,8 +380,8 @@
         param.adminarea1Name = $('#adminarea1Id').val() ? $('#adminarea1Id > option:selected').text() : '';
         param.adminarea2Name = $('#adminarea2Id').val() ? $('#adminarea2Id > option:selected').text() : '';
         param.adminarea3Name = $('#adminarea3Id').val() ? $('#adminarea3Id > option:selected').text() : '';
-        param.showAlterTime= $('#showAlterTime').val()?new Date($('#showAlterTime').val()).getTime():'';
-        param.showAddTime= $('#showAddTime').val()?new Date($('#showAddTime').val()).getTime():'';
+        param.alterTime= $('#alterTime').val()?new Date($('#alterTime').val()).getTime():'';
+        param.addTime= $('#addTime').val()?new Date($('#addTime').val()).getTime():'';
 
 
         $.ajax({

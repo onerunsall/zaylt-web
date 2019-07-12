@@ -4,7 +4,7 @@
     <script>
         var rootDis="../"
     </script>
-    <title>忠安医联体运维平台-修改医院</title>
+    <title>忠安医联体运维平台-医院信息</title>
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -37,9 +37,7 @@
 
         }
 
-        #picsPad [name=imgPad]:last-of-type [name=exchangePlace] {
-            display:none!important
-        }
+
 
     </style>
     <script>
@@ -220,27 +218,6 @@
                                                placeholder="9999"/></span>
             </div>
 
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right">展示的添加时间</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%">
-                     <span id="showAddTimeShow"  class="valueShow" style="word-wrap: break-word;word-break: break-all;"></span>
-                    <input id="showAddTime" class="valueAlter " type="datetime-local"
-                                               style="padding:3px 3px;"
-                                               columnName="展示的添加时间"
-                                               placeholder="请使用谷歌浏览器"/></span>
-            </div>
-
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right">展示的更新时间</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%">
-                     <span id="showAlterTimeShow"  class="valueShow" style="word-wrap: break-word;word-break: break-all;"></span>
-                    <input id="showAlterTime" class="valueAlter " type="datetime-local"
-                                               style="padding:3px 3px;"
-                                               columnName="展示的更新时间"
-                                               placeholder="请使用谷歌浏览器"/></span>
-            </div>
 
 
 
@@ -248,16 +225,22 @@
                 <span class="title" style="width:30%;display: inline-block;text-align: right">添加时间</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%">
-                     <span id="addTimeShow"   style="word-wrap: break-word;word-break: break-all;"></span>
-                </span>
+                     <span id="addTimeShow"  class="valueShow" style="word-wrap: break-word;word-break: break-all;" ></span>
+                    <input id="addTime" class="valueAlter giveup-cache" type="datetime-local"
+                           style="padding:3px 3px;"
+                           columnName="添加时间"
+                           placeholder="请使用谷歌浏览器"/></span>
             </div>
 
             <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right">更新时间</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%">
-                     <span id="alterTimeShow"  style="word-wrap: break-word;word-break: break-all;"></span>
-                </span>
+                      <span id="alterTimeShow"  class="valueShow" style="word-wrap: break-word;word-break: break-all;" ></span>
+                    <input id="alterTime" class="valueAlter giveup-cache" type="datetime-local"
+                           style="padding:3px 3px;"
+                           columnName="更新时间"
+                           placeholder="请使用谷歌浏览器"/></span>
             </div>
         </fieldset>
 
@@ -439,14 +422,10 @@
             if (res.code == 0) {
                 var vb =hospital= res.data;
 
+                $('#alterTime').val(moment(vb.alterTime).format('YYYY-MM-DDTHH:mm'))
                 $('#alterTimeShow').text(moment(vb.alterTime).format('YYYY-MM-DD HH:mm:ss'))
+                $('#addTime').val(moment(vb.addTime).format('YYYY-MM-DDTHH:mm'))
                 $('#addTimeShow').text(moment(vb.addTime).format('YYYY-MM-DD HH:mm:ss'))
-
-                $('#showAlterTime').val(moment(vb.showAlterTime).format('YYYY-MM-DDTHH:mm'))
-                $('#showAlterTimeShow').text(moment(vb.showAlterTime).format('YYYY-MM-DD HH:mm:ss'))
-
-                $('#showAddTime').val(moment(vb.showAddTime).format('YYYY-MM-DDTHH:mm'))
-                $('#showAddTimeShow').text(moment(vb.showAddTime).format('YYYY-MM-DD HH:mm:ss'))
 
 
 
@@ -582,8 +561,8 @@
         param.adminarea1Name = $('#adminarea1Id').val() ? $('#adminarea1Id > option:selected').text() : '';
         param.adminarea2Name = $('#adminarea2Id').val() ? $('#adminarea2Id > option:selected').text() : '';
         param.adminarea3Name = $('#adminarea3Id').val() ? $('#adminarea3Id > option:selected').text() : '';
-        param.showAlterTime= $('#showAlterTime').val()?new Date($('#showAlterTime').val()).getTime():'';
-        param.showAddTime= $('#showAddTime').val()?new Date($('#showAddTime').val()).getTime():'';
+        param.alterTime= $('#alterTime').val()?new Date($('#alterTime').val()).getTime():'';
+        param.addTime= $('#addTime').val()?new Date($('#addTime').val()).getTime():'';
 
         $.ajax({
             url: rootDis+"maintainer/hospitalAlter",

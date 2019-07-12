@@ -1,5 +1,4 @@
 
-
 function resCodeProcess(code,codeMsg) {
     debugger
     var win = window.parent !== window ? window.parent : window

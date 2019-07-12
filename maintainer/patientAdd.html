@@ -4,7 +4,7 @@
     <script>
         var rootDis="../"
     </script>
-    <title>忠安医联体运维平台-添加门诊</title>
+    <title>忠安医联体运维平台-添加病人</title>
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -32,6 +32,11 @@
             cursor:pointer;
 
         }
+
+
+        .entityListPad .entityPad:last-of-type .exchangePlace {
+            display:none;
+        }
     </style>
     <script>
       var  queryParamMap = giveup.parseQueryStr(location.search.substr(1));
@@ -53,16 +58,7 @@
     <div style="margin-top:10px;"></div>
     <form id="detailPad" style="line-height: 20px;">
         <fieldset>
-            <legend style="color: #595959">用户信息</legend>
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">手机</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="phone" class="valueAlter giveup-cache" columnName="手机"
-                           style="width:80%;padding:3px 3px" type="text" required maxlength="32" placeholder="最大长度32"/>
-                </span>
-            </div>
-
+            <legend style="color: #595959">病人信息</legend>
             <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">姓名</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
@@ -73,19 +69,24 @@
             </div>
 
             <div style="margin:20px 0;">
-                <span class="title"  style="width:30%;display: inline-block;text-align: right">头像</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">电话</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;text-align: left">
-                    <span class="valueAlter"  >
-                        <span id="coverPad"  style="margin-right:5px;display:none;">
-                            <img id="cover" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;"  columnName="头像" class="giveup-cache"/>
-                            <span style="cursor:pointer;color:red;" onclick="$('#coverPad').hide();$('#cover').attr('src','')">X</span>
-                        </span>
-                        <img onclick="alterCover()"  src="resource/add.jpg" style="width:20px;cursor:pointer;" />
-                    </span>
+                <span style="width:50%;display: inline-block;;text-align: left">
+                    <input id="tel" class="valueAlter giveup-cache" columnName="电话"
+                           style="width:80%;padding:3px 3px" type="text" required maxlength="32" placeholder="最大长度32"/>
                 </span>
-
             </div>
+
+            <div style="margin:20px 0;">
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">身份证号</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%;display: inline-block;;text-align: left">
+                    <input id="idcardNo" class="valueAlter giveup-cache" columnName="身份证号"
+                           style="width:80%;padding:3px 3px" type="text" required maxlength="32" placeholder="最大长度32"/>
+                </span>
+            </div>
+
+
 
             <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right">医院</span>
@@ -117,28 +118,57 @@
             </span>
             </div>
 
-
-
-
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">密码</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">病症</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="password" class="valueAlter giveup-cache" columnName="密码" required
-                           style="width:80%;padding:3px 3px" type="password" maxlength="32" placeholder="最大长度32"/>
-                </span>
+                 <textarea id="sickness"
+                           class="valueAlter giveup-cache"
+                           style="width:80%;padding:3px 3px" rows="7"
+                           maxlength="500"
+                           columnName="病症"
+                           placeholder="最大长度500"></textarea>
+             </span>
             </div>
 
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">密码确认</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">备注</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="passwordConfirm" class="valueAlter giveup-cache" columnName="密码"
-                           style="width:80%;padding:3px 3px" type="password" maxlength="32" placeholder="最大长度32"/>
-                </span>
+                 <textarea id="remark"
+                           class="valueAlter giveup-cache"
+                           style="width:80%;padding:3px 3px" rows="7"
+                           maxlength="500"
+                           columnName="备注"
+                           placeholder="最大长度500"></textarea>
+             </span>
             </div>
 
 
+            <div style="margin:15px 0;">
+                <span class="title" style="width:30%;display: inline-block;text-align: right">发票</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span id="invoicesPad" class="entityListPad valueAlter"><img onclick="invoicePadAdd()" class="entityPadAdd" src="./resource/add.jpg" class="valueAlter" style="width:20px;cursor:pointer;" /></span>
+            </div>
+
+
+            <div style="margin:20px 0;">
+                <span class="title" style="width:30%;display: inline-block;text-align: right">添加时间</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%"><input id="addTime" class="valueAlter giveup-cache" type="datetime-local"
+                                               style="padding:3px 3px;"
+                                               columnName="添加时间"
+                                               placeholder="请使用谷歌浏览器"/></span>
+            </div>
+
+            <div style="margin:20px 0;">
+                <span class="title" style="width:30%;display: inline-block;text-align: right">更新时间</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%"><input id="alterTime" class="valueAlter giveup-cache" type="datetime-local"
+                                               style="padding:3px 3px;"
+                                               columnName="更新时间"
+                                               placeholder="请使用谷歌浏览器"/></span>
+            </div>
         </fieldset>
 
 
@@ -153,12 +183,21 @@
 </div>
 
 
+<span  class="imgPadSample entityPad" style="margin-right:5px;display:none">
+    <img  class="entity" style="width:50px;cursor:pointer" onclick="giveup.imgPreview(this.src)"/>
+    <span style="cursor:pointer;color:#af0000;" class="" onclick="$(this).parent('.entityPad').remove()">X</span>
+    <span  style="cursor:pointer;margin:0 5px" class=" exchangePlace"
+          onclick="$(this).parent('.entityPad').giveup_exchangeDom($(this).parent('.entityPad').next('.entityPad'))"><></span>
+</span>
+
 </body>
 <script>
     navim.push({url: location.href, title: currentPath})
     $('#currentPath').html('导航: ' + navim.spring())
 
-
+    var vb = new Date();
+    $('#addTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+    $('#alterTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
 
     $.ajaxSetup({
         layerIndex: -1,
@@ -169,6 +208,48 @@
             layer.close(this.layerIndex);
         }
     });
+
+    function invoicePadAdd() {
+        $('<input type="file" name="file" style="display:none"/>').change(function () {
+            var r = prompt('该文件大小' + Math.round(this.files[0].size / 1024) + 'KB，如需压缩，请按质量从低到高输入1-9，取消则不压缩。', '8')
+            var compressIs =false
+            if(r != null){
+                r = parseInt(r);
+                if(isNaN(r) || r < 1 || r > 9){
+                    alert('输入有误')
+                    return;
+                }
+                compressIs =true
+            }
+            var inputDom = this;
+            var file = inputDom.files[0];
+            var fd = new FormData()
+            fd.append('file', file);
+            $.ajax({
+                url: rootDis+'imgupload?' + $.param({quality: r}),
+                type: 'POST',
+                data: fd,
+                cache: false,
+                processData: false,
+                contentType: false,
+                async: true,
+                success: function (res) {
+                    if (res.code == 0) {
+                        if (compressIs)
+                            alert('压缩后文件大小' + Math.round(res.data.size / 1024) + 'KB')
+                        var imgPad = $('.imgPadSample').clone(true);
+                        imgPad.removeClass('imgPadSample')
+                        imgPad.find('.entity').attr('src', res.data.url)
+                        imgPad.show()
+                        $('#invoicesPad .entityPadAdd').before(imgPad)
+                    } else {
+                        resCodeProcess(res.code,res.codeMsg)
+                    }
+                    $(inputDom).remove()
+                }
+            })
+        }).appendTo($('body')).click()
+    }
 
     function chooseHospital(){
         var r = prompt('请输入要查询的医院信息。')
@@ -239,28 +320,8 @@
         var param = {}
         param.token = token;
         var jqDom,jqDomValue;
-        jqDom=$('#phone')
-        param.phone = jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
-            return;
-        }
-        if(!jqDomValue && jqDom.attr('required')){
-            alert('\"'+jqDom.attr('columnName')+'\"不能空')
-            return;
-        }
-
         jqDom=$('#name')
-        param.name = jqDomValue= jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
-            return;
-        }
-
-        param.cover = $('#cover').attr('src')
-
-        jqDom=$('#password')
-        param.password= jqDomValue = jqDom.val();
+        param.name = jqDomValue = jqDom.val();
         if(jqDomValue.length> jqDom.attr('maxlength')){
             alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
             return;
@@ -269,16 +330,45 @@
             alert('\"'+jqDom.attr('columnName')+'\"不能空')
             return;
         }
-        if(param.password && param.password!=$('#passwordConfirm').val()){
-            alert('两次密码不一致')
+
+        jqDom=$('#tel')
+        param.tel = jqDomValue= jqDom.val();
+        if(jqDomValue.length> jqDom.attr('maxlength')){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
             return;
         }
+
+        jqDom=$('#idcardNo')
+        param.idcardNo = jqDomValue= jqDom.val();
+        if(jqDomValue.length> jqDom.attr('maxlength')){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+            return;
+        }
+        jqDom=$('#remark')
+        param.remark = jqDomValue= jqDom.val();
+        if(jqDomValue.length> jqDom.attr('maxlength')){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+            return;
+        }
+
+        jqDom=$('#sickness')
+        param.sickness = jqDomValue= jqDom.val();
+        if(jqDomValue.length> jqDom.attr('maxlength')){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+            return;
+        }
+        jqDom=$('#hospitalId')
+        param.hospitalId= jqDomValue = jqDom.val();
 
         jqDom=$('#clinicId')
         param.clinicId= jqDomValue = jqDom.val();
 
+        param.alterTime= $('#alterTime').val()?new Date($('#alterTime').val()).getTime():'';
+        param.addTime= $('#addTime').val()?new Date($('#addTime').val()).getTime():'';
+
+        param.invoices= $('#invoicesPad .entity').giveup_attrs('src').join(',');
         $.ajax({
-            url: rootDis+"maintainer/clinicerAdd",
+            url: rootDis+"maintainer/patientAdd",
             type: 'post',
             async: false,
             data: param,

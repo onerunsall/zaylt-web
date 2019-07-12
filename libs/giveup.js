@@ -246,7 +246,7 @@ giveup.upSelectedOptions =function (select){
 giveup.layer=function (params){
     var layer = document.createElement('div');
     if(params.id==undefined||params.id==null)
-        layer.id='giveup-layer'+ giveup.stringUtils.randomString(4)
+        layer.id='giveup-layer'+ giveup.randomString(4)
     else
         layer.id=params.id;
     layer.classList.add('giveup-layer')
@@ -315,40 +315,6 @@ giveup.getEventTarget = function(e){
 
 
 
-giveup.layer=function (params){
-    var div = document.createElement('div');
-    if(params.id==undefined||params.id==null)
-        div.id='giveup-layer'+ giveup.randomString(false,4)
-    else
-        div.id=params.id;
-    div.classList.add('giveup-layer')
-    div.style.position='fixed';
-    div.style.display='none';
-    div.style.top='0';
-    div.style.left='0';
-    div.style.bottom='0';
-    div.style.right='0';
-    div.style.overflow='auto';
-    div.style['z-index']=9999999;
-    div.style['background-color']='rgba(0, 0, 0, 0.3)';
-    document.body.appendChild(div);
-    if(params.init!=undefined||params.init!=null){
-        params.init(div);
-        //div.giveup_layerInit=params.init;
-        //div.giveup_layerInit();
-    }
-    div.style.display='block';
-
-    if(params.clickClose){
-        $(div).click(function(){
-            var e = giveup.getEvent();
-            var target = giveup.getEventTarget(e);
-            if(target == div){
-                $(this).remove();
-            }
-        })
-    }
-}
 
 //{complete:function({canvas:,imgType:'image/png'}){},xRadio:1,yRadio:1}
 giveup.cutImg = function (params){

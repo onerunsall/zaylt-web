@@ -1,3 +1,4 @@
+
 $.prototype.giveup_attrs=function(attr){
     var ss = [];
     $(this).each(function(index,ele){
