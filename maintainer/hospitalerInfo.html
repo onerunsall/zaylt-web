@@ -167,16 +167,18 @@
                 data: {token:token,ew:r},
                 success: function (res) {
                     if (res.code == 0) {
-                        if(res.data.sum.totalItemCount > 1){
-                            alert('匹配结果过多，请缩小查询范围')
-                        }else if(res.data.sum.totalItemCount ==0){
-                            alert('无匹配结果')
-                        }else{
-                            var entity = res.data.items[0];
-                            var entitySign = res.data.items[0].name+(res.data.items[0].headmanName?'/'+res.data.items[0].headmanName:'')
-                            if(confirm('已找到 "'+entitySign+'"，确定吗？')){
-                                $('#hospitalId').val(res.data.items[0].hospitalId)
-                                $('#hospitalSignShow').text(entitySign)
+                        var msg = "请输入选择的序号，如无所需项请缩小查询范围: \n\n"
+                        $(res.data.items).each(function(index,ele){
+                            ele.sign=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
+                            msg+=(index+1)+'. '+ele.sign+'\n'
+                        })
+
+                        var r1 = prompt(msg)
+                        if(r1!= null){
+                            var entity = res.data.items[r1-1];
+                            if(confirm('已选择 "'+entity.sign+'"，确定吗？')){
+                                $('#hospitalId').val(entity.hospitalId)
+                                $('#hospitalSignShow').text(entity.sign)
                                 $('#hospitalPad').show()
                             }
                         }
