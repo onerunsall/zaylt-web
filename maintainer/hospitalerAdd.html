@@ -92,16 +92,13 @@
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left;vertical-align: top;">
                 <span  class="valueAlter">
-                    <span id="hospitalPad">
-                    <span id="hospitalSignShow" class="giveup-cache giveup-cache-text"></span>
-                   <input id="hospitalId" class="giveup-cache" columnName="医院ID" type="text" style="display:none;"/>
-                    <span id="hospitalRemove"  style="margin-left:5px;cursor: pointer;color:#af0000;" onclick="$('#hospitalSignShow').text('');$('#hospitalId').val('');$('#hospitalPad'').hide()" >X</span>
-                    </span>
+                     <span id="hospitalIdSignShow" class="giveup-cache giveup-cache-text" style="display:none;"></span>
+                     <input id="hospitalId" class="giveup-cache" columnName="医院ID" type="text" style="display:none;"/>
+                      <span id="hospitalIdDel"  style="margin-left:5px;cursor: pointer;color:#af0000;display:none;" onclick="$('#hospitalIdSignShow').text('').hide();$('#hospitalId').val('').hide();$('#hospitalIdDel').hide()" >X</span>
                     <div ><button  onclick="chooseHospital()" type="button" >选择</button></div>
                 </span>
             </span>
             </div>
-
 
 
 
@@ -155,29 +152,51 @@
         }
     });
 
+
     function chooseHospital(){
         var r = prompt('请输入要查询的医院信息。')
-        if(r){
+        if(r!=null){
+            findHospital(r)
+        }
+
+        function findHospital(kw,ew,pageNo){
+            pageNo=pageNo||1;
             $.ajax({
                 url: rootDis+"maintainer/hospitalList",
                 type: 'post',
                 async: false,
-                data: {token:token,ew:r},
+                data: {token:token,kw:kw,pn:pageNo,ps:9},
                 success: function (res) {
                     if (res.code == 0) {
-                        var msg = "请输入选择的序号，如无所需项请缩小查询范围: \n\n"
+                        var msg = "请输入要选择的序号，当前第"+pageNo+"页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
+                        var vb;
                         $(res.data.items).each(function(index,ele){
-                            ele.sign=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
-                            msg+=(index+1)+'. '+ele.sign+'\n'
+                            ele.signShow=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
+                            msg+=(index+1)+'. '+ele.signShow+'\n'
                         })
-
-                        var r1 = prompt(msg)
-                        if(r1!= null){
-                            var entity = res.data.items[r1-1];
-                            if(confirm('已选择 "'+entity.sign+'"，确定吗？')){
-                                $('#hospitalId').val(entity.hospitalId)
-                                $('#hospitalSignShow').text(entity.sign)
-                                $('#hospitalPad').show()
+                        if(pageNo!=1&&res.data.items.length == 0)
+                            msg+='已经到底了'
+                        if(pageNo==1&&res.data.items.length == 0)
+                            msg+='未找到任何数据'
+                        vb = prompt(msg)
+                        if(vb!= null){
+                            if(vb.startsWith('+')){
+                                vb =vb.replace('+','')
+                                vb=!vb?1:vb;
+                                findHospital(kw,ew,pageNo+ +vb)
+                            }else  if(vb.startsWith('-')){
+                                vb =vb.replace('-','')
+                                vb=!vb?1:vb;
+                                findHospital(kw,ew,pageNo- +vb)
+                            }else if(!isNaN(vb)){
+                                var entity = res.data.items[+vb-1];
+                                if(entity && confirm('已选择 "'+entity.signShow+'"，确定吗？')){
+                                    $('#hospitalId').val(entity.hospitalId)
+                                    $('#hospitalIdSignShow').text(entity.signShow).show()
+                                    $('#hospitalIdDel').show()
+                                }
+                            }else{
+                                alert('输入错误')
                             }
                         }
                     } else {

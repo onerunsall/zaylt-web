@@ -4,7 +4,7 @@
     <script>
         var rootDis = "../"
     </script>
-    <title>忠安医联体运维平台-科室信息</title>
+    <title>忠安医联体运维平台-主轮播信息</title>
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon"/>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -22,11 +22,7 @@
     <script src="../libs/jquery.extend.giveup.js"></script>
     <script src="../libs/layer/layer.js"></script>
     <script src="../libs/moment.js"></script>
-    <link rel="stylesheet" href="../libs/kindeditor/themes/default/default.css"/>
-    <link rel="stylesheet" href="../libs/kindeditor/plugins/code/prettify.css"/>
-    <script charset="utf-8" src="../libs/kindeditor/kindeditor-all.js"></script>
-    <script charset="utf-8" src="../libs/kindeditor/lang/zh-CN.js"></script>
-    <script charset="utf-8" src="../libs/kindeditor/plugins/code/prettify.js"></script>
+
     <style>
         .title {
             font-weight: 600;
@@ -44,12 +40,12 @@
 
     </style>
     <script>
-        var office;
+        var procurementMaincarousel;
         var queryParamMap = giveup.parseQueryStr(location.search.substr(1));
         var token = $.cookie('token');
         var loginStatus = $.cookie('loginStatus_' + token);
         var currentPath = queryParamMap.currentPath;
-        var officeId = queryParamMap.officeId;
+        var procurementMaincarouselId = queryParamMap.procurementMaincarouselId;
     </script>
 </head>
 
@@ -72,34 +68,9 @@
     <div style="margin-top:10px;"></div>
     <form id="detailPad" style="line-height: 20px;">
         <fieldset>
-            <legend style="color: #595959">科室信息</legend>
-            <div style="margin:20px 0;">
-                <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top;">标题</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;;text-align: left">
-                     <span id="nameShow" class="valueShow" style="word-wrap: break-word;word-break: break-all;"></span>
-                    <input id="name" class="valueAlter giveup-cache" columnName="标题"
-                           style="width:80%;padding:3px 3px" type="text" required maxlength="100"
-                           placeholder="最大长度100"/>
-                </span>
-            </div>
+            <legend style="color: #595959">主轮播信息</legend>
 
 
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right">医院</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;;text-align: left;vertical-align: top;">
-                    <span id="hospitalNameShow" class="valueShow"></span>
-                <span class="valueAlter">
-                     <span id="hospitalIdSignShow" class="giveup-cache giveup-cache-text"></span>
-                     <input id="hospitalId" class="giveup-cache" columnName="医院ID" type="text" style="display:none;"/>
-                      <span id="hospitalIdDel" style="margin-left:5px;cursor: pointer;color:#af0000;"
-                            onclick="$('#hospitalIdSignShow').text('').hide();$('#hospitalId').val('').hide();$('#hospitalIdDel').hide()">X</span>
-                    <div><button onclick="chooseHospital()" type="button">选择</button></div>
-                </span>
-            </span>
-            </div>
 
             <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right">封面</span>
@@ -115,76 +86,48 @@
                         <img onclick="alterCover()" src="resource/add.jpg" style="width:20px;cursor:pointer;"/>
                     </span>
                 </span>
-
             </div>
+
+            <div style="margin:20px 0;">
+                <span class="title"  style="width:30%;display: inline-block;text-align: right">跳转</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%;display: inline-block;text-align: left">
+                     <span id="jumpShow" class="valueShow"></span>
+                    <select id="jump" class="valueAlter" style="padding:1px 4px">
+                        <option value="0">无</option>
+                        <option value="1">网页</option>
+                    </select>
+                </span>
+            </div>
+
+
+            <div style="margin:20px 0;display: none;" class="jumpPad jump1Pad">
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">URL</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%;display: inline-block;;text-align: left">
+                     <span id="jump1UrlShow" class="valueShow"></span>
+                    <input id="jump1Url" class="valueAlter " columnName="URL"
+                           style="width:80%;padding:3px 3px" type="text" maxlength="500" placeholder="最大长度500"/>
+                </span>
+            </div>
+
 
 
 
             <div>
                 <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top">简介</span>
+                      style="width:30%;display: inline-block;text-align: right;vertical-align: top">备注</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:40%;display: inline-block;text-align: left">
-                    <textarea id="contentShow" class="valueShow"
-                              style="width: 100%;padding:1px 4px" rows="7" disabled></textarea>
+                    <textarea id="remarkShow" class="valueShow"
+                         style="width: 100%;padding:1px 4px" rows="7" disabled></textarea>
                    <span class="valueAlter" >
-                    <textarea id="content"
+                    <textarea id="remark"
+
                               style="width: 100%;padding:1px 4px" rows="7"></textarea></span>
                 </span>
             </div>
 
-
-            <div>
-                <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top">诊疗技术</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:40%;display: inline-block;text-align: left">
-                    <textarea id="zhenLiaoJiShuShow" class="valueShow"
-                              style="width: 100%;padding:1px 4px" rows="7" disabled></textarea>
-                   <span class="valueAlter" >
-                    <textarea id="zhenLiaoJiShu"
-                              style="width: 100%;padding:1px 4px" rows="7"></textarea></span>
-                </span>
-            </div>
-
-            <div>
-                <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top">特色</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:40%;display: inline-block;text-align: left">
-                    <textarea id="teSeShow" class="valueShow"
-                              style="width: 100%;padding:1px 4px" rows="7" disabled></textarea>
-                   <span class="valueAlter" >
-                    <textarea id="teSe"
-                              style="width: 100%;padding:1px 4px" rows="7"></textarea></span>
-                </span>
-            </div>
-
-            <div>
-                <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top">优势</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:40%;display: inline-block;text-align: left">
-                    <textarea id="youShiShow" class="valueShow"
-                              style="width: 100%;padding:1px 4px" rows="7" disabled></textarea>
-                   <span class="valueAlter" >
-                    <textarea id="youShi"
-                              style="width: 100%;padding:1px 4px" rows="7"></textarea></span>
-                </span>
-            </div>
-
-            <div>
-                <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top">适应症</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:40%;display: inline-block;text-align: left">
-                    <textarea id="shiYingZhengShow" class="valueShow"
-                              style="width: 100%;padding:1px 4px" rows="7" disabled></textarea>
-                   <span class="valueAlter" >
-                    <textarea id="shiYingZheng"
-                              style="width: 100%;padding:1px 4px" rows="7"></textarea></span>
-                </span>
-            </div>
 
             <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right">排序号</span>
@@ -246,7 +189,6 @@
 </body>
 <script>
 
-    var contentKindEditor;
     navim.push({url: location.href, title: currentPath})
     $('#currentPath').html('导航: ' + navim.spring())
 
@@ -263,70 +205,16 @@
 
 
 
-    function chooseHospital(){
-        var r = prompt('请输入要查询的医院信息。')
-        if(r!=null){
-            findHospital(r)
-        }
-
-        function findHospital(kw,ew,pageNo){
-            pageNo=pageNo||1;
-            $.ajax({
-                url: rootDis+"maintainer/hospitalList",
-                type: 'post',
-                async: false,
-                data: {token:token,kw:kw,pn:pageNo,ps:9},
-                success: function (res) {
-                    if (res.code == 0) {
-                        var msg = "请输入要选择的序号，当前第"+pageNo+"页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
-                        var vb;
-                        $(res.data.items).each(function(index,ele){
-                            ele.signShow=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
-                            msg+=(index+1)+'. '+ele.signShow+'\n'
-                        })
-                        if(pageNo!=1&&res.data.items.length == 0)
-                            msg+='已经到底了'
-                        if(pageNo==1&&res.data.items.length == 0)
-                            msg+='未找到任何数据'
-                        vb = prompt(msg)
-                        if(vb!= null){
-                            if(vb.startsWith('+')){
-                                vb =vb.replace('+','')
-                                vb=!vb?1:vb;
-                                findHospital(kw,ew,pageNo+ +vb)
-                            }else  if(vb.startsWith('-')){
-                                vb =vb.replace('-','')
-                                vb=!vb?1:vb;
-                                findHospital(kw,ew,pageNo- +vb)
-                            }else if(!isNaN(vb)){
-                                var entity = res.data.items[+vb-1];
-                                if(entity && confirm('已选择 "'+entity.signShow+'"，确定吗？')){
-                                    $('#hospitalId').val(entity.hospitalId)
-                                    $('#hospitalIdSignShow').text(entity.signShow).show()
-                                    $('#hospitalIdDel').show()
-                                }
-                            }else{
-                                alert('输入错误')
-                            }
-                        }
-                    } else {
-                        resCodeProcess(res.code,res.codeMsg)
-                    }
-                }
-            })
-        }
-    }
-
 
 
     $.ajax({
-        url: rootDis + "maintainer/officeInfo",
+        url: rootDis + "maintainer/procurementMaincarouselInfo",
         type: 'post',
         async: false,
-        data: {officeId: officeId, token: token},
+        data: {procurementMaincarouselId: procurementMaincarouselId, token: token},
         success: function (res) {
             if (res.code == 0) {
-                var vb = office = res.data;
+                var vb = procurementMaincarousel = res.data;
                 $('#alterTime').val(moment(vb.alterTime).format('YYYY-MM-DDTHH:mm'))
                 $('#alterTimeShow').text(moment(vb.alterTime).format('YYYY-MM-DD HH:mm:ss'))
                 $('#addTime').val(moment(vb.addTime).format('YYYY-MM-DDTHH:mm'))
@@ -336,26 +224,18 @@
                 $('#orderNoShow').text(vb.orderNo);
 
 
-                $('#name').val(vb.name);
-                $('#nameShow').text(vb.name);
+                $('#remark').val(vb.remark);
+                $('#remarkShow').text(vb.remark);
+
+                $('#jump').val(vb.jump).change();
+                $('#jumpShow').text(vb.jump==0?'无':vb.jump==1?'网页':'');
+
+                $('#jump1Url').val(vb.jump1Url);
+                $('#jump1UrlShow').text(vb.jump1Url);
 
 
-                $('#content').val(vb.content);
-                $('#contentShow').text(vb.content);
 
-                $('#zhenLiaoJiShu').val(vb.zhenLiaoJiShu);
-                $('#zhenLiaoJiShuShow').text(vb.zhenLiaoJiShu);
-
-                $('#teSe').val(vb.teSe);
-                $('#teSeShow').text(vb.teSe);
-
-                $('#youShi').val(vb.youShi);
-                $('#youShiShow').text(vb.youShi);
-
-                $('#shiYingZheng').val(vb.shiYingZheng);
-                $('#shiYingZhengShow').text(vb.shiYingZheng);
-
-
+                $('.jump'+vb.jump+'Pad').show()
 
                 if (vb.hospitalId) {
                     $('#hospitalNameShow').text(vb.hospitalName);
@@ -382,22 +262,13 @@
     function alter() {
         var param = {}
         param.token = token;
-        param.officeId = officeId;
+        param.procurementMaincarouselId = procurementMaincarouselId;
         var jqDom, jqDomValue;
 
-        jqDom=$('#name')
-        param.name = jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
-            return;
-        }
-        if(!jqDomValue && jqDom.attr('required')){
-            alert('\"'+jqDom.attr('columnName')+'\"不能空')
-            return;
-        }
-        jqDom=$('#content')
-        param.content = jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
+        jqDom=$('#remark')
+        param.remark = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
             alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
             return;
         }
@@ -406,10 +277,21 @@
             return;
         }
 
-
-        jqDom=$('#zhenLiaoJiShu')
-        param.zhenLiaoJiShu = jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
+        jqDom=$('#jump')
+        param.jump = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+            return;
+        }
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
+            return;
+        }
+        jqDom=$('#jump1Url')
+        param.jump1Url = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
             alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
             return;
         }
@@ -418,38 +300,6 @@
             return;
         }
 
-        jqDom=$('#teSe')
-        param.teSe = jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
-            return;
-        }
-        if(!jqDomValue && jqDom.attr('required')){
-            alert('\"'+jqDom.attr('columnName')+'\"不能空')
-            return;
-        }
-
-        jqDom=$('#youShi')
-        param.youShi = jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
-            return;
-        }
-        if(!jqDomValue && jqDom.attr('required')){
-            alert('\"'+jqDom.attr('columnName')+'\"不能空')
-            return;
-        }
-
-        jqDom=$('#shiYingZheng')
-        param.shiYingZheng = jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
-            return;
-        }
-        if(!jqDomValue && jqDom.attr('required')){
-            alert('\"'+jqDom.attr('columnName')+'\"不能空')
-            return;
-        }
 
         jqDom=$('#orderNo')
         param.orderNo = jqDomValue= jqDom.val();
@@ -462,15 +312,12 @@
             return;
         }
 
-        jqDom=$('#hospitalId')
-        param.hospitalId= jqDomValue = jqDom.val();
-
 
         param.alterTime= $('#alterTime').val()?new Date($('#alterTime').val()).getTime():'';
         param.addTime= $('#addTime').val()?new Date($('#addTime').val()).getTime():'';
 
         $.ajax({
-            url: rootDis + "maintainer/officeAlter",
+            url: rootDis + "maintainer/procurementMaincarouselAlter",
             type: 'post',
             async: false,
             data: param,
@@ -546,5 +393,9 @@
         location.reload()
     })
 
+    $('#jump').change(function(){
+        $('.jumpPad').hide();
+        $('.jump'+this.value+'Pad').show()
+    })
 </script>
 </html>

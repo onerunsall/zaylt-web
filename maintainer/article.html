@@ -291,9 +291,9 @@
             },
             itemDel: function (articleId) {
                 let item = this.itemsMap[articleId];
-                var r = confirm(`确认删除？${item.rownum}.` + item.name)
+                var r = confirm(`确认删除？${item.rownum}.` + (item.name||''))
                 if (r == true) {
-                    r = confirm(`再次确认删除？${item.rownum}.` + item.name)
+                    r = confirm(`再次确认删除？${item.rownum}.` + (item.name||''))
                     if (r == true) {
                         $.ajax({
                             url: rootDis + "maintainer/articleDel",
@@ -384,8 +384,8 @@
                                 var msg = "请输入要选择的序号，当前第" + pageNo + "页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
                                 var vb;
                                 $(res.data.items).each(function (index, ele) {
-                                    ele.sign = ele.name + (ele.headmanName ? '/' + ele.headmanName : '')
-                                    msg += (index + 1) + '. ' + ele.sign + '\n'
+                                    ele.signShow = ele.name + (ele.headmanName ? '/' + ele.headmanName : '')
+                                    msg += (index + 1) + '. ' + ele.signShow + '\n'
                                 })
                                 if (pageNo != 1 && res.data.items.length == 0)
                                     msg += '已经到底了'
@@ -403,9 +403,9 @@
                                         findHospital(kw, ew, pageNo - +vb)
                                     } else if (!isNaN(vb)) {
                                         var entity = res.data.items[+vb - 1];
-                                        if (entity && confirm('已选择 "' + entity.sign + '"，确定吗？')) {
+                                        if (entity && confirm('已选择 "' + entity.signShow + '"，确定吗？')) {
                                             thisVue.queryParams.hospitalId = entity.hospitalId
-                                            thisVue.queryParams.hospitalIdSignShow = entity.sign
+                                            thisVue.queryParams.hospitalIdSignShow = entity.signShow
                                         }
                                     } else {
                                         alert('输入错误')

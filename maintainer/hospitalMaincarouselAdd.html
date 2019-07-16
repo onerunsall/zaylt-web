@@ -4,7 +4,7 @@
     <script>
         var rootDis="../"
     </script>
-    <title>忠安医联体运维平台-添加门诊</title>
+    <title>忠安医联体运维平台-添加主轮播</title>
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -22,6 +22,11 @@
     <script src="../libs/jquery.extend.giveup.js"></script>
     <script src="../libs/layer/layer.js"></script>
     <script src="../libs/moment.js"></script>
+    <link rel="stylesheet" href="../libs/kindeditor/themes/default/default.css"/>
+    <link rel="stylesheet" href="../libs/kindeditor/plugins/code/prettify.css"/>
+    <script charset="utf-8" src="../libs/kindeditor/kindeditor-all.js"></script>
+    <script charset="utf-8" src="../libs/kindeditor/lang/zh-CN.js"></script>
+    <script charset="utf-8" src="../libs/kindeditor/plugins/code/prettify.js"></script>
 
     <style>
         .title {
@@ -32,12 +37,18 @@
             cursor:pointer;
 
         }
+
+
+        .entityListPad .entityPad:last-of-type .exchangePlace {
+            display:none;
+        }
     </style>
     <script>
-      var  queryParamMap = giveup.parseQueryStr(location.search.substr(1));
+
+        var queryParamMap = giveup.parseQueryStr(location.search.substr(1));
+
       var  token = $.cookie('token');
       var  loginStatus = $.cookie('loginStatus_'+token);
-     var   currentPath = queryParamMap.currentPath;
     </script>
 </head>
 
@@ -53,16 +64,7 @@
     <div style="margin-top:10px;"></div>
     <form id="detailPad" style="line-height: 20px;">
         <fieldset>
-            <legend style="color: #595959">门诊信息</legend>
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">门诊名</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="name" class="valueAlter giveup-cache" columnName="门诊名"
-                           style="width:80%;padding:3px 3px" type="text" maxlength="32" placeholder="最大长度32"/>
-                </span>
-            </div>
-
+            <legend style="color: #595959">主轮播信息</legend>
 
             <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right">医院</span>
@@ -90,69 +92,85 @@
 
             </div>
 
-
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">电话</span>
+                <span class="title"  style="width:30%;display: inline-block;text-align: right">跳转</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="tel" class="valueAlter giveup-cache" columnName="电话"
-                           style="width:80%;padding:3px 3px" type="text" maxlength="32" placeholder="最大长度32"/>
+                <span style="width:50%;display: inline-block;text-align: left">
+                    <select id="jump" style="padding:1px 4px">
+                        <option value="0">无</option>
+                        <option value="1">网页</option>
+                        <option value="2">文章详情</option>
+                        <option value="3">专家详情</option>
+                        <option value="4">案例详情</option>
+                        <option value="5">活动详情</option>
+                        <option value="6">医院介绍</option>
+                        <option value="7">专家列表</option>
+                        <option value="8">科室列表</option>
+                    </select>
                 </span>
             </div>
 
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">主任</span>
+            <div style="margin:20px 0;display: none;" class="jumpPad jump1Pad">
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">URL</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="headmanName" class="valueAlter giveup-cache" columnName="院长"
-                           style="width:80%;padding:3px 3px" type="text" maxlength="32" placeholder="最大长度32"/>
+                    <input id="jump1Url" class="valueAlter " columnName="jump1Url"
+                           style="width:80%;padding:3px 3px" type="text" maxlength="500" placeholder="最大长度500"/>
                 </span>
             </div>
 
-
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">地址</span>
+            <div style="margin:20px 0;display: none;" class="jumpPad jump2Pad">
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">文章ID</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                    <input id="address" class="valueAlter giveup-cache" columnName="地址"
+                    <input id="jump2ArticleId" class="valueAlter " columnName="文章ID"
                            style="width:80%;padding:3px 3px" type="text" maxlength="500" placeholder="最大长度500"/>
                 </span>
             </div>
 
 
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">简介</span>
+            <div style="margin:20px 0;display: none;" class="jumpPad jump3Pad">
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">专家ID</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                 <textarea id="intro"
-                           class="valueAlter giveup-cache"
-                           style="width:80%;padding:3px 3px" rows="7"
-                           maxlength="2000"
-                           columnName="简介"
-                           placeholder="最大长度2000"></textarea>
-             </span>
+                    <input id="jump3DoctorId" class="valueAlter " columnName="专家ID"
+                           style="width:80%;padding:3px 3px" type="text" maxlength="500" placeholder="最大长度500"/>
+                </span>
+            </div>
+
+            <div style="margin:20px 0;display: none;" class="jumpPad jump4Pad">
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">案例ID</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%;display: inline-block;;text-align: left">
+                    <input id="jump4ProjectId" class="valueAlter " columnName="案例ID"
+                           style="width:80%;padding:3px 3px" type="text" maxlength="500" placeholder="最大长度500"/>
+                </span>
+            </div>
+
+            <div style="margin:20px 0;display: none;" class="jumpPad jump5Pad">
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">活动ID</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%;display: inline-block;;text-align: left">
+                    <input id="jump5ActivityId" class="valueAlter " columnName="活动ID"
+                           style="width:80%;padding:3px 3px" type="text" maxlength="500" placeholder="最大长度500"/>
+                </span>
+            </div>
+
+            <div>
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top">备注</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:40%;display: inline-block;text-align: left"><textarea id="remark"
+                                                                                         class="giveup-cache" maxlength="500" placeholder="最大长度500"
+                                                                                         style="width: 100%;padding:1px 4px" rows="7"></textarea></span>
             </div>
 
             <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">备注</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">排序号</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
-                 <textarea id="remark"
-                           class="valueAlter giveup-cache"
-                           style="width:80%;padding:3px 3px" rows="7"
-                           maxlength="500"
-                           columnName="备注"
-                           placeholder="最大长度500"></textarea>
+              <input id="orderNo" class="valueAlter giveup-cache" columnName="排序号"
+                     style="padding:3px 3px;text-align: right;" type="number"   placeholder="9999"/>
              </span>
-            </div>
-
-            <div style="margin:20px 0;">
-                <span class="title" style="width:30%;display: inline-block;text-align: right">排序号</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%"><input id="orderNo" class="valueAlter giveup-cache" type="number"
-                                               style="text-align: right;padding:3px 3px;width:7%"
-                                               columnName="排序号"
-                                               placeholder="9999"/></span>
             </div>
 
             <div style="margin:20px 0;">
@@ -172,7 +190,6 @@
                                                columnName="更新时间"
                                                placeholder="请使用谷歌浏览器"/></span>
             </div>
-
         </fieldset>
 
 
@@ -187,21 +204,29 @@
 </div>
 
 
+<span  class="imgPadSample entityPad" style="margin-right:5px;display:none">
+    <img  class="entity" style="width:50px;cursor:pointer" onclick="giveup.imgPreview(this.src)"/>
+    <span style="cursor:pointer;color:#af0000;" class="" onclick="$(this).parent('.entityPad').remove()">X</span>
+    <span  style="cursor:pointer;margin:0 5px" class=" exchangePlace"
+          onclick="$(this).parent('.entityPad').giveup_exchangeDom($(this).parent('.entityPad').next('.entityPad'))"><></span>
+</span>
+
 </body>
 <script>
-    navim.push({url: location.href, title: currentPath})
-    $('#currentPath').html('导航: ' + navim.spring())
 
-    $('#hospitalId').val(queryParamMap.hospitalId)
-    if(queryParamMap.hospitalIdSignShow){
-        $('#hospitalIdSignShow').text(queryParamMap.hospitalIdSignShow).show()
-        $('#hospitalIdDel').show()
+        navim.push({url: location.href, title: queryParamMap.currentPath})
+        $('#currentPath').html('导航: ' + navim.spring())
 
-    }
+        $('#hospitalId').val(queryParamMap.hospitalId)
+        if(queryParamMap.hospitalIdSignShow){
+            $('#hospitalIdSignShow').text(queryParamMap.hospitalIdSignShow).show()
+            $('#hospitalIdDel').show()
+        }
 
-    var vb= new Date();
-    $('#addTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
-    $('#alterTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+        var vb = new Date();
+        $('#addTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+        $('#alterTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+
 
 
 
@@ -214,6 +239,9 @@
             layer.close(this.layerIndex);
         }
     });
+
+
+
 
 
 
@@ -271,58 +299,103 @@
         }
     }
 
+
     $('[name=clearBtn]').click(function () {
         giveup.cache.clearAll()
         location.reload()
     })
+
     $('[name=addBtn]').click(function () {
         var param = {}
         param.token = token;
-        var jqDom,jqDomValue;
-        jqDom=$('#name')
-        param.name = jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
+        var jqDom,jqDomValue,maxlength;
+
+        jqDom=$('#jump')
+        param.jump = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
             alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
             return;
         }
-        jqDom=$('#tel')
-        param.tel = jqDomValue= jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
+            return;
+        }
+        jqDom=$('#jump1Url')
+        param.jump1Url = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
             alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
             return;
         }
-
-
-        jqDom=$('#address')
-        param.address= jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
+            return;
+        }
+        jqDom=$('#jump2ArticleId')
+        param.jump2ArticleId = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
             alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
             return;
         }
-
-        jqDom=$('#intro')
-        param.intro= jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
             return;
         }
 
+        jqDom=$('#jump3DoctorId')
+        param.jump3DoctorId = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+            return;
+        }
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
+            return;
+        }
+
+        jqDom=$('#jump4ProjectId')
+        param.jump4ProjectId = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+            return;
+        }
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
+            return;
+        }
+
+        jqDom=$('#jump5ActivityId')
+        param.jump5ActivityId = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+            return;
+        }
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
+            return;
+        }
 
         jqDom=$('#remark')
-        param.remark = jqDomValue= jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
+        param.remark = jqDomValue = jqDom.val();
+        maxlength=jqDom.attr('maxlength')
+        if(maxlength && jqDomValue.length> maxlength){
             alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
             return;
         }
-
-        jqDom=$('#headmanName')
-        param.headmanName= jqDomValue = jqDom.val();
-        if(jqDomValue.length> jqDom.attr('maxlength')){
-            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
             return;
         }
 
-        debugger
+        jqDom=$('#orderNo')
+        param.orderNo = jqDomValue= jqDom.val();
+
+
         jqDom=$('#cover')
         param.cover = jqDomValue= jqDom.attr('src');
         if(!jqDomValue && jqDom.attr('required')){
@@ -330,14 +403,16 @@
             return;
         }
 
-        param.orderNo = $('#orderNo').val();
-        param.hospitalId = $('#hospitalId').val();
+        jqDom=$('#hospitalId')
+        param.hospitalId= jqDomValue = jqDom.val();
+
+
 
         param.alterTime= $('#alterTime').val()?new Date($('#alterTime').val()).getTime():'';
         param.addTime= $('#addTime').val()?new Date($('#addTime').val()).getTime():'';
 
         $.ajax({
-            url: rootDis+"maintainer/clinicAdd",
+            url: rootDis+"maintainer/hospitalMaincarouselAdd",
             type: 'post',
             async: false,
             data: param,
@@ -350,8 +425,6 @@
             }
         })
     })
-
-
 
 
 
@@ -396,7 +469,10 @@
     }
 
 
-
+$('#jump').change(function(){
+    $('.jumpPad').hide();
+    $('.jump'+this.value+'Pad').show()
+})
 </script>
 <script src="../libs/giveup.cache.js"></script>
 </html>

@@ -71,11 +71,11 @@
             <legend style="color: #595959">专家信息</legend>
             <div style="margin:20px 0;">
                 <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top;">标题</span>
+                      style="width:30%;display: inline-block;text-align: right;vertical-align: top;">专家名</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left">
                      <span id="nameShow" class="valueShow" style="word-wrap: break-word;word-break: break-all;"></span>
-                    <input id="name" class="valueAlter giveup-cache" columnName="标题"
+                    <input id="name" class="valueAlter giveup-cache" columnName="专家名"
                            style="width:80%;padding:3px 3px" type="text" required maxlength="100"
                            placeholder="最大长度100"/>
                 </span>
@@ -90,7 +90,7 @@
                 <span class="valueAlter">
                      <span id="hospitalIdSignShow" class="giveup-cache giveup-cache-text"></span>
                      <input id="hospitalId" class="giveup-cache" columnName="医院ID" type="text" style="display:none;"/>
-                      <span id="hospitalIdDel" style="margin-left:5px;cursor: pointer;color:#af0000;"
+                      <span id="hospitalIdDel" style="margin-left:5px;cursor: pointer;color:#af0000;display:none;"
                             onclick="$('#hospitalIdSignShow').text('').hide();$('#hospitalId').val('').hide();$('#hospitalIdDel').hide()">X</span>
                     <div><button onclick="chooseHospital()" type="button">选择</button></div>
                 </span>
@@ -105,7 +105,7 @@
                 <span class="valueAlter">
                      <span id="officeIdSignShow" class="giveup-cache giveup-cache-text"></span>
                      <input id="officeId" class="giveup-cache" columnName="科室ID" type="text" style="display:none;"/>
-                      <span id="officeIdDel" style="margin-left:5px;cursor: pointer;color:#af0000;"
+                      <span id="officeIdDel" style="margin-left:5px;cursor: pointer;color:#af0000;display:none;"
                             onclick="$('#officeIdSignShow').text('').hide();$('#officeId').val('').hide();$('#officeIdDel').hide()">X</span>
                     <div><button onclick="chooseOffice()" type="button">选择</button></div>
                 </span>
@@ -121,7 +121,7 @@
                     <span class="valueAlter">
                             <img id="cover" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;display:none;"
                                  columnName="封面" class="giveup-cache"/>
-                            <span id="coverDel" style="cursor:pointer;display:none;color:#af0000;"
+                            <span id="coverDel" style="cursor:pointer;display:none;color:#af0000;display:none;"
                                   onclick="$('#coverDel').hide();$('#cover').attr('src','').hide()">X</span>
                         <img onclick="alterCover()" src="resource/add.jpg" style="width:20px;cursor:pointer;"/>
                     </span>
