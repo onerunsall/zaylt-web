@@ -337,7 +337,8 @@ function  alterPwd(){
                     if (res.code == 0) {
                         if(compressIs)
                             alert('压缩后文件大小' + Math.round(res.data.size / 1024) + 'KB')
-                        $('#coverPad').show().find('#cover').attr('src', res.data.url)
+                        $('#cover').attr('src', res.data.url).show();
+                        $('#coverDel').show();
                     } else {
                         resCodeProcess(res.code,res.codeMsg)
                     }

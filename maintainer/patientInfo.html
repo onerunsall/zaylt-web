@@ -104,33 +104,31 @@
                 <span class="title" style="width:30%;display: inline-block;text-align: right">医院</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left;vertical-align: top;">
-                     <span id="hospitalNameShow"  class="valueShow"  style="word-wrap: break-word;word-break: break-all;"></span>
-                <span  class="valueAlter">
-                    <span id="hospitalPad">
-                     <span id="hospitalSignShow" class="giveup-cache giveup-cache-text"></span>
+                    <span id="hospitalNameShow" class="valueShow"></span>
+                <span class="valueAlter">
+                     <span id="hospitalIdSignShow" class="giveup-cache giveup-cache-text"></span>
                      <input id="hospitalId" class="giveup-cache" columnName="医院ID" type="text" style="display:none;"/>
-                      <span id="hospitalRemove"  style="margin-left:5px;cursor: pointer;color:#af0000;" onclick="$('#hospitalSignShow').text('');$('#hospitalId').val('');$('#hospitalPad').hide()" >X</span>
-                   </span>
-                    <div ><button  onclick="chooseHospital()" type="button" >选择</button></div>
+                      <span id="hospitalIdDel" style="margin-left:5px;cursor: pointer;color:#af0000;"
+                            onclick="$('#hospitalIdSignShow').text('').hide();$('#hospitalId').val('').hide();$('#hospitalIdDel').hide()">X</span>
+                    <div><button onclick="chooseHospital()" type="button">选择</button></div>
                 </span>
             </span>
             </div>
-
             <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right">门诊</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left;vertical-align: top;">
-                     <span id="clinicNameShow"  class="valueShow"  style="word-wrap: break-word;word-break: break-all;"></span>
-                <span  class="valueAlter">
-                    <span id="clinicPad">
-                    <span id="clinicSignShow" class="giveup-cache giveup-cache-text"></span>
-                   <input id="clinicId" class="giveup-cache" columnName="门诊ID" type="text" style="display:none;"/>
-                    <span id="clinicRemove"  style="margin-left:5px;cursor: pointer;color:#af0000;" onclick="$('#clinicSignShow').text('');$('#clinicId').val('');$('#clinicPad').hide()" >X</span>
-                    </span>
-                    <div ><button  onclick="chooseClinic()" type="button" >选择</button></div>
+                    <span id="clinicNameShow" class="valueShow"></span>
+                <span class="valueAlter">
+                     <span id="clinicIdSignShow" class="giveup-cache giveup-cache-text"></span>
+                     <input id="clinicId" class="giveup-cache" columnName="门诊ID" type="text" style="display:none;"/>
+                      <span id="clinicIdDel" style="margin-left:5px;cursor: pointer;color:#af0000;"
+                            onclick="$('#clinicIdSignShow').text('').hide();$('#clinicId').val('').hide();$('#clinicIdDel').hide()">X</span>
+                    <div><button onclick="chooseClinic()" type="button">选择</button></div>
                 </span>
             </span>
             </div>
+
 
             <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right;vertical-align: top;">病症</span>
@@ -241,27 +239,48 @@
 
     function chooseHospital(){
         var r = prompt('请输入要查询的医院信息。')
-        if(r){
+        if(r!=null){
+            findHospital(r)
+        }
+
+        function findHospital(kw,ew,pageNo){
+            pageNo=pageNo||1;
             $.ajax({
                 url: rootDis+"maintainer/hospitalList",
                 type: 'post',
                 async: false,
-                data: {token:token,ew:r},
+                data: {token:token,kw:kw,pn:pageNo},
                 success: function (res) {
                     if (res.code == 0) {
-                        var msg = "请输入选择的序号，如无所需项请缩小查询范围: \n\n"
+                        var msg = "请输入要选择的序号，当前第"+pageNo+"页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
+                        var vb;
                         $(res.data.items).each(function(index,ele){
                             ele.sign=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
                             msg+=(index+1)+'. '+ele.sign+'\n'
                         })
-
-                        var r1 = prompt(msg)
-                        if(r1!= null){
-                            var entity = res.data.items[r1-1];
-                            if(confirm('已选择 "'+entity.sign+'"，确定吗？')){
-                                $('#hospitalId').val(entity.hospitalId)
-                                $('#hospitalSignShow').text(entity.sign)
-                                $('#hospitalPad').show()
+                        if(pageNo!=1&&res.data.items.length == 0)
+                            msg+='已经到底了'
+                        if(pageNo==1&&res.data.items.length == 0)
+                            msg+='未找到任何数据'
+                        vb = prompt(msg)
+                        if(vb!= null){
+                            if(vb.startsWith('+')){
+                                vb =vb.replace('+','')
+                                vb=!vb?1:vb;
+                                findHospital(kw,ew,pageNo+ +vb)
+                            }else  if(vb.startsWith('-')){
+                                vb =vb.replace('-','')
+                                vb=!vb?1:vb;
+                                findHospital(kw,ew,pageNo- +vb)
+                            }else if(!isNaN(vb)){
+                                var entity = res.data.items[+vb-1];
+                                if(entity && confirm('已选择 "'+entity.sign+'"，确定吗？')){
+                                    $('#hospitalId').val(entity.hospitalId)
+                                    $('#hospitalIdSignShow').text(entity.sign).show()
+                                    $('#hospitalIdDel').show()
+                                }
+                            }else{
+                                alert('输入错误')
                             }
                         }
                     } else {
@@ -274,27 +293,48 @@
 
     function chooseClinic(){
         var r = prompt('请输入要查询的门诊信息。')
-        if(r){
+        if(r!=null){
+            findClinic(r)
+        }
+
+        function findClinic(kw,ew,pageNo){
+            pageNo=pageNo||1;
             $.ajax({
                 url: rootDis+"maintainer/clinicList",
                 type: 'post',
                 async: false,
-                data: {token:token,ew:r,hospitalId:$('#hospitalId').val()},
+                data: {token:token,kw:kw,pn:pageNo,hospitalId:$('#hospitalId').val()},
                 success: function (res) {
                     if (res.code == 0) {
-                        var msg = "请输入选择的序号，如无所需项请缩小查询范围: \n\n"
+                        var msg = "请输入要选择的序号，当前第"+pageNo+"页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
+                        var vb;
                         $(res.data.items).each(function(index,ele){
                             ele.sign=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
                             msg+=(index+1)+'. '+ele.sign+'\n'
                         })
-
-                        var r1 = prompt(msg)
-                        if(r1!= null){
-                            var entity = res.data.items[r1-1];
-                            if(confirm('已选择 "'+entity.sign+'"，确定吗？')){
-                                $('#clinicId').val(entity.clinicId)
-                                $('#clinicSignShow').text(entity.sign)
-                                $('#clinicPad').show()
+                        if(pageNo!=1&&res.data.items.length == 0)
+                            msg+='已经到底了'
+                        if(pageNo==1&&res.data.items.length == 0)
+                            msg+='未找到任何数据'
+                        vb = prompt(msg)
+                        if(vb!= null){
+                            if(vb.startsWith('+')){
+                                vb =vb.replace('+','')
+                                vb=!vb?1:vb;
+                                findClinic(kw,ew,pageNo+ +vb)
+                            }else  if(vb.startsWith('-')){
+                                vb =vb.replace('-','')
+                                vb=!vb?1:vb;
+                                findClinic(kw,ew,pageNo- +vb)
+                            }else if(!isNaN(vb)){
+                                var entity = res.data.items[+vb-1];
+                                if(entity && confirm('已选择 "'+entity.sign+'"，确定吗？')){
+                                    $('#clinicId').val(entity.clinicId)
+                                    $('#clinicIdSignShow').text(entity.sign).show()
+                                    $('#clinicIdDel').show()
+                                }
+                            }else{
+                                alert('输入错误')
                             }
                         }
                     } else {
@@ -304,6 +344,7 @@
             })
         }
     }
+
 
 
     $.ajax({
@@ -335,23 +376,22 @@
                 $('#remark').val( vb.remark);
                 $('#remarkShow').text( vb.remark);
 
-                if(vb.hospitalId){
-                    $('#hospitalNameShow').text( vb.hospitalName);
+                if (vb.hospitalId) {
+                    $('#hospitalNameShow').text(vb.hospitalName);
 
-                    $('#hospitalId').val( vb.hospitalId);
-                    $('#hospitalSignShow').text( vb.hospitalName);
-                    $('#hospitalPad').show()
+                    $('#hospitalId').val(vb.hospitalId);
+                    $('#hospitalIdSignShow').text(vb.hospitalName);
+                    $('#hospitalIdDel').show()
                 }
 
 
-                if(vb.clinicId){
-                    $('#clinicNameShow').text( vb.clinicName);
+                if (vb.clinicId) {
+                    $('#clinicNameShow').text(vb.clinicName);
 
-                    $('#clinicId').val( vb.clinicId);
-                    $('#clinicSignShow').text( vb.clinicName);
-                    $('#clinicPad').show()
+                    $('#clinicId').val(vb.clinicId);
+                    $('#clinicIdSignShow').text(vb.clinicName);
+                    $('#clinicIdDel').show()
                 }
-
 
 
 

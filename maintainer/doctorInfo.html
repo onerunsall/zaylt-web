@@ -4,7 +4,7 @@
     <script>
         var rootDis = "../"
     </script>
-    <title>忠安医联体运维平台-文章信息</title>
+    <title>忠安医联体运维平台-专家信息</title>
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon"/>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -22,11 +22,7 @@
     <script src="../libs/jquery.extend.giveup.js"></script>
     <script src="../libs/layer/layer.js"></script>
     <script src="../libs/moment.js"></script>
-    <link rel="stylesheet" href="../libs/kindeditor/themes/default/default.css"/>
-    <link rel="stylesheet" href="../libs/kindeditor/plugins/code/prettify.css"/>
-    <script charset="utf-8" src="../libs/kindeditor/kindeditor-all.js"></script>
-    <script charset="utf-8" src="../libs/kindeditor/lang/zh-CN.js"></script>
-    <script charset="utf-8" src="../libs/kindeditor/plugins/code/prettify.js"></script>
+
     <style>
         .title {
             font-weight: 600;
@@ -44,12 +40,12 @@
 
     </style>
     <script>
-        var article;
+        var doctor;
         var queryParamMap = giveup.parseQueryStr(location.search.substr(1));
         var token = $.cookie('token');
         var loginStatus = $.cookie('loginStatus_' + token);
         var currentPath = queryParamMap.currentPath;
-        var articleId = queryParamMap.articleId;
+        var doctorId = queryParamMap.doctorId;
     </script>
 </head>
 
@@ -72,7 +68,7 @@
     <div style="margin-top:10px;"></div>
     <form id="detailPad" style="line-height: 20px;">
         <fieldset>
-            <legend style="color: #595959">文章信息</legend>
+            <legend style="color: #595959">专家信息</legend>
             <div style="margin:20px 0;">
                 <span class="title"
                       style="width:30%;display: inline-block;text-align: right;vertical-align: top;">标题</span>
@@ -102,6 +98,21 @@
             </div>
 
             <div style="margin:20px 0;">
+                <span class="title" style="width:30%;display: inline-block;text-align: right">科室</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%;display: inline-block;;text-align: left;vertical-align: top;">
+                    <span id="officeNameShow" class="valueShow"></span>
+                <span class="valueAlter">
+                     <span id="officeIdSignShow" class="giveup-cache giveup-cache-text"></span>
+                     <input id="officeId" class="giveup-cache" columnName="科室ID" type="text" style="display:none;"/>
+                      <span id="officeIdDel" style="margin-left:5px;cursor: pointer;color:#af0000;"
+                            onclick="$('#officeIdSignShow').text('').hide();$('#officeId').val('').hide();$('#officeIdDel').hide()">X</span>
+                    <div><button onclick="chooseOffice()" type="button">选择</button></div>
+                </span>
+            </span>
+            </div>
+
+            <div style="margin:20px 0;">
                 <span class="title" style="width:30%;display: inline-block;text-align: right">封面</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;text-align: left">
@@ -119,41 +130,34 @@
             </div>
 
 
-            <div style="margin:20px 0;">
-                <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top;">浏览量</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;;text-align: left">
-                     <span id="viewCountShow" style="word-wrap: break-word;word-break: break-all;"></span>
-
-             </span>
-            </div>
-
-            <div style="margin:20px 0;">
-                <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top;">基础浏览量</span>
-                <span class="title" style="width:5%;display: inline-block;"></span>
-                <span style="width:50%;display: inline-block;;text-align: left">
-                     <span id="viewCountBaseShow" class="valueShow"
-                           style="word-wrap: break-word;word-break: break-all;"></span>
-              <input id="viewCountBase" class="valueAlter giveup-cache" columnName="基础浏览量"
-                     style="padding:3px 3px;text-align: right;" type="number" placeholder="0"/>
-             </span>
-            </div>
 
             <div>
                 <span class="title"
-                      style="width:30%;display: inline-block;text-align: right;vertical-align: top">内容</span>
+                      style="width:30%;display: inline-block;text-align: right;vertical-align: top">简介</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:40%;display: inline-block;text-align: left">
-                    <div id="contentShow" class="valueShow"
-                         style="border:1px solid #cacaca;display:none;word-wrap: break-word;word-break:break-all;padding:3px;"></div>
+                    <textarea id="introShow" class="valueShow"
+                              style="width: 100%;padding:1px 4px" rows="7" disabled></textarea>
                    <span class="valueAlter" >
-                    <textarea id="content"
-
-                              style="width: 100%;height: 30px;padding:1px 4px"></textarea></span>
+                    <textarea id="intro"
+                              style="width: 100%;padding:1px 4px" rows="7" maxlength="5000" placeholder="最大长度5000"></textarea></span>
                 </span>
             </div>
+
+
+            <div>
+                <span class="title"
+                      style="width:30%;display: inline-block;text-align: right;vertical-align: top">头衔</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:40%;display: inline-block;text-align: left">
+                    <textarea id="jobTitlesShow" class="valueShow"
+                              style="width: 100%;padding:1px 4px" rows="7" disabled></textarea>
+                   <span class="valueAlter" >
+                    <textarea id="jobTitles"
+                              style="width: 100%;padding:1px 4px" rows="7" maxlength="500" placeholder="最大长度500，多个用英文逗号隔开"></textarea></span>
+                </span>
+            </div>
+
 
 
             <div style="margin:20px 0;">
@@ -231,25 +235,6 @@
         }
     });
 
-    contentKindEditor = KindEditor.create('#content', {
-        autoHeightMode: true,
-        cssPath: '../libs/kindeditor/plugins/code/prettify.css',
-        uploadJson: '../kindeditor/upload_json.jsp',
-        fileManagerJson: '../kindeditor/file_manager_json.jsp',
-        allowFileManager: true,
-        afterCreate: function () {
-            var self = this;
-            KindEditor.ctrl(document, 13, function () {
-                self.sync();
-                document.forms['example'].submit();
-            });
-            KindEditor.ctrl(self.edit.doc, 13, function () {
-                self.sync();
-                document.forms['example'].submit();
-            });
-        }
-    });
-    prettyPrint();
 
 
     function chooseHospital(){
@@ -270,8 +255,8 @@
                         var msg = "请输入要选择的序号，当前第"+pageNo+"页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
                         var vb;
                         $(res.data.items).each(function(index,ele){
-                            ele.sign=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
-                            msg+=(index+1)+'. '+ele.sign+'\n'
+                            ele.signShow=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
+                            msg+=(index+1)+'. '+ele.signShow+'\n'
                         })
                         if(pageNo!=1&&res.data.items.length == 0)
                             msg+='已经到底了'
@@ -289,9 +274,9 @@
                                 findHospital(kw,ew,pageNo- +vb)
                             }else if(!isNaN(vb)){
                                 var entity = res.data.items[+vb-1];
-                                if(entity && confirm('已选择 "'+entity.sign+'"，确定吗？')){
+                                if(entity && confirm('已选择 "'+entity.signShow+'"，确定吗？')){
                                     $('#hospitalId').val(entity.hospitalId)
-                                    $('#hospitalIdSignShow').text(entity.sign).show()
+                                    $('#hospitalIdSignShow').text(entity.signShow).show()
                                     $('#hospitalIdDel').show()
                                 }
                             }else{
@@ -307,15 +292,69 @@
     }
 
 
+    function chooseOffice(){
+        var r = prompt('请输入要查询的科室信息。')
+        if(r!=null){
+            findOffice(r)
+        }
+
+        function findOffice(kw,ew,pageNo){
+            pageNo=pageNo||1;
+            $.ajax({
+                url: rootDis+"maintainer/officeList",
+                type: 'post',
+                async: false,
+                data: {token:token,kw:kw,pn:pageNo,hospitalId:$('#hospitalId').val()},
+                success: function (res) {
+                    if (res.code == 0) {
+                        var msg = "请输入要选择的序号，当前第"+pageNo+"页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
+                        var vb;
+                        $(res.data.items).each(function(index,ele){
+                            ele.signShow=ele.name
+                            msg+=(index+1)+'. '+ele.signShow+'\n'
+                        })
+                        if(pageNo!=1&&res.data.items.length == 0)
+                            msg+='已经到底了'
+                        if(pageNo==1&&res.data.items.length == 0)
+                            msg+='未找到任何数据'
+                        vb = prompt(msg)
+                        if(vb!= null){
+                            if(vb.startsWith('+')){
+                                vb =vb.replace('+','')
+                                vb=!vb?1:vb;
+                                findOffice(kw,ew,pageNo+ +vb)
+                            }else  if(vb.startsWith('-')){
+                                vb =vb.replace('-','')
+                                vb=!vb?1:vb;
+                                findOffice(kw,ew,pageNo- +vb)
+                            }else if(!isNaN(vb)){
+                                var entity = res.data.items[+vb-1];
+                                if(entity && confirm('已选择 "'+entity.signShow+'"，确定吗？')){
+                                    $('#officeId').val(entity.officeId)
+                                    $('#officeIdSignShow').text(entity.signShow).show()
+                                    $('#officeIdDel').show()
+                                }
+                            }else{
+                                alert('输入错误')
+                            }
+                        }
+                    } else {
+                        resCodeProcess(res.code,res.codeMsg)
+                    }
+                }
+            })
+        }
+    }
+
 
     $.ajax({
-        url: rootDis + "maintainer/articleInfo",
+        url: rootDis + "maintainer/doctorInfo",
         type: 'post',
         async: false,
-        data: {articleId: articleId, token: token},
+        data: {doctorId: doctorId, token: token},
         success: function (res) {
             if (res.code == 0) {
-                var vb = article = res.data;
+                var vb = office = res.data;
                 $('#alterTime').val(moment(vb.alterTime).format('YYYY-MM-DDTHH:mm'))
                 $('#alterTimeShow').text(moment(vb.alterTime).format('YYYY-MM-DD HH:mm:ss'))
                 $('#addTime').val(moment(vb.addTime).format('YYYY-MM-DDTHH:mm'))
@@ -328,10 +367,15 @@
                 $('#name').val(vb.name);
                 $('#nameShow').text(vb.name);
 
-                $('#viewCountShow').text(vb.viewCount);
 
-                $('#viewCountBase').val(vb.viewCountBase);
-                $('#viewCountBaseShow').text(vb.viewCountBase)
+                $('#intro').val(vb.intro);
+                $('#introShow').text(vb.intro);
+
+                $('#jobTitles').val(vb.jobTitles);
+                $('#jobTitlesShow').text(vb.jobTitles);
+
+
+
 
                 if (vb.hospitalId) {
                     $('#hospitalNameShow').text(vb.hospitalName);
@@ -341,6 +385,13 @@
                     $('#hospitalIdDel').show()
                 }
 
+                if (vb.officeId) {
+                    $('#officeNameShow').text(vb.officeName);
+
+                    $('#officeId').val(vb.officeId);
+                    $('#officeIdSignShow').text(vb.officeName);
+                    $('#officeIdDel').show()
+                }
 
                 if (vb.cover) {
                     $('#cover').attr('src', vb.cover).show()
@@ -348,14 +399,7 @@
                     $('#coverShow').show().attr('src', vb.cover)
                 }
 
-                if (vb.contentBtId) {
-                    $.get('../bigtxt/'+vb.contentBtId+'/'+vb.contentBtId,null,function(res){
-                        if(res){
-                            contentKindEditor.html(res);
-                            $('#contentShow').html(res).show();
-                        }
-                    })
-                }
+
             } else {
                 resCodeProcess(res.code, res.codeMsg)
             }
@@ -365,7 +409,7 @@
     function alter() {
         var param = {}
         param.token = token;
-        param.articleId = articleId;
+        param.doctorId = doctorId;
         var jqDom, jqDomValue;
 
         jqDom=$('#name')
@@ -378,9 +422,29 @@
             alert('\"'+jqDom.attr('columnName')+'\"不能空')
             return;
         }
+        jqDom=$('#intro')
+        param.intro = jqDomValue = jqDom.val();
+        if(jqDomValue.length> jqDom.attr('maxlength')){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+            return;
+        }
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
+            return;
+        }
 
-        jqDom=$('#viewCountBase')
-        param.viewCountBase = jqDomValue= jqDom.val();
+
+        jqDom=$('#jobTitles')
+        param.jobTitles = jqDomValue = jqDom.val();
+        if(jqDomValue.length> jqDom.attr('maxlength')){
+            alert('\"'+jqDom.attr('columnName')+'\"最大长度'+jqDom.attr('maxlength'))
+            return;
+        }
+        if(!jqDomValue && jqDom.attr('required')){
+            alert('\"'+jqDom.attr('columnName')+'\"不能空')
+            return;
+        }
+
 
         jqDom=$('#orderNo')
         param.orderNo = jqDomValue= jqDom.val();
@@ -396,13 +460,14 @@
         jqDom=$('#hospitalId')
         param.hospitalId= jqDomValue = jqDom.val();
 
-        param.content= contentKindEditor.html()
+        jqDom=$('#officeId')
+        param.officeId= jqDomValue = jqDom.val();
 
         param.alterTime= $('#alterTime').val()?new Date($('#alterTime').val()).getTime():'';
         param.addTime= $('#addTime').val()?new Date($('#addTime').val()).getTime():'';
 
         $.ajax({
-            url: rootDis + "maintainer/articleAlter",
+            url: rootDis + "maintainer/doctorAlter",
             type: 'post',
             async: false,
             data: param,

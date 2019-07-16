@@ -79,7 +79,7 @@
                 @click="query()">查询
         </button>
         <button style="margin:0 5px;display:inline-block;margin-top:5px;min-width:60px;padding:0 10px;height:25px"
-                @click="window.location.href = `./patientAdd.html?currentPath=添加病人`">添加病人
+                @click='window.location.href = `./patientAdd.html?currentPath=添加病人&hospitalId=${queryParams.hospitalId||""}&hospitalIdSignShow=${queryParams.hospitalIdSignShow||""}&clinicId=${queryParams.clinicId||""}&clinicIdSignShow=${queryParams.clinicIdSignShow||""}`'>添加病人
         </button>
     </div>
 
@@ -109,6 +109,38 @@
                     </span>
     </span>
 
+        <span style="height:25px;width:300px;display:inline-block;margin-top:5px;">
+        <span style="font-size: 14px;display:inline-block;width:25%;text-align: right">医院:</span>
+        <span>
+
+                     <span v-if="queryParams.hospitalId"
+                           style="width:50%;overflow:hidden;display:inline-block;text-overflow:ellipsis;vertical-align: text-top;white-space: nowrap; "
+                           :title="queryParams.hospitalIdSignShow">{{queryParams.hospitalIdSignShow}}</span>
+                     <input v-model="queryParams.hospitalId" type="text" style="display:none;"/>
+                      <span v-if="queryParams.hospitalId" style="margin-left:5px;cursor: pointer;color:#af0000;"
+                            @click="queryParams.hospitalId=''">X</span>
+
+                        <button @click="chooseHospital" v-if="!queryParams.hospitalId" style="width:60%" type="button">选择</button>
+
+                    </span>
+    </span>
+
+
+        <span style="height:25px;width:300px;display:inline-block;margin-top:5px;">
+        <span style="font-size: 14px;display:inline-block;width:25%;text-align: right">门诊:</span>
+        <span>
+
+                     <span v-if="queryParams.clinicId"
+                           style="width:50%;overflow:hidden;display:inline-block;text-overflow:ellipsis;vertical-align: text-top;white-space: nowrap; "
+                           :title="queryParams.clinicIdSignShow">{{queryParams.clinicIdSignShow}}</span>
+                     <input v-model="queryParams.clinicId" type="text" style="display:none;"/>
+                      <span v-if="queryParams.clinicId" style="margin-left:5px;cursor: pointer;color:#af0000;"
+                            @click="queryParams.clinicId=''">X</span>
+
+                        <button @click="chooseClinic" v-if="!queryParams.clinicId" style="width:60%" type="button">选择</button>
+
+                    </span>
+    </span>
     </div>
 
     <div style="clear: both"></div>
@@ -118,7 +150,7 @@
         <div class="row-title">
             <span class="cell " style="width:40px;">选择</span>
             <span class="cell " style="width:50px;">序号</span>
-            <span class="cell "  style="width:300px;" >姓名</span>
+            <span class="cell "  style="width:300px;" >病人名</span>
             <span class="cell "  >电话</span>
             <span class="cell "  >门诊</span>
             <span class="cell "  >医院</span>
@@ -200,7 +232,7 @@
     var app = new Vue({
         el: '#app',
         data: {
-            queryString: this.giveup.parseQueryStr(location.search.substr(1)),
+            pageQueryParamMap: this.giveup.parseQueryStr(location.search.substr(1)),
             items: [],
             itemsMap:{},
             hasMoreItems: null,
@@ -208,16 +240,21 @@
             sorts: [],
             goPageNo: null,
             token: this.$cookies.get('token'),
-            queryParams: {status:''},
+            queryParams: {status:'',hospitalId:'',clinicId:''},
             pageNo: 1,
             totalPageCount: null,
             pageSize: 30,
             sum: {totalItemCount: null},
             currentPageItemCount: null,
         },
-        mounted: function () {
+
+        created: function () {
             debugger
-            this.navim.push({url: location.href, title: this.queryString.currentPath})
+            this.queryParams.hospitalId = this.pageQueryParamMap.hospitalId
+            this.queryParams.hospitalIdSignShow = this.pageQueryParamMap.hospitalIdSignShow
+            this.queryParams.clinicId = this.pageQueryParamMap.clinicId
+            this.queryParams.clinicIdSignShow = this.pageQueryParamMap.clinicIdSignShow
+            this.navim.push({url: location.href, title: this.pageQueryParamMap.currentPath})
             this.eventToRows()
             this.initQuery();
             this.loadItems();
@@ -348,7 +385,113 @@
                     }
                 })
 
-            }
+            }, chooseHospital: function () {
+                debugger
+                let thisVue = this;
+                var r = prompt('请输入要查询的医院信息。')
+                if (r != null) {
+                    findHospital(r)
+                }
+
+                function findHospital(kw, ew, pageNo) {
+                    pageNo = pageNo || 1;
+                    $.ajax({
+                        url: rootDis + "maintainer/hospitalList",
+                        type: 'post',
+                        async: false,
+                        data: {token: thisVue.token, kw: kw, pn: pageNo},
+                        success: function (res) {
+                            if (res.code == 0) {
+                                var msg = "请输入要选择的序号，当前第" + pageNo + "页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
+                                var vb;
+                                $(res.data.items).each(function (index, ele) {
+                                    ele.signShow = ele.name + (ele.headmanName ? '/' + ele.headmanName : '')
+                                    msg += (index + 1) + '. ' + ele.signShow + '\n'
+                                })
+                                if (pageNo != 1 && res.data.items.length == 0)
+                                    msg += '已经到底了'
+                                if (pageNo == 1 && res.data.items.length == 0)
+                                    msg += '未找到任何数据'
+                                vb = prompt(msg)
+                                if (vb != null) {
+                                    if (vb.startsWith('+')) {
+                                        vb = vb.replace('+', '')
+                                        vb = !vb ? 1 : vb;
+                                        findHospital(kw, ew, pageNo + +vb)
+                                    } else if (vb.startsWith('-')) {
+                                        vb = vb.replace('-', '')
+                                        vb = !vb ? 1 : vb;
+                                        findHospital(kw, ew, pageNo - +vb)
+                                    } else if (!isNaN(vb)) {
+                                        var entity = res.data.items[+vb - 1];
+                                        if (entity && confirm('已选择 "' + entity.signShow + '"，确定吗？')) {
+                                            thisVue.queryParams.hospitalId = entity.hospitalId
+                                            thisVue.queryParams.hospitalIdSignShow = entity.signShow
+                                        }
+                                    } else {
+                                        alert('输入错误')
+                                    }
+                                }
+                            } else {
+                                resCodeProcess(res.code, res.codeMsg)
+                            }
+                        }
+                    })
+                }
+            }, chooseClinic: function () {
+                debugger
+                let thisVue = this;
+                var r = prompt('请输入要查询的门诊信息。')
+                if (r != null) {
+                    findClinic(r)
+                }
+
+                function findClinic(kw, ew, pageNo) {
+                    pageNo = pageNo || 1;
+                    $.ajax({
+                        url: rootDis + "maintainer/clinicList",
+                        type: 'post',
+                        async: false,
+                        data: {token: thisVue.token,hospitalId:thisVue.queryParams.hospitalId,kw: kw, pn: pageNo},
+                        success: function (res) {
+                            if (res.code == 0) {
+                                var msg = "请输入要选择的序号，当前第" + pageNo + "页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
+                                var vb;
+                                $(res.data.items).each(function (index, ele) {
+                                    ele.signShow = ele.name + (ele.headmanName ? '/' + ele.headmanName : '')
+                                    msg += (index + 1) + '. ' + ele.signShow + '\n'
+                                })
+                                if (pageNo != 1 && res.data.items.length == 0)
+                                    msg += '已经到底了'
+                                if (pageNo == 1 && res.data.items.length == 0)
+                                    msg += '未找到任何数据'
+                                vb = prompt(msg)
+                                if (vb != null) {
+                                    if (vb.startsWith('+')) {
+                                        vb = vb.replace('+', '')
+                                        vb = !vb ? 1 : vb;
+                                        findClinic(kw, ew, pageNo + +vb)
+                                    } else if (vb.startsWith('-')) {
+                                        vb = vb.replace('-', '')
+                                        vb = !vb ? 1 : vb;
+                                        findClinic(kw, ew, pageNo - +vb)
+                                    } else if (!isNaN(vb)) {
+                                        var entity = res.data.items[+vb - 1];
+                                        if (entity && confirm('已选择 "' + entity.signShow + '"，确定吗？')) {
+                                            thisVue.queryParams.clinicId = entity.clinicId
+                                            thisVue.queryParams.clinicIdSignShow = entity.signShow
+                                        }
+                                    } else {
+                                        alert('输入错误')
+                                    }
+                                }
+                            } else {
+                                resCodeProcess(res.code, res.codeMsg)
+                            }
+                        }
+                    })
+                }
+            },
         }
     })
 

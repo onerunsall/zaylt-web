@@ -560,18 +560,6 @@ giveup.cancelHandler=function (event){
     return false;
 }
 
-giveup.parseQueryStr =function (queryStr){
-    var str=decodeURIComponent(queryStr);
-    var arr=str.split("&");
-    var obj = {};
-    for(var i=0;i < arr.length;i++){
-        var arrsub=arr[i].split("=");
-        obj[arrsub[0]]=arrsub[1];
-    }
-    return obj;
-}
-
-
 giveup.isEmptyStr =function (str){
     if(str == undefined || str == null || this.trimStrToEmpty(str).length==0)
         return true;

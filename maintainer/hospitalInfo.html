@@ -55,10 +55,14 @@
 <div style="height:29px"></div>
 <div style="padding:10px;">
     <div style="margin-top:20px;">
-        <button name="refreshBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick=" location.reload()">刷新</button>
-        <button name="alterBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">修改</button>
-        <button name="alterCancelBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">取消修改</button>
-        <button name="alterCompleteBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">完成修改</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick=" location.reload()">刷新</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px">修改</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick="location.href=`./article.html?currentPath=文章管理&hospitalId=${queryParamMap.hospitalId}&hospitalIdSignShow=${hospital.name}/${hospital.headmanName}`">文章管理</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick="location.href=`./clinic.html?currentPath=门诊管理&hospitalId=${queryParamMap.hospitalId}&hospitalIdSignShow=${hospital.name}/${hospital.headmanName}`">门诊管理</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick="location.href=`./office.html?currentPath=科室管理&hospitalId=${queryParamMap.hospitalId}&hospitalIdSignShow=${hospital.name}/${hospital.headmanName}`">科室管理</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick="location.href=`./doctor.html?currentPath=专家管理&hospitalId=${queryParamMap.hospitalId}&hospitalIdSignShow=${hospital.name}/${hospital.headmanName}`">专家管理</button>
+        <button class="valueAlter" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none" onclick="location.reload()">取消修改</button>
+        <button class="valueAlter"  style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none" onclick="alter();">完成修改</button>
     </div>
     <div style="margin-top:10px;"></div>
     <form id="detailPad" style="line-height: 20px;">
@@ -249,10 +253,14 @@
 
 
     <div style="margin-top:20px;">
-        <button name="refreshBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick=" location.reload()">刷新</button>
-        <button name="alterBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px">修改</button>
-        <button name="alterCancelBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">取消修改</button>
-        <button name="alterCompleteBtn" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none">完成修改</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick=" location.reload()">刷新</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px">修改</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick="location.href=`./article.html?currentPath=文章管理&hospitalId=${queryParamMap.hospitalId}&hospitalIdSignShow=${hospital.name}/${hospital.headmanName}`">文章管理</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick="location.href=`./clinic.html?currentPath=门诊管理&hospitalId=${queryParamMap.hospitalId}&hospitalIdSignShow=${hospital.name}/${hospital.headmanName}`">门诊管理</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick="location.href=`./office.html?currentPath=科室管理&hospitalId=${queryParamMap.hospitalId}&hospitalIdSignShow=${hospital.name}/${hospital.headmanName}`">科室管理</button>
+        <button class="valueShow" style="margin:0 10px;margin-top:5px;width:100px;height:30px" onclick="location.href=`./doctor.html?currentPath=专家管理&hospitalId=${queryParamMap.hospitalId}&hospitalIdSignShow=${hospital.name}/${hospital.headmanName}`">专家管理</button>
+        <button class="valueAlter" style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none" onclick="location.reload()">取消修改</button>
+        <button class="valueAlter"  style="margin:0 10px;margin-top:5px;width:100px;height:30px;display: none" onclick="alter();">完成修改</button>
     </div>
     <div style="margin-top:20px;"></div>
 </div>
@@ -400,7 +408,8 @@
                     if (res.code == 0) {
                         if(compressIs)
                             alert('压缩后文件大小' + Math.round(res.data.size / 1024) + 'KB')
-                        $('#coverPad').show().find('#cover').attr('src', res.data.url)
+                        $('#cover').attr('src', res.data.url).show();
+                        $('#coverDel').show();
                     } else {
                         resCodeProcess(res.code,res.codeMsg)
                     }
@@ -584,20 +593,10 @@
         $('.valueAlter').show()
         $('.valueShow').hide()
 
-        $('[name=refreshBtn]').hide();
-        $('[name=alterCompleteBtn]').show();
-        $('[name=alterCancelBtn]').show();
-        $('[name=alterBtn]').hide();
+
 
     })
 
-    $('[name=alterCompleteBtn]').click(function(){
-        alter();
-    })
-
-    $('[name=alterCancelBtn]').click(function(){
-        location.reload()
-    })
 
 
 </script>

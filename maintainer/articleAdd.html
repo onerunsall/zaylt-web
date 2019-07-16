@@ -44,10 +44,11 @@
         }
     </style>
     <script>
-      var  queryParamMap = giveup.parseQueryStr(location.search.substr(1));
+
+        var queryParamMap = giveup.parseQueryStr(location.search.substr(1));
+
       var  token = $.cookie('token');
       var  loginStatus = $.cookie('loginStatus_'+token);
-     var   currentPath = queryParamMap.currentPath;
     </script>
 </head>
 
@@ -79,11 +80,9 @@
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;;text-align: left;vertical-align: top;">
                 <span  class="valueAlter">
-                    <span id="hospitalPad">
-                     <span id="hospitalSignShow" class="giveup-cache giveup-cache-text"></span>
+                     <span id="hospitalIdSignShow" class="giveup-cache giveup-cache-text" style="display:none;"></span>
                      <input id="hospitalId" class="giveup-cache" columnName="医院ID" type="text" style="display:none;"/>
-                      <span id="hospitalRemove"  style="margin-left:5px;cursor: pointer;color:#af0000;" onclick="$('#hospitalSignShow').text('');$('#hospitalId').val('');$('#hospitalPad').hide()" >X</span>
-                   </span>
+                      <span id="hospitalIdDel"  style="margin-left:5px;cursor: pointer;color:#af0000;display:none;" onclick="$('#hospitalIdSignShow').text('').hide();$('#hospitalId').val('').hide();$('#hospitalIdDel').hide()" >X</span>
                     <div ><button  onclick="chooseHospital()" type="button" >选择</button></div>
                 </span>
             </span>
@@ -94,10 +93,8 @@
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;text-align: left">
                     <span class="valueAlter"  >
-                        <span id="coverPad"  style="margin-right:5px;display:none;">
-                            <img id="cover" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;"  columnName="封面" class="giveup-cache"/>
-                            <span style="cursor:pointer;color:#af0000;" onclick="$('#coverPad').hide();$('#cover').attr('src','')">X</span>
-                        </span>
+                            <img id="cover" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;display:none;"  columnName="封面" class="giveup-cache"/>
+                            <span id="coverDel" style="cursor:pointer;color:#af0000;display:none;" onclick="$('#cover').attr('src','').hide();$('#coverDel').hide()">X</span>
                         <img onclick="alterCover()"  src="resource/add.jpg" style="width:20px;cursor:pointer;" />
                     </span>
                 </span>
@@ -171,12 +168,40 @@
 
 </body>
 <script>
-    navim.push({url: location.href, title: currentPath})
-    $('#currentPath').html('导航: ' + navim.spring())
 
-    var vb = new Date();
-    $('#addTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
-    $('#alterTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+        navim.push({url: location.href, title: queryParamMap.currentPath})
+        $('#currentPath').html('导航: ' + navim.spring())
+
+        $('#hospitalId').val(queryParamMap.hospitalId)
+        if(queryParamMap.hospitalIdSignShow){
+            $('#hospitalIdSignShow').text(queryParamMap.hospitalIdSignShow).show()
+            $('#hospitalIdDel').show()
+        }
+
+        var vb = new Date();
+        $('#addTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+        $('#alterTime').val(moment(vb).format('YYYY-MM-DDTHH:mm'))
+
+    var contentKindEditor = KindEditor.create('#content', {
+            autoHeightMode : true,
+            cssPath : '../libs/kindeditor/plugins/code/prettify.css',
+            uploadJson : '../kindeditor/upload_json.jsp',
+            fileManagerJson : '../kindeditor/file_manager_json.jsp',
+            allowFileManager : true,
+            afterCreate : function() {
+                var self = this;
+                KindEditor.ctrl(document, 13, function() {
+                    self.sync();
+                    document.forms['example'].submit();
+                });
+                KindEditor.ctrl(self.edit.doc, 13, function() {
+                    self.sync();
+                    document.forms['example'].submit();
+                });
+            }
+        });
+        prettyPrint();
+
 
     $.ajaxSetup({
         layerIndex: -1,
@@ -188,50 +213,55 @@
         }
     });
 
-    var contentKindEditor = KindEditor.create('#content', {
-        autoHeightMode : true,
-        cssPath : '../libs/kindeditor/plugins/code/prettify.css',
-        uploadJson : '../kindeditor/upload_json.jsp',
-        fileManagerJson : '../kindeditor/file_manager_json.jsp',
-        allowFileManager : true,
-        afterCreate : function() {
-            var self = this;
-            KindEditor.ctrl(document, 13, function() {
-                self.sync();
-                document.forms['example'].submit();
-            });
-            KindEditor.ctrl(self.edit.doc, 13, function() {
-                self.sync();
-                document.forms['example'].submit();
-            });
-        }
-    });
-    prettyPrint();
+
+
+
 
 
     function chooseHospital(){
         var r = prompt('请输入要查询的医院信息。')
         if(r!=null){
+            findHospital(r)
+        }
+
+        function findHospital(kw,ew,pageNo){
+            pageNo=pageNo||1;
             $.ajax({
                 url: rootDis+"maintainer/hospitalList",
                 type: 'post',
                 async: false,
-                data: {token:token,kw:r},
+                data: {token:token,kw:kw,pn:pageNo},
                 success: function (res) {
                     if (res.code == 0) {
-                        var msg = "请输入选择的序号，如无所需项请缩小查询范围: \n\n"
+                        var msg = "请输入要选择的序号，当前第"+pageNo+"页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
+                        var vb;
                         $(res.data.items).each(function(index,ele){
                             ele.sign=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
-                                msg+=(index+1)+'. '+ele.sign+'\n'
+                            msg+=(index+1)+'. '+ele.sign+'\n'
                         })
-
-                        var r1 = prompt(msg)
-                        if(r1!= null){
-                            var entity = res.data.items[r1-1];
-                            if(confirm('已选择 "'+entity.sign+'"，确定吗？')){
-                                $('#hospitalId').val(entity.hospitalId)
-                                $('#hospitalSignShow').text(entity.sign)
-                                $('#hospitalPad').show()
+                        if(pageNo!=1&&res.data.items.length == 0)
+                            msg+='已经到底了'
+                        if(pageNo==1&&res.data.items.length == 0)
+                            msg+='未找到任何数据'
+                        vb = prompt(msg)
+                        if(vb!= null){
+                            if(vb.startsWith('+')){
+                                vb =vb.replace('+','')
+                                vb=!vb?1:vb;
+                                findHospital(kw,ew,pageNo+ +vb)
+                            }else  if(vb.startsWith('-')){
+                                vb =vb.replace('-','')
+                                vb=!vb?1:vb;
+                                findHospital(kw,ew,pageNo- +vb)
+                            }else if(!isNaN(vb)){
+                                var entity = res.data.items[+vb-1];
+                                if(entity && confirm('已选择 "'+entity.sign+'"，确定吗？')){
+                                    $('#hospitalId').val(entity.hospitalId)
+                                    $('#hospitalIdSignShow').text(entity.sign).show()
+                                    $('#hospitalIdDel').show()
+                                }
+                            }else{
+                                alert('输入错误')
                             }
                         }
                     } else {
@@ -243,11 +273,11 @@
     }
 
 
-
     $('[name=clearBtn]').click(function () {
         giveup.cache.clearAll()
         location.reload()
     })
+
     $('[name=addBtn]').click(function () {
         var param = {}
         param.token = token;
@@ -331,7 +361,8 @@
                     if (res.code == 0) {
                         if(compressIs)
                             alert('压缩后文件大小' + Math.round(res.data.size / 1024) + 'KB')
-                        $('#coverPad').show().find('#cover').attr('src', res.data.url)
+                        $('#cover').attr('src', res.data.url).show();
+                        $('#coverDel').show();
                     } else {
                         resCodeProcess(res.code,res.codeMsg)
                     }
