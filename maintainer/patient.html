@@ -399,7 +399,7 @@
                         url: rootDis + "maintainer/hospitalList",
                         type: 'post',
                         async: false,
-                        data: {token: thisVue.token, kw: kw, pn: pageNo},
+                        data: {token: thisVue.token, kw: kw, pn: pageNo,ps:9},
                         success: function (res) {
                             if (res.code == 0) {
                                 var msg = "请输入要选择的序号，当前第" + pageNo + "页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
@@ -452,7 +452,7 @@
                         url: rootDis + "maintainer/clinicList",
                         type: 'post',
                         async: false,
-                        data: {token: thisVue.token,hospitalId:thisVue.queryParams.hospitalId,kw: kw, pn: pageNo},
+                        data: {token: thisVue.token,hospitalId:thisVue.queryParams.hospitalId,kw: kw, pn: pageNo,ps:9},
                         success: function (res) {
                             if (res.code == 0) {
                                 var msg = "请输入要选择的序号，当前第" + pageNo + "页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
