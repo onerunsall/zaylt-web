@@ -73,18 +73,19 @@
             </div>
 
             <div style="margin:20px 0;">
-                <span class="title"  style="width:30%;display: inline-block;text-align: right">头像</span>
+                <span class="title" style="width:30%;display: inline-block;text-align: right">封面</span>
                 <span class="title" style="width:5%;display: inline-block;"></span>
                 <span style="width:50%;display: inline-block;text-align: left">
-                    <span class="valueAlter"  >
-                        <span id="coverPad"  style="margin-right:5px;display:none;">
-                            <img id="cover" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;"  columnName="头像" class="giveup-cache"/>
-                            <span style="cursor:pointer;color:#af0000;" onclick="$('#coverPad').hide();$('#cover').attr('src','')">X</span>
-                        </span>
-                        <img onclick="alterCover()"  src="resource/add.jpg" style="width:20px;cursor:pointer;" />
+                     <img id="coverShow" class="valueShow" onclick="giveup.imgPreview(this.src)"
+                          style="width:80px;cursor: pointer;display: none;"/>
+                    <span class="valueAlter">
+                            <img id="cover" onclick="giveup.imgPreview(this.src)" style="width:80px;cursor: pointer;display:none;"
+                                 columnName="封面" class="giveup-cache"/>
+                            <span id="coverDel" style="cursor:pointer;display:none;color:#af0000;"
+                                  onclick="$('#coverDel').hide();$('#cover').attr('src','').hide()">X</span>
+                        <img onclick="alterCover()" src="resource/add.jpg" style="width:20px;cursor:pointer;"/>
                     </span>
                 </span>
-
             </div>
 
             <div style="margin:20px 0;">
@@ -332,6 +333,8 @@
         jqDom=$('#clinicId')
         param.clinicId= jqDomValue = jqDom.val();
 
+        jqDom=$('#hospitalId')
+        param.hospitalId= jqDomValue = jqDom.val();
         $.ajax({
             url: rootDis+"maintainer/clinicerAdd",
             type: 'post',
