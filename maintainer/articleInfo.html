@@ -141,6 +141,28 @@
              </span>
             </div>
 
+            <div style="margin:20px 0;">
+                <span class="title"
+                      style="width:30%;display: inline-block;text-align: right;vertical-align: top;">分享量</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%;display: inline-block;;text-align: left">
+                     <span id="shareCountShow" style="word-wrap: break-word;word-break: break-all;"></span>
+
+             </span>
+            </div>
+
+            <div style="margin:20px 0;">
+                <span class="title"
+                      style="width:30%;display: inline-block;text-align: right;vertical-align: top;">基础分享量</span>
+                <span class="title" style="width:5%;display: inline-block;"></span>
+                <span style="width:50%;display: inline-block;;text-align: left">
+                     <span id="shareCountBaseShow" class="valueShow"
+                           style="word-wrap: break-word;word-break: break-all;"></span>
+              <input id="shareCountBase" class="valueAlter giveup-cache" columnName="基础分享量"
+                     style="padding:3px 3px;text-align: right;" type="number" placeholder="0"/>
+             </span>
+            </div>
+
             <div>
                 <span class="title"
                       style="width:30%;display: inline-block;text-align: right;vertical-align: top">内容</span>
@@ -333,6 +355,11 @@
                 $('#viewCountBase').val(vb.viewCountBase);
                 $('#viewCountBaseShow').text(vb.viewCountBase)
 
+                $('#shareCountShow').text(vb.shareCount);
+
+                $('#shareCountBase').val(vb.shareCountBase);
+                $('#shareCountBaseShow').text(vb.shareCountBase)
+
                 if (vb.hospitalId) {
                     $('#hospitalNameShow').text(vb.hospitalName);
 
@@ -382,9 +409,11 @@
         jqDom=$('#viewCountBase')
         param.viewCountBase = jqDomValue= jqDom.val();
 
+        jqDom=$('#shareCountBase')
+        param.shareCountBase = jqDomValue= jqDom.val();
+
         jqDom=$('#orderNo')
         param.orderNo = jqDomValue= jqDom.val();
-
 
         jqDom=$('#cover')
         param.cover = jqDomValue= jqDom.attr('src');
