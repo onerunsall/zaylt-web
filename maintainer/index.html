@@ -61,7 +61,7 @@
         <ul id="menu" class="ztree" style="padding:0;margin:0"></ul>
     </div>
     <div style="float:left;position: fixed;left: 251px;;bottom: 0;top:71px;right:0;display: inline-block;">
-        <iframe style="width:100%;height:100%" frameborder="no"></iframe>
+        <iframe style="width:100%;height:100%" frameborder="no" src="./hospital.html?currentPath=医院管理"></iframe>
     </div>
 </div>
 </body>
@@ -113,14 +113,14 @@
             {name: '用户管理', uurl: './hospitaler.html?currentPath=医院端用户管理'},
             {name: '医院管理', uurl: './hospital.html?currentPath=医院管理'},
             {name: '医院主轮播', uurl: './hospitalMaincarousel.html?currentPath=医院主轮播'},
-            {name: '权限管理', uurl: './userapis.html?currentPath=医院端权限管理'}
+            // {name: '权限管理', uurl: './userapis.html?currentPath=医院端权限管理'}
         ]
     })
     zNodes.push({
         name: '门诊端管理', children: [
             {name: '用户管理', uurl: './clinicer.html?currentPath=门诊端用户管理'},
             {name: '门诊管理', uurl: './clinic.html?currentPath=门诊管理'},
-            {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
+            // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
         ]
     })
 
@@ -131,20 +131,20 @@
     zNodes.push({name: '集采主轮播', uurl: './procurementMaincarousel.html?currentPath=集采主轮播'})
 
 
-    zNodes.push({
-        name: '运维端管理', children: [
-            {name: '用户管理', uurl: './maintainuser.html?currentPath=运维端用户管理'},
-            {name: '权限管理', uurl: './maintainuserapis.html?currentPath=运维端权限管理'}
-        ]
-    })
-    zNodes.push({
-        name: '配置页面', children: [
-            {name: '客户端用户协议', uurl: './setpage/setuserprotocol.html?currentPath=客户端用户协议'}
-        ]
-    })
-    zNodes.push({name: '系统配置', uurl: './sysparam.html?currentPath=系统配置'})
-    zNodes.push({name: '文件管理', uurl: './file.html?currentPath=文件管理'})
-    zNodes.push({name: '个人中心', uurl: './mycenter.html?currentPath=个人中心'})
+    // zNodes.push({
+    //     name: '运维端管理', children: [
+    //         {name: '用户管理', uurl: './maintainuser.html?currentPath=运维端用户管理'},
+    //         {name: '权限管理', uurl: './maintainuserapis.html?currentPath=运维端权限管理'}
+    //     ]
+    // })
+    // zNodes.push({
+    //     name: '配置页面', children: [
+    //         {name: '客户端用户协议', uurl: './setpage/setuserprotocol.html?currentPath=客户端用户协议'}
+    //     ]
+    // })
+    // zNodes.push({name: '系统配置', uurl: './sysparam.html?currentPath=系统配置'})
+    // zNodes.push({name: '文件管理', uurl: './file.html?currentPath=文件管理'})
+    // zNodes.push({name: '个人中心', uurl: './mycenter.html?currentPath=个人中心'})
     zNodes.push({name: '退出登录', uurl: ''})
     // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
     var setting = {

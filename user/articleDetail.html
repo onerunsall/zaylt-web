@@ -183,11 +183,11 @@
     var id=GetQueryString('id');
     var type=GetQueryString('type');
     if(type==1){
-        url='/zaylt/c2/article/item'
+        url='/c2/article/item'
     }else if(type==2){
-        url='/zaylt/c2/activity/item'
+        url='/c2/activity/item'
     }else{
-        url='/zaylt/c2/project/items'
+        url='/c2/project/item'
     }
     $.ajax({
         url:url,
@@ -204,7 +204,7 @@
 //                $('.hosimg').attr('src',res.data.hospitalCover);
                 var contentBtId=res.data.contentBtId
                         $.ajax({
-                            url:'/zaylt/other/bigtxt/' + contentBtId + '/' + contentBtId,
+                            url:'/other/bigtxt/' + contentBtId + '/' + contentBtId,
 //                            data:'itemId='+ id,
                             type:'post',
                             async:false,

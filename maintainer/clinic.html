@@ -331,9 +331,8 @@
                             this.itemsMap={}
 
                             var data = res.data;
-                            this.pageSize = data.ps
-                            this.pageNo = data.pn
-                            this.sum = res.data.sum;
+                            data.sum.totalItemCount=data.sum.totalItemCount
+                            this.sum = data.sum;
                             this.totalPageCount = this.sum.totalItemCount % this.pageSize == 0 ? this.sum.totalItemCount / this.pageSize : parseInt(this.sum.totalItemCount / this.pageSize) + 1;
 
                             this.currentPageItemCount = data.items.length;
