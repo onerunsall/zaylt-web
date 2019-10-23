@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>忠安医联体运维平台-文章管理</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
+
+    
+    <script src="/libs/jquery.min.js"></script>
+    <script src="/libs/jquery.cookie.js"></script>
+    <script src="/libs/layer/layer.js"></script>
+    <script src="/libs/moment.js"></script>
+    <link rel="stylesheet" type="text/css" href="/libs/jquery-easyui-1.8.7/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/libs/jquery-easyui-1.8.7/themes/icon.css">
+    <script type="text/javascript" src="/libs/jquery-easyui-1.8.7/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/libs/jquery-easyui-1.8.7/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/libs/public.js"></script>
+    <link rel="stylesheet" href="/libs/public.css" />
+    <script src="/libs/jquery.extend.giveup.js"></script>
+
+    
+    <script src="/maintain/libs/public.js"></script>
+    <link rel="stylesheet" href="/maintain/libs/public.css" />
+
+    
+   
+
+    <style>
+
+    </style>
+</head>
+
+<body style="margin:0;padding:0;">
+
+    <div id="tb" style="padding:2px 5px;">
+        <div> 关键字: <input name="kw" class="easyui-textbox" data-options="
+        iconWidth:20,
+        icons:[{
+            iconCls:'icon-clear',
+            handler: function(e){
+                $(e.data.target).textbox('setValue','');
+            }
+        }],
+        onChange:function(newValue, oldValue){
+            articleQuery.param.kw=newValue
+        }" style="width:200px">
+            发布时间 From: <input name="addTimeStart" class="easyui-datebox" style="width:110px" data-options="
+            onChange:function(newValue, oldValue){
+                articleQuery.param.addTimeStart=newValue
+            }">
+            To: <input name="addTimeEnd" class="easyui-datebox" style="width:110px" data-options="
+        onChange:function(newValue, oldValue){
+            articleQuery.param.addTimeEnd=newValue
+        }">
+            关闭:
+            <input name="closed" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:0,data:[
+           {
+                text: '是',
+                value: '1'
+            },{
+                text: '否',
+                value: '0'
+            }],
+            iconWidth:20,
+            icons:[{
+                iconCls:'icon-clear',
+                handler: function(e){
+                    $(e.data.target).combobox('setValue','');
+                }
+            }],
+            onChange:function(newValue, oldValue){
+                articleQuery.param.closed=newValue
+            }" />
+            医院:<input class="easyui-combobox" name="hospitalName" style="width:200px;" data-options="
+            valueField:'hospitalId',
+            textField:'name',
+            panelHeight:'auto',
+            mode:'remote',
+            loader: function (param, success, error) {
+                debugger
+                param.token = token;
+                param.kw=param.q;
+                param.ps = param.rows;
+                param.pn = param.page;
+                $.ajax({
+                    url: '/maintain/hospitals',
+                    type: 'get',
+                    data: param,
+                    success: function (data) {
+                        if (data.code != 0) {
+                            resCodeProcess(data.code, data.codeMsg)
+                            return false;
+                        } else {
+                            success(data.data);
+                        }
+    
+                    }
+                })
+            },
+            onChange:function(newValue, oldValue){
+                articleQuery.param.hospitalId=newValue
+            },
+            loadFilter: function (data) {
+                debugger
+                return data.rows;
+            },
+            iconWidth:20,
+            icons:[{
+                iconCls:'icon-clear',
+                handler: function(e){
+                    $(e.data.target).combobox('setValue','');
+                }
+            }]
+            ">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="$('#dg').datagrid('load');">Search</a>
+        </div>
+        <div style="margin-top:5px;"></div>
+        <span name="checkedCount" style="margin-right:5px;"></span><span name="sum"></span>
+    </div>
+    <table id="dg" style="width:100%;min-height:420px">
+    </table>
+    <div id="ft" style="padding:2px 5px;">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick=""></a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deleteRow()"></a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-dustbin" plain="true" onclick="deleteRows()"></a>
+    </div>
+</body>
+<script>
+
+    var token = $.cookie('token');
+    var articleQuery = {
+        param: {
+            kw: null,
+            hospitalId: null,
+            closed: 0,
+            addTimeStart: null,
+            addTimeEnd: null
+        },
+        rows: [],
+        sum: {
+            rowCount: 0
+        },
+        pn: null,
+        ps: null
+    }
+
+
+    function deleteRow() {
+        var checked = $('#dg').datagrid('getChecked');
+        var articleIds = $(checked).giveup_attrs('articleId');
+        var articleIdsSplit = articleIds.join();
+        var doDel=false;
+        if (checked.length == 1) {
+            if (confirm(`将删除 ${checked[0].name}/${checked[0].hospitalName} ，确定吗？`)) {
+                doDel = true;
+            }
+        } else if (checked.length > 1) {
+            var r = prompt(`将删除 ${checked.length} 条记录，确定吗？`, `输入删除数量`);
+            if (r != null) {
+                if (r == checked.length) {
+                    doDel = true;
+                } else {
+                    alert('删除数量有误')
+                }
+            }
+        }
+
+        if(doDel){
+            $.ajax({
+                    type: 'post',
+                    url: `/maintain/article/delete`,
+                    data:{token:token,articleId:articleIdsSplit},
+                    success: function (data) {
+                        if(data.codeMsg)
+                            alert(data.codeMsg)
+                        if (data.code == 0) {
+                            $('#dg').datagrid('reload')
+                            $('#dg').datagrid('clearChecked')
+                        }
+                    }
+                })
+        }
+
+    }
+
+
+
+    function deleteRows() {
+        var rowCount = $('#dg').datagrid('getPager').pagination('options').total;
+        var r = prompt(`将删除全部 ${rowCount} 条记录，确定吗？`,`输入删除数量` )
+            if (r != null) {
+                if (r == rowCount) {
+                    doDel = true;
+                } else {
+                    alert('删除数量有误')
+                }
+            }
+
+            if(doDel){
+            $.ajax({
+                    type: 'post',
+                    url: `/maintain/articles/delete`,
+                    data:{token:token,...articleQuery.param},
+                    success: function (data) {
+                        if(data.codeMsg)
+                            alert(data.codeMsg)
+                        if (data.code == 0) {
+                            $('#dg').datagrid('reload')
+                            $('#dg').datagrid('clearChecked')
+                        }
+                    }
+                })
+        }
+    }
+
+    $('#dg').datagrid({
+        columns: [[
+            {
+                field: 'cover', title: '封面', width: 100, align: 'center', halign: 'center', formatter: function (value, row, index) {
+                    return value ? `<img src='${value}' />` : value
+                }
+            },
+            { field: 'viewCount', title: '浏览量', width: 70, align: 'right', sortable: true, halign: 'center' },
+            { field: 'hospitalName', title: '医院', width: 150, align: 'left', halign: 'center' },
+            { field: 'orderNo', title: '排序号', width: 70, align: 'right', sortable: true, halign: 'center' },
+            {
+                field: 'addTime', title: '发布时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
+                    return value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : value;
+                }
+            }
+        ]],
+        frozenColumns: [[
+            { field: 'ck', align: 'left', checkbox: true },
+            { field: 'name', title: '名称', width: 150, align: 'left', halign: 'center' }
+        ]],
+        toolbar: "#tb",
+        footer: '#ft',
+        idField: 'articleId',
+        pagination: true,
+        rownumbers: true,
+        emptyMsg: '无数据',
+        singleSelect: true,
+        ctrlSelect: true,
+        checkOnSelect: false,
+        selectOnCheck: false,
+        multiSort: true,
+        autoRowHeight: false,
+        showFooter: true,
+        onCheck: function (index, row) {
+            $('#tb [name=checkedCount]').html(`已选:${$('#dg').datagrid('getChecked').length}`)
+        },
+        onUncheck: function (index, row) {
+            $('#tb [name=checkedCount]').html(`已选:${$('#dg').datagrid('getChecked').length}`)
+        },
+        onCheckAll: function (index, row) {
+            $('#tb [name=checkedCount]').html(`已选:${$('#dg').datagrid('getChecked').length}`)
+        },
+        onUncheckAll: function (index, row) {
+            $('#tb [name=checkedCount]').html(`已选:${$('#dg').datagrid('getChecked').length}`)
+        },
+        rowStyler: function (index, row) {
+
+        },
+        loader: function (param, success, error) {
+            debugger
+            $('#dg').datagrid('clearChecked');
+            param.token = token;
+            param.ps = param.rows;
+            param.pn = param.page;
+            Object.assign(param, articleQuery.param);
+            $.ajax({
+                url: '/maintain/articles',
+                type: 'get',
+                data: param,
+                success: function (data) {
+                    if(data.codeMsg)
+                            alert(data.codeMsg)
+                    if (data.code != 0) {
+                        resCodeProcess(data.code, data.codeMsg)
+                        return false;
+                    } else {
+                        success(data.data);
+                        $('#tb [name=sum]').html(`总浏览量:${public.toEmpty(data.data.sum.totalViewCount)}`)
+                    }
+
+                }
+            })
+        },
+        loadFilter: function (data) {
+            debugger
+            var fdata = {
+                rows: data.rows, total: data.sum.rowCount, footer: [
+                    { "cover": "", "viewCount": public.toEmpty(data.sum.totalViewCount), "name": "总计:" }
+                ]
+            }
+            return fdata;
+        }
+    });
+
+
+</script>
+
+</html>

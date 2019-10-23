@@ -24,3 +24,6 @@ $.prototype.giveup_exchangeDom=function(target){
     s1.remove()
 
 }
+
+
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <title>忠安医联体运维平台-概览</title>
+    <script src="../libs/jquery.min.js"></script>
+    <script src="../libs/jquery.cookie.js"></script>
+    <script src="../libs/layer/layer.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../libs/jquery-easyui-1.8.7/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../libs/jquery-easyui-1.8.7/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../libs/jquery-easyui-1.8.7/demo/demo.css">
+    <script type="text/javascript" src="../libs/jquery-easyui-1.8.7/jquery.easyui.min.js"></script>
+</head>
+<style>
+
+</style>
+
+<body style="margin:0;padding:0;">
+    <input type="text">
+    <button onclick='qqq()'>qqq</button>
+
+</body>
+
+<script>
+    function qqq() {
+      
+        parent.$('#indexPad-tabPad').tabs('add', {
+            title: '概览1',
+            closable: true,
+            content: "111",
+            tools: [{
+                iconCls: 'icon-mini-refresh',
+                handler: function () {
+                    
+                }
+            }]
+        });
+    } 
+</script>
+
+</html>
