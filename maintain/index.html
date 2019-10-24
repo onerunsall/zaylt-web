@@ -68,6 +68,11 @@
                 <div id="indexPad-tabPad" class="easyui-tabs" style="width:100%">
 
                 </div>
+                <div id="tab-tools">
+                    <a href="javascript:void(0)" class="easyui-linkbutton"
+                        data-options="plain:true,iconCls:'icon-dustbin'"
+                        onclick="$($('#indexPad-tabPad').tabs('tabs')).each(function(index,ele){ $('#indexPad-tabPad').tabs('close',),index})   "></a>
+                </div>
             </div>
 
         </div>
@@ -79,10 +84,9 @@
     var token = $.cookie('token'), logining, account, zNodes;
 
     $('#indexPad-tabPad').tabs({
-        border: false,
-        narrow: true,
-        plain: true,
         fit: true,
+        narrow: true,
+        tools: '#tab-tools',
         onSelect: function (title) {
 
         }
@@ -91,7 +95,20 @@
     $('#indexPad-tabPad').tabs('add', {
         title: '概览',
         closable: true,
-        content: "<iframe src='overview.html' style='width:100%;height:100%;border:none;'/>"
+        content: "<iframe src='overview.html' style='width:100%;height:100%;border:none;'/>",
+        tools: [{
+            iconCls: 'icon-mini-refresh',
+            handler: function () {
+                var current_tab = $('#indexPad-tabPad').tabs('getSelected');
+                $('#indexPad-tabPad').tabs('update', {
+                    tab: current_tab,
+                    options: {
+                        content: current_tab.panel('options', 'content'),
+                    }
+                });
+            }
+        }
+        ]
     });
 
     $.ajaxSetup({
@@ -110,21 +127,23 @@
             data: { token: token },
             type: 'post',
             async: false,
-            success: function (res) {
-                if (res.code == 0) {
-                    $.cookie('token', res.data.token, { expires: 30, path: '/' });
-                    $.cookie('logining', JSON.stringify(res.data), { expires: 30, path: '/' });
-                    account = res.data.account
-                } else {
+            success: function (data) {
+                if (data.code != 0) {
+                    alert(data.codeMsg)
                     $.removeCookie('token', { path: '/' });
                     $.removeCookie('logining', { path: '/' });
-                    resCodeProcess(res.code, res.codeMsg)
+                    maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                } else {
+                    $.cookie('token', data.data.token, { expires: 30, path: '/' });
+                    $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
+                    account = data.data.account
                 }
             }
         })
-    } else
-        location.href = './login.html';
-
+    } else {
+        alert('检测到未登录或登录失效')
+        maintainPublic.resCodeProcess(20, '请登录')
+    }
 
     $('#account').text(account)
 
@@ -171,14 +190,40 @@
                         title: '概览',
                         closable: true,
                         width: "100%",
-                        content: "<iframe src='overview.html' style='width:100%;height:100%;border:none;'/>"
+                        content: "<iframe src='overview.html' style='width:100%;height:100%;border:none;'/>",
+                        tools: [{
+                            iconCls: 'icon-mini-refresh',
+                            handler: function () {
+                                var current_tab = $('#indexPad-tabPad').tabs('getSelected');
+                                $('#indexPad-tabPad').tabs('update', {
+                                    tab: current_tab,
+                                    options: {
+                                        content: current_tab.panel('options', 'content'),
+                                    }
+                                });
+                            }
+                        }
+                        ]
                     });
                 } else if (treeNode.name == '文章管理') {
                     $('#indexPad-tabPad').tabs('add', {
                         title: '文章管理',
                         closable: true,
                         width: "100%",
-                        content: "<iframe src='article-manage.html' style='width:100%;height:100%;border:none;'/>"
+                        content: "<iframe src='article-manage.html' style='width:100%;height:100%;border:none;'/>",
+                        tools: [{
+                            iconCls: 'icon-mini-refresh',
+                            handler: function () {
+                                var current_tab = $('#indexPad-tabPad').tabs('getSelected');
+                                $('#indexPad-tabPad').tabs('update', {
+                                    tab: current_tab,
+                                    options: {
+                                        content: current_tab.panel('options', 'content'),
+                                    }
+                                });
+                            }
+                        }
+                        ]
                     });
                 }
                 zTreeObj.expandNode(treeNode);

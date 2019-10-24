@@ -5,7 +5,7 @@
 
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-   
+
     <title>忠安医联体运维平台-登录</title>
     <script src="libs/public.js"></script>
     <link rel="stylesheet" href="libs/public.css" />
@@ -55,109 +55,114 @@
         <!--<div class="registernow rt">注册账户</div>-->
     </div>
 
-    
+
     <div id="message" style="position: absolute;left:50%;top:20%;display:none;">
-        <div name="content" style="padding:5px;border:1px green solid;border-radius: 5px;position: relative;margin:auto;right:50%;background-color: white;min-width:100px;text-align: center;">
+        <div name="content"
+            style="padding:5px;border:1px green solid;border-radius: 5px;position: relative;margin:auto;right:50%;background-color: white;min-width:100px;text-align: center;">
             成功
         </div>
     </div>
 
     <div id="warning" style="position: absolute;left:50%;top:20%;display:none;">
-            <div name="content" style="padding:5px;border:1px orange solid;border-radius: 5px;position: relative;margin:auto;right:50%;background-color: white;min-width:100px;text-align: center;">
-                警告
-            </div>
+        <div name="content"
+            style="padding:5px;border:1px orange solid;border-radius: 5px;position: relative;margin:auto;right:50%;background-color: white;min-width:100px;text-align: center;">
+            警告
+        </div>
     </div>
 </body>
 
 <script>
-        var token = $.cookie('token');
+    var token = $.cookie('token');
 
-        $.ajaxSetup({
-            layerIndex: -1,
-            beforeSend: function () {
-                this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-            },
-            complete: function () {
-                layer.close(this.layerIndex);
-            }
-        });
-
-
-        if (token) {
-            $.ajax({
-                url: '/maintain/login-refresh',
-                data: { token: token },
-                type: 'post',
-                async: false,
-                success: function (res) {
-                    if (res.code == 0) {
-                        $.cookie('token', res.data.token, { expires: 30, path: '/' });
-                        $.cookie('logining', JSON.stringify(res.data), { expires: 30, path: '/' });
-                        location.href = './index.html';
-                    }
-                    else {
-                        $.removeCookie('token', { path: '/' });
-                        $.removeCookie('logining', { path: '/' });
-                    }
-                }
-            })
+    $.ajaxSetup({
+        layerIndex: -1,
+        beforeSend: function () {
+            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+        },
+        complete: function () {
+            layer.close(this.layerIndex);
         }
+    });
 
-        
-        function login() {
-            var account = $('.phone input').val();
-            var pwd = $('.pwd input').val();
-            $.ajax({
-                url: '/maintain/login',
-                data: { account: account, pwd: pwd },
-                type: 'post',
-                async: false,
-                success: function (res) {
-                    if (res.code == 0) {
-                        $('#message').fadeIn(100).fadeOut(1500).find('[name=content]').text('成功');
-                        token = res.data.token;
-                        $.ajax({
-                            url: '/maintain/login-refresh',
-                            data: { token: token },
-                            type: 'post',
-                            async: false,
-                            success: function (res) {
-                                if (res.code == 0) {
-                                    $.cookie('token', res.data.token, { expires: 30, path: '/' });
-                                    $.cookie('logining', JSON.stringify(res.data), { expires: 30, path: '/' });
-                                    location.href = './index.html';
-                                }
-                                else {
-                                    $.removeCookie('token', { path: '/' });
-                                    $.removeCookie('logining', { path: '/' });
-                                    resCodeProcess(res.code, res.codeMsg)
-                                }
+
+    if (token) {
+        $.ajax({
+            url: '/maintain/login-refresh',
+            data: { token: token },
+            type: 'post',
+            async: false,
+            success: function (data) {
+                if (data.code != 0) {
+                    alert(data.codeMsg)
+                    $.removeCookie('token', { path: '/' });
+                    $.removeCookie('logining', { path: '/' });
+                }
+                else {
+                    $.cookie('token', data.data.token, { expires: 30, path: '/' });
+                    $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
+                    location.href = './index.html';
+                }
+            }
+        })
+    }
+
+
+    function login() {
+        var account = $('.phone input').val();
+        var pwd = $('.pwd input').val();
+        $.ajax({
+            url: '/maintain/login',
+            data: { account: account, pwd: pwd },
+            type: 'post',
+            async: false,
+            success: function (data) {
+                if (data.code != 0) {
+                    alert(data.codeMsg)
+                    maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                }
+                else {
+                    $('#message').fadeIn(100).fadeOut(1500).find('[name=content]').text('成功');
+                    token = data.data.token;
+                    $.ajax({
+                        url: '/maintain/login-refresh',
+                        data: { token: token },
+                        type: 'post',
+                        async: false,
+                        success: function (data) {
+                            if (data.code != 0) {
+                                alert(data.codeMsg)
+                                $.removeCookie('token', { path: '/' });
+                                $.removeCookie('logining', { path: '/' });
+                                maintainPublic.resCodeProcess(data.code, data.codeMsg)
                             }
-                        })
-                    }
-                    else{
-                       
-                        resCodeProcess(res.code, res.codeMsg)
-                    }
-                }
-            })
-        }
-
-
-
-
-
-        document.onkeydown = function (e) {
-            var theEvent = window.event || e;
-            var code = theEvent.keyCode || theEvent.which;
-            if (code == 13) {
-                if ($(document.activeElement).parents('#loginPad')[0]) {
-                    $("#loginPad [name=login]").click();
+                            else {
+                                $.cookie('token', data.data.token, { expires: 30, path: '/' });
+                                $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
+                                location.href = './index.html';
+                            }
+                        }
+                    })
                 }
             }
+        })
+    }
+
+
+
+
+
+    document.onkeydown = function (e) {
+        var theEvent = window.event || e;
+        var code = theEvent.keyCode || theEvent.which;
+        if (code == 13) {
+            if ($(document.activeElement).parents('#loginPad')[0]) {
+                $("#loginPad [name=login]").click();
+            }
         }
+    }
 
 
 
-    </script>
+</script>
+
 </html>
