@@ -124,25 +124,22 @@
     if (token) {
         $.ajax({
             url: '/maintain/login-refresh',
-            data: { token: token },
             type: 'post',
             async: false,
             success: function (data) {
-                if (data.code != 0) {
+                if(data.codeMsg)
                     alert(data.codeMsg)
-                    $.removeCookie('token', { path: '/' });
-                    $.removeCookie('logining', { path: '/' });
-                    maintainPublic.resCodeProcess(data.code, data.codeMsg)
-                } else {
-                    $.cookie('token', data.data.token, { expires: 30, path: '/' });
+                if (data.code == 0) {
                     $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
                     account = data.data.account
+                } else {
+                    maintainPublic.resCodeProcess(data.code, data.codeMsg)
                 }
             }
         })
     } else {
-        alert('检测到未登录或登录失效')
-        maintainPublic.resCodeProcess(20, '请登录')
+        alert('请登录')
+        maintainPublic.resCodeProcess(20)
     }
 
     $('#account').text(account)
@@ -168,8 +165,9 @@
     })
 
     zNodes.push({ name: '病人管理', uurl: './patient.html?currentPath=病人管理' })
-    zNodes.push({ name: '文章管理', uurl: './article-manage.html?currentPath=文章管理' })
-    zNodes.push({ name: '科室管理', uurl: './office.html?currentPath=科室管理' })
+    zNodes.push({ name: '文章管理', _url: './hospital-article-manage.html' })
+    zNodes.push({ name: '活动管理', _url: './hospital-activity-manage.html' })
+    zNodes.push({ name: '科室管理', _url: './hospital-office-manage.html' })
     zNodes.push({ name: '专家管理', uurl: './doctor.html?currentPath=专家管理' })
     zNodes.push({ name: '集采主轮播', uurl: './procurementMaincarousel.html?currentPath=集采主轮播' })
 
@@ -184,48 +182,28 @@
             onClick: function (e, treeId, treeNode) {
                 if (treeNode.name == '退出登录') {
                     logout();
-                    return
-                } else if (treeNode.name == '概览') {
-                    $('#indexPad-tabPad').tabs('add', {
-                        title: '概览',
-                        closable: true,
-                        width: "100%",
-                        content: "<iframe src='overview.html' style='width:100%;height:100%;border:none;'/>",
-                        tools: [{
-                            iconCls: 'icon-mini-refresh',
-                            handler: function () {
-                                var current_tab = $('#indexPad-tabPad').tabs('getSelected');
-                                $('#indexPad-tabPad').tabs('update', {
-                                    tab: current_tab,
-                                    options: {
-                                        content: current_tab.panel('options', 'content'),
-                                    }
-                                });
-                            }
-                        }
-                        ]
-                    });
-                } else if (treeNode.name == '文章管理') {
-                    $('#indexPad-tabPad').tabs('add', {
-                        title: '文章管理',
-                        closable: true,
-                        width: "100%",
-                        content: "<iframe src='article-manage.html' style='width:100%;height:100%;border:none;'/>",
-                        tools: [{
-                            iconCls: 'icon-mini-refresh',
-                            handler: function () {
-                                var current_tab = $('#indexPad-tabPad').tabs('getSelected');
-                                $('#indexPad-tabPad').tabs('update', {
-                                    tab: current_tab,
-                                    options: {
-                                        content: current_tab.panel('options', 'content'),
-                                    }
-                                });
-                            }
-                        }
-                        ]
-                    });
+                    return ;
                 }
+                    $('#indexPad-tabPad').tabs('add', {
+                        title: treeNode.name,
+                        closable: true,
+                        width: "100%",
+                        content: `<iframe src='${treeNode._url}' style='width:100%;height:100%;border:none;'/>`,
+                        tools: [{
+                            iconCls: 'icon-mini-refresh',
+                            handler: function () {
+                                var current_tab = $('#indexPad-tabPad').tabs('getSelected');
+                                $('#indexPad-tabPad').tabs('update', {
+                                    tab: current_tab,
+                                    options: {
+                                        content: current_tab.panel('options', 'content'),
+                                    }
+                                });
+                            }
+                        }
+                        ]
+                    });
+                
                 zTreeObj.expandNode(treeNode);
             }
         }
@@ -238,6 +216,7 @@
         $.removeCookie('token', { path: '/' });
         $.removeCookie('logining', { path: '/' });
         $.ajax({
+            type:'post',
             url: '/maintain/logout',
             data: { token: token },
             async: true

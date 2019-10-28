@@ -33,7 +33,7 @@
                 <span>账户</span>
             </div>
         </div>
-        <div class="number pwd" style="margin-top: 24px">
+        <div class="number password" style="margin-top: 24px">
             <input type="password" />
             <div>
                 <img src="login/resource/mima.png" alt="" />
@@ -45,7 +45,7 @@
                 <input class="lf" type="checkbox" name="vehicle" value="Car" checked="checked" />
                 <span class="lf">自动登录</span>
             </div>
-            <div class="rt forgetpwd">忘记密码</div>
+            <div class="rt forgetpassword">忘记密码</div>
         </div>
         <div class="loginbtn" style="margin-top:20px;">
             <button name="login" onclick="login()">登录</button>
@@ -88,17 +88,10 @@
     if (token) {
         $.ajax({
             url: '/maintain/login-refresh',
-            data: { token: token },
             type: 'post',
             async: false,
             success: function (data) {
-                if (data.code != 0) {
-                    alert(data.codeMsg)
-                    $.removeCookie('token', { path: '/' });
-                    $.removeCookie('logining', { path: '/' });
-                }
-                else {
-                    $.cookie('token', data.data.token, { expires: 30, path: '/' });
+                if (data.code == 0) {
                     $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
                     location.href = './index.html';
                 }
@@ -109,39 +102,36 @@
 
     function login() {
         var account = $('.phone input').val();
-        var pwd = $('.pwd input').val();
+        var password = $('.password input').val();
         $.ajax({
             url: '/maintain/login',
-            data: { account: account, pwd: pwd },
+            data: { account: account, password: password },
             type: 'post',
             async: false,
             success: function (data) {
-                if (data.code != 0) {
+                if (data.codeMsg)
                     alert(data.codeMsg)
-                    maintainPublic.resCodeProcess(data.code, data.codeMsg)
-                }
-                else {
+                if (data.code == 0) {
                     $('#message').fadeIn(100).fadeOut(1500).find('[name=content]').text('成功');
-                    token = data.data.token;
                     $.ajax({
                         url: '/maintain/login-refresh',
-                        data: { token: token },
                         type: 'post',
                         async: false,
                         success: function (data) {
-                            if (data.code != 0) {
+                            if (data.codeMsg)
                                 alert(data.codeMsg)
-                                $.removeCookie('token', { path: '/' });
-                                $.removeCookie('logining', { path: '/' });
-                                maintainPublic.resCodeProcess(data.code, data.codeMsg)
-                            }
-                            else {
-                                $.cookie('token', data.data.token, { expires: 30, path: '/' });
+                            if (data.code == 0) {
                                 $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
                                 location.href = './index.html';
                             }
+                            else {
+                                maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                            }
                         }
                     })
+                }
+                else {
+                    maintainPublic.resCodeProcess(data.code, data.codeMsg)
                 }
             }
         })

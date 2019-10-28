@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>忠安医联体运维平台-添加文章</title>
+    <title>忠安医联体运维平台-查看文章</title>
     <link rel="shortcut icon" href="/resource/favicon.ico" type="image/x-icon" />
 
 
@@ -32,10 +32,120 @@
 </head>
 
 <style>
+    #rowPad .show {}
 
+    #rowPad .edit {
+        display: none;
+    }
 </style>
 
+<script>
+    $.ajaxSetup({
+        layerIndex: -1,
+        beforeSend: function () {
+            this.layerIndex = layer.load(0, { shade: [0.1, '#393D49'] });
+        },
+        complete: function () {
+            layer.close(this.layerIndex);
+        }
+    });
+
+
+    var queryStringObject = public.queryStringObject();
+
+    var rowPad = {
+        selector: "#rowPad",
+        param: { token: null, articleId: null },
+        row: {
+
+        }, contentKindEditor: null,
+        beforePage: function () {
+            rowPad.param.articleId = queryStringObject.articleId
+
+            $.ajax({
+                type: 'get',
+                url: `/maintain/hospital-article/${rowPad.param.articleId}`,
+                async: false,
+                data: { token: rowPad.param.token },
+                success: function (data) {
+                    if (data.codeMsg)
+                        alert(data.codeMsg)
+                    if (data.code == 0) {
+                        rowPad.row = data.data;
+                    } else {
+                        maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                    }
+                }
+            })
+        },
+        afterPage: function () {
+            $(rowPad.selector).find('[name=dg]').datagrid()
+
+            rowPad.contentKindEditor = KindEditor.create('#rowPad [name=content]', {
+                cssPath: '/libs/kindeditor/plugins/code/prettify.css',
+                uploadJson: '/kindeditor/upload_json.jsp',
+                fileManagerJson: '/kindeditor/file_manager_json.jsp',
+                allowFileManager: true,
+                afterCreate: function () {
+                    var self = this;
+                    KindEditor.ctrl(document, 13, function () {
+                        self.sync();
+                        document.forms['example'].submit();
+                    });
+                    KindEditor.ctrl(self.edit.doc, 13, function () {
+                        self.sync();
+                        document.forms['example'].submit();
+                    });
+
+                    debugger
+                    if (rowPad.row.contentBtId)
+                        $.get(`/bigtxt/${rowPad.row.contentBtId}/${rowPad.row.contentBtId}`, function (data) {
+                            self.html(data)
+                        })
+                }
+            })
+        },
+        rowAlter: function () {
+            $.ajax({
+                type: 'post',
+                url: '/maintain/hospital-article-alter',
+                data: { token: rowPad.param.token, articleId: rowPad.param.articleId, content: rowPad.contentKindEditor.html(), ...rowPad.row },
+                success: function (data) {
+                    if (data.codeMsg)
+                        alert(data.codeMsg)
+                    if (data.code == 0) {
+                        if (!data.codeMsg)
+                            alert('操作成功')
+                        location.reload()
+                    } else {
+                        maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                    }
+                }
+            })
+        }
+    }
+
+    rowPad.beforePage()
+
+    var loadingPad = {
+        param:{},
+        remove: function () {
+            $("#loadingPad").remove();
+        }
+    }
+
+    $.parser.onComplete = function () {
+        loadingPad.remove()
+    }
+
+</script>
+
 <body style="margin:0;padding:0;">
+    <div id='loadingPad' style="position: absolute; z-index: 1000; top: 0px; left: 0px; 
+        width: 100%; height: 100%; background: white; text-align: center;padding:5px 10px">
+        <font>loading···</font>
+    </div>
+
     <div id="rowPad">
         <table name="dg" data-options="singleSelect:true">
             <thead>
@@ -48,7 +158,7 @@
                 <tr>
                     <td>文章名称</td>
                     <td><input name="name" class="easyui-textbox" style="width:100%" data-options="
-                        value:'',
+                        value:rowPad.row.name,
                         iconWidth:20,
                         icons:[{
                             iconCls:'icon-clear',
@@ -64,13 +174,17 @@
                 <tr>
                     <td>医院</td>
                     <td><input class="easyui-combobox" name="hospitalId" style="width:100%;" data-options="
+                        text:rowPad.row.hospitalName,
+                        value:rowPad.row.hospitalId,
                         valueField:'hospitalId',
                         textField:'name',
                         panelHeight:'auto',
                         mode:'remote',
+                        onShowPanel:function(){
+                            $(this).combobox('reload')
+                        },
                         loader: function (param, success, error) {
                             debugger
-                            param.token = rowPad.param.token;
                             param.kw=param.q;
                             param.ps = param.rows;
                             param.pn = param.page;
@@ -120,15 +234,27 @@
                                         rowPad.row.cover=url   
                                 })
                         " />
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-look" plain="true"
+                                style="vertical-align: text-bottom;" onclick="javascript:
+                             $(this).prev().prev().attr('src',rowPad.row.cover).attr('data-original',rowPad.row.cover).show().parent().viewer({
+                                 url: 'data-original',
+                             });"></a>
+
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
+                                style="vertical-align: text-bottom;"
+                                onclick="$(this).prev().prev().prev().attr('src','').attr('data-original','').hide();rowPad.row.cover='';"></a>
+
                             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
-                                style="vertical-align: text-bottom;" onclick="$(this).prev().click()"></a>
+                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().prev().click()"></a>
+
+
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>简介</td>
                     <td><input name="intro" class="easyui-textbox" style="width:100%;height:200px;" data-options="
-                            value:'',
+                            value:rowPad.row.intro,
                             multiline:true,
                             onChange:function(newValue, oldValue){
                                 rowPad.row.intro=newValue
@@ -139,10 +265,16 @@
                     <td><textarea name="content" style="width: 100%;height: 30px;padding:1px 4px"></textarea></td>
                 </tr>
                 <tr>
+                    <td>浏览量</td>
+                    <td>
+                        <div class="easyui-panel" style="background-color:rgba(0, 0, 0, 0);"
+                            data-options="content:rowPad.row.viewCount+'',border:false"></div>
+                    </td>
+                </tr>
+                <tr>
                     <td>基础浏览量</td>
                     <td><input name="viewCountBase" class="easyui-numberbox" style="width:100%" data-options="
-                                prompt:0,
-                                value:'',
+                                value:rowPad.row.viewCountBase,
                                 precision:0,
                                 iconWidth:20,
                                 icons:[{
@@ -156,10 +288,16 @@
                                 }" style="width:200px"></td>
                 </tr>
                 <tr>
+                    <td>分享量</td>
+                    <td>
+                        <div class="easyui-panel" style="background-color:rgba(0, 0, 0, 0);"
+                            data-options="content:rowPad.row.shareCount+'',border:false"></div>
+                    </td>
+                </tr>
+                <tr>
                     <td>基础分享量</td>
                     <td><input name="shareCountBase" class="easyui-numberbox" style="width:100%" data-options="
-                                    prompt:0,
-                                    value:'',
+                                    value:rowPad.row.shareCountBase,
                                     precision:0,
                                     iconWidth:20,
                                     icons:[{
@@ -173,8 +311,11 @@
                                     }" style="width:200px"></td>
                 </tr>
                 <tr>
-                    <td>关闭</td>
-                    <td><input name="closed" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',value:0,data:[
+                    <td>冻结</td>
+                    <td><input name="frozen" class="easyui-combobox" style="width:100%" data-options="
+                                    value:rowPad.row.frozen,
+                                    editable:false,panelHeight:'auto',
+                                    data:[
                                     {
                                          text: '是',
                                          value: '1'
@@ -190,14 +331,13 @@
                                          }
                                      }],
                                      onChange:function(newValue, oldValue){
-                                        rowPad.row.closed=newValue
+                                        rowPad.row.frozen=newValue
                                      }" /></td>
                 </tr>
                 <tr>
                     <td>排序号</td>
                     <td><input name="orderNo" class="easyui-numberbox" style="width:100%" data-options="
-                                    prompt:'9999',
-                                    value:'',
+                                    value:rowPad.row.orderNo,
                                     precision:2,
                                     iconWidth:20,
                                     icons:[{
@@ -213,8 +353,7 @@
                 <tr>
                     <td>添加时间</td>
                     <td><input name="addTime" class="easyui-datetimebox" style="width:100%" data-options="
-                                        prompt:moment().format('YYYY-MM-DD H:mm:ss'),
-                                        value:'',
+                                        value:moment(rowPad.row.addTime).format('YYYY-MM-DD H:mm:ss'),
                                         editable:false,
                                         icons:[{
                                             iconCls:'icon-clear',
@@ -229,8 +368,7 @@
                 <tr>
                     <td>更新时间</td>
                     <td><input name="alterTime" class="easyui-datetimebox" style="width:100%" data-options="
-                                            prompt:moment().format('YYYY-MM-DD H:mm:ss'),
-                                            value:'',
+                                            value:moment(rowPad.row.alterTime).format('YYYY-MM-DD H:mm:ss'),
                                             editable:false,
                                             icons:[{
                                                 iconCls:'icon-clear',
@@ -242,79 +380,45 @@
                                                 rowPad.row.alterTime=newValue
                                             }"></td>
                 </tr>
+                <tr>
+                    <td>删除</td>
+                    <td><input name="del" class="easyui-combobox" style="width:100%" data-options="
+                                        value:rowPad.row.del,
+                                        editable:false,
+                                        panelHeight:'auto',
+                                        data:[
+                                        {
+                                             text: '是',
+                                             value: '1'
+                                         },{
+                                             text: '否',
+                                             value: '0'
+                                         }],
+                                         iconWidth:20,
+                                         icons:[{
+                                             iconCls:'icon-clear',
+                                             handler: function(e){
+                                                 $(e.data.target).combobox('setValue','');
+                                             }
+                                         }],
+                                         onChange:function(newValue, oldValue){
+                                            rowPad.row.del=newValue
+                                         }" /></td>
+                </tr>
             </tbody>
         </table>
         <div style="margin-top:5px;">
-            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-add" onclick="rowPad.rowAdd()">确认添加</a>
-            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-remove"
-                onclick="location.reload()">清空</a>
-
+            <a href="JavaScript:void(0)" class="easyui-linkbutton show" iconCls="icon-edit"
+                onclick="$('.edit').css('display','inline-block');$('.show').hide();">修改</a>
+            <a href="JavaScript:void(0)" class="easyui-linkbutton edit" iconCls="icon-save"
+                onclick="rowPad.rowAlter()">确认修改</a>
+            <a href="JavaScript:void(0)" class="easyui-linkbutton edit" iconCls="icon-cancel"
+                onclick="location.reload()">取消修改</a>
         </div>
     </div>
 </body>
 <script>
-    $.ajaxSetup({
-        layerIndex: -1,
-        beforeSend: function () {
-            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-        },
-        complete: function () {
-            layer.close(this.layerIndex);
-        }
-    });
-
-    var token = $.cookie('token')
-    var rowPad = {
-        param: { token: token },
-        row: {
-
-        },
-        contentKindEditor: null,
-        init: function () {
-            $('#rowPad [name=dg]').datagrid()
-
-            rowPad.contentKindEditor = KindEditor.create('#rowPad [name=content]', {
-                cssPath: '/libs/kindeditor/plugins/code/prettify.css',
-                uploadJson: '/kindeditor/upload_json.jsp',
-                fileManagerJson: '/kindeditor/file_manager_json.jsp',
-                allowFileManager: true,
-                afterCreate: function () {
-                    var self = this;
-                    KindEditor.ctrl(document, 13, function () {
-                        self.sync();
-                        document.forms['example'].submit();
-                    });
-                    KindEditor.ctrl(self.edit.doc, 13, function () {
-                        self.sync();
-                        document.forms['example'].submit();
-                    });
-                }
-            })
-        },
-        rowAdd: function () {
-            $.ajax({
-                type: 'post',
-                url: '/maintain/article/add',
-                data: { token: rowPad.param.token, content: rowPad.contentKindEditor.html(), ...rowPad.row },
-                success: function (data) {
-                    if (data.codeMsg)
-                        alert(data.codeMsg)
-                    if (data.code == 0) {
-                        if (!data.codeMsg)
-                            alert('操作成功')
-                        location.reload()
-                    } else {
-                        maintainPublic.resCodeProcess(data.code, data.codeMsg)
-                    }
-                }
-            })
-        }
-    }
-
-
-    rowPad.init()
-
-
+    rowPad.afterPage()
 </script>
 
 </html>
