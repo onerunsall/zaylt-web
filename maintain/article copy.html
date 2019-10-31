@@ -282,7 +282,7 @@
         function findHospital(kw,ew,pageNo){
             pageNo=pageNo||1;
             $.ajax({
-                url: rootDis+"/maintain/hospitalList",
+                url: rootDis+"/maintain/hospitals",
                 type: 'post',
                 async: false,
                 data: {token:token,kw:kw,pn:pageNo,ps:9},
@@ -290,13 +290,13 @@
                     if (res.code == 0) {
                         var msg = "请输入要选择的序号，当前第"+pageNo+"页。'+'号向后翻页，'-'号向前翻页，加数字则指定翻的页数。\n\n"
                         var vb;
-                        $(res.data.items).each(function(index,ele){
+                        $(res.data.rows).each(function(index,ele){
                             ele.signShow=ele.name+(ele.headmanName?'/'+ele.headmanName:'')
                             msg+=(index+1)+'. '+ele.signShow+'\n'
                         })
-                        if(pageNo!=1&&res.data.items.length == 0)
+                        if(pageNo!=1&&res.data.rows.length == 0)
                             msg+='已经到底了'
-                        if(pageNo==1&&res.data.items.length == 0)
+                        if(pageNo==1&&res.data.rows.length == 0)
                             msg+='未找到任何数据'
                         vb = prompt(msg)
                         if(vb!= null){
@@ -309,7 +309,7 @@
                                 vb=!vb?1:vb;
                                 findHospital(kw,ew,pageNo- +vb)
                             }else if(!isNaN(vb)){
-                                var entity = res.data.items[+vb-1];
+                                var entity = res.data.rows[+vb-1];
                                 if(entity && confirm('已选择 "'+entity.signShow+'"，确定吗？')){
                                     $('#hospitalId').val(entity.hospitalId)
                                     $('#hospitalIdSignShow').text(entity.signShow).show()

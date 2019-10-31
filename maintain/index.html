@@ -147,32 +147,32 @@
 
     zNodes = []
 
-    zNodes.push({ name: '概览', uurl: './overview.html?currentPath=病人管理' })
+    zNodes.push({ name: '概览', _url: './overview.html?currentPath=病人管理' })
     zNodes.push({
         name: '医院端管理', children: [
-            { name: '用户管理', uurl: './hospitaler.html?currentPath=医院端用户管理' },
-            { name: '医院管理', uurl: './hospital.html?currentPath=医院管理' },
-            { name: '医院主轮播', uurl: './hospitalMaincarousel.html?currentPath=医院主轮播' },
+            { name: '用户管理', _url: './hospitaler.html?currentPath=医院端用户管理' },
+            { name: '医院管理', _url: './hospital.html?currentPath=医院管理' },
+            { name: '医院主轮播', _url: './hospitalMaincarousel.html?currentPath=医院主轮播' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=医院端权限管理'}
         ]
     })
     zNodes.push({
         name: '门诊端管理', children: [
-            { name: '用户管理', uurl: './clinicer.html?currentPath=门诊端用户管理' },
-            { name: '门诊管理', uurl: './clinic.html?currentPath=门诊管理' },
+            { name: '用户管理', _url: './clinicer.html?currentPath=门诊端用户管理' },
+            { name: '门诊管理', _url: './clinic.html?currentPath=门诊管理' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
         ]
     })
 
-    zNodes.push({ name: '病人管理', uurl: './patient.html?currentPath=病人管理' })
+    zNodes.push({ name: '病人管理', _url: './patient.html?currentPath=病人管理' })
     zNodes.push({ name: '文章管理', _url: './hospital-article-manage.html' })
     zNodes.push({ name: '活动管理', _url: './hospital-activity-manage.html' })
     zNodes.push({ name: '科室管理', _url: './hospital-office-manage.html' })
-    zNodes.push({ name: '专家管理', uurl: './doctor.html?currentPath=专家管理' })
-    zNodes.push({ name: '集采主轮播', uurl: './procurementMaincarousel.html?currentPath=集采主轮播' })
+    zNodes.push({ name: '专家管理', _url: './doctor.html?currentPath=专家管理' })
+    zNodes.push({ name: '集采主轮播', _url: './procurementMaincarousel.html?currentPath=集采主轮播' })
 
 
-    zNodes.push({ name: '退出登录', uurl: '' })
+    zNodes.push({ name: '退出登录', _url: '' })
     // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
     var setting = {
         view: {

@@ -326,14 +326,14 @@
                             this.sum = res.data.sum;
                             this.totalPageCount = this.sum.rowCount % this.pageSize == 0 ? this.sum.rowCount / this.pageSize : parseInt(this.sum.rowCount / this.pageSize) + 1;
 
-                            this.currentPageItemCount = data.items.length;
+                            this.currentPageItemCount = data.rows.length;
                             if (this.currentPageItemCount < this.pageSize)
                                 this.hasMoreItems = false;
                             if (this.currentPageItemCount == this.pageSize)
                                 this.hasMoreItems = true;
                             debugger
 
-                            $(data.items).each((index, item) => {
+                            $(data.rows).each((index, item) => {
                                 item.rownum = (this.pageNo - 1) * this.pageSize + 1 + index;
                                 this.itemsMap[item.procurementMaincarouselId] = item
                                 this.items.push(item)
