@@ -273,7 +273,7 @@
             pageNo=pageNo||1;
             $.ajax({
                 url: rootDis+"/maintain/hospitals",
-                type: 'post',
+                type: 'get',
                 async: false,
                 data: {token:token,kw:kw,pn:pageNo,ps:9},
                 success: function (res) {
