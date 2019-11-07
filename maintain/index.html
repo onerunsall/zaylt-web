@@ -71,7 +71,9 @@
                 <div id="tab-tools">
                     <a href="javascript:void(0)" class="easyui-linkbutton"
                         data-options="plain:true,iconCls:'icon-dustbin'"
-                        onclick="$($('#indexPad-tabPad').tabs('tabs')).each(function(index,ele){ $('#indexPad-tabPad').tabs('close',),index})   "></a>
+                        onclick="
+						if(confirm('确定关闭所有标签页吗？'))
+						$($('#indexPad-tabPad').tabs('tabs')).each(function(index,ele){ $('#indexPad-tabPad').tabs('close',),index})   "></a>
                 </div>
             </div>
 
@@ -166,9 +168,10 @@
 
     zNodes.push({ name: '病人管理', _url: './patient.html?currentPath=病人管理' })
     zNodes.push({ name: '文章管理', _url: './hospital-article-manage.html' })
+    zNodes.push({ name: '项目管理', _url: './hospital-project-manage.html' })
     zNodes.push({ name: '活动管理', _url: './hospital-activity-manage.html' })
     zNodes.push({ name: '科室管理', _url: './hospital-office-manage.html' })
-    zNodes.push({ name: '专家管理', _url: './doctor.html?currentPath=专家管理' })
+    zNodes.push({ name: '专家管理', _url: './hospital-doctor-manage.html' })
     zNodes.push({ name: '集采主轮播', _url: './procurementMaincarousel.html?currentPath=集采主轮播' })
 
 

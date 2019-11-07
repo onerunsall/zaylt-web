@@ -245,7 +245,7 @@ K.options = {
 	themeType : 'default',
 	langType : 'zh-CN',
 	urlType : '',
-	newlineTag : 'p',
+	newlineTag : 'br',
 	resizeType : 2,
 	syncType : 'form',
 	pasteType : 2,
