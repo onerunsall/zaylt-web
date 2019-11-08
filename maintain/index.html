@@ -149,30 +149,34 @@
 
     zNodes = []
 
-    zNodes.push({ name: '概览', _url: './overview.html?currentPath=病人管理' })
+    zNodes.push({ name: '概览', _url: './overview.html' })
     zNodes.push({
-        name: '医院端管理', children: [
-            { name: '用户管理', _url: './hospitaler.html?currentPath=医院端用户管理' },
-            { name: '医院管理', _url: './hospital.html?currentPath=医院管理' },
-            { name: '医院主轮播', _url: './hospitalMaincarousel.html?currentPath=医院主轮播' },
+        name: '医院管理', children: [
+            { name: '医院', _url: './hospital-manage.html' },
+            { name: '用户', _url: './hospital-user-manage.html' },
+            { name: '广告', _url: './hospital-ad-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=医院端权限管理'}
         ]
     })
     zNodes.push({
-        name: '门诊端管理', children: [
-            { name: '用户管理', _url: './clinicer.html?currentPath=门诊端用户管理' },
-            { name: '门诊管理', _url: './clinic.html?currentPath=门诊管理' },
+        name: '门诊管理', children: [
+            { name: '门诊', _url: './hospital-clinic-manage.html' },
+            { name: '用户', _url: './hospital-clinic-user-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
         ]
     })
 
-    zNodes.push({ name: '病人管理', _url: './patient.html?currentPath=病人管理' })
+    zNodes.push({ name: '病员管理', _url: './patient-manage.html' })
     zNodes.push({ name: '文章管理', _url: './hospital-article-manage.html' })
     zNodes.push({ name: '项目管理', _url: './hospital-project-manage.html' })
     zNodes.push({ name: '活动管理', _url: './hospital-activity-manage.html' })
     zNodes.push({ name: '科室管理', _url: './hospital-office-manage.html' })
     zNodes.push({ name: '专家管理', _url: './hospital-doctor-manage.html' })
-    zNodes.push({ name: '集采主轮播', _url: './procurementMaincarousel.html?currentPath=集采主轮播' })
+    zNodes.push({ name: '广告管理', _url: './ad-manage.html' })
+    zNodes.push({ name: '页面编辑',children:[
+		{name:'用户协议',_url:'/maintain/set-page-user-protocol.html'}
+	] })
+    zNodes.push({ name: '参数管理', _url: './param-manage.html' })
 
 
     zNodes.push({ name: '退出登录', _url: '' })
@@ -187,6 +191,7 @@
                     logout();
                     return ;
                 }
+                if(treeNode._url)
                     $('#indexPad-tabPad').tabs('add', {
                         title: treeNode.name,
                         closable: true,

@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>忠安医联体运维平台-专家管理</title>
+    <title>忠安医联体运维平台-医院管理</title>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="/resource/favicon.ico" type="image/x-icon" />
 
@@ -56,7 +56,7 @@
             token: null
         },
         queryParam: {
-            
+
         },
         beforePage: function () {
         },
@@ -68,14 +68,13 @@
                             return value ? `<span class="image-previewer"><img src='${value}' style='width:50px' data-original='${value}'/></span>` : value
                         }
                     },
-                    { field: 'viewCount', title: '浏览量', width: 70, align: 'right', sortable: true, halign: 'center' },
-                    { field: 'hospitalId', title: '医院', width: 200, align: 'left',sortable: true, halign: 'center' , formatter: function (value, row, index) {
-                            return row.hospitalName;
-                        }},
-                    { field: 'officeId', title: '科室', width: 200, align: 'left', sortable: true,halign: 'center' , formatter: function (value, row, index) {
-                            return row.officeName;
-                        }},
-                   
+                    { field: 'tel', title: '电话', width: 150, align: 'left', halign: 'center', formatter: function (value, row, index) {
+                            return  `<span style="width:100%;display:inline-block;" title="${value||''}">${value||''}</span>`
+                        }  },
+                    { field: 'money', title: '金额', width: 70, align: 'right', sortable: true, halign: 'center' },
+                    { field: 'point', title: '积分', width: 70, align: 'right', sortable: true, halign: 'center' },
+                    { field: 'clinicCount', title: '门诊数', width: 70, align: 'right', sortable: true, halign: 'center' },
+                    { field: 'patientCount', title: '病员数', width: 70, align: 'right', sortable: true, halign: 'center' },
                     { field: 'orderNo', title: '排序号', width: 70, align: 'right', sortable: true, halign: 'center' },
                     {
                         field: 'addTime', title: '添加时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
@@ -90,7 +89,7 @@
                             debugger
                             if (value == '汇总：')
                                 return value;
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="maintainPublic.newTab('查看专家:${public.subOmitRight(row.name, 3)}','/maintain/hospital-doctor.html?doctorId=${row.doctorId}')">${value}</a>`;
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="maintainPublic.newTab('查看医院:${public.subOmitRight(row.name, 3)}','/maintain/hospital.html?hospitalId=${row.hospitalId}')">${value}</a>`;
                         }, styler: function (value, row, index) {
                             return ``
                         }
@@ -98,7 +97,7 @@
                 ]],
                 toolbar: `${rowsPad.selector} [name=tb]`,
                 footer: `${rowsPad.selector} [name=ft]`,
-                idField: 'doctorId',
+                idField: 'hospitalId',
                 pagination: true,
                 rownumbers: true,
                 emptyMsg: '无数据',
@@ -132,7 +131,7 @@
                     param.pn = param.page;
                     Object.assign(param, rowsPad.queryParam);
                     $.ajax({
-                        url: '/maintain/hospital-doctors',
+                        url: '/maintain/hospitals',
                         type: 'get',
                         data: param,
                         success: function (data) {
@@ -142,7 +141,7 @@
                                 return false;
                             } else {
                                 success(data.data);
-                                $(rowsPad.selector).find('[name=tb] [name=sum]').html(`总浏览量:${public.toEmpty(data.data.sum.totalViewCount)}`)
+                                $(rowsPad.selector).find('[name=tb] [name=sum]').html()
                             }
 
                         }
@@ -152,7 +151,7 @@
                     debugger
                     var fdata = {
                         rows: data.rows, total: data.sum.rowCount, footer: [
-                            { "cover": "", "viewCount": public.toEmpty(data.sum.totalViewCount), "name": "汇总：" }
+                            { "money": public.toEmpty(data.sum.totalMoney), "point": public.toEmpty(data.sum.totalPoint), "name": "汇总：" }
                         ]
                     }
                     return fdata;
@@ -165,10 +164,10 @@
         },
         addRow: function () {
             parent.$('#indexPad-tabPad').tabs('add', {
-                title: '添加专家',
+                title: '添加医院',
                 closable: true,
                 width: "100%",
-                content: "<iframe src='hospital-doctor-add.html' style='width:100%;height:100%;border:none;'/>",
+                content: "<iframe src='hospital-add.html' style='width:100%;height:100%;border:none;'/>",
                 tools: [{
                     iconCls: 'icon-mini-refresh',
                     handler: function () {
@@ -185,13 +184,14 @@
             });
         },
         deleteRow: function () {
+            debugger
             var checked = $(rowsPad.selector).find('[name=dg]').datagrid('getChecked');
             var selected = $(rowsPad.selector).find('[name=dg]').datagrid('getSelected');
-            var doctorIds = $(checked).giveup_attrs('doctorId');
-            var doctorIdsSplit = doctorIds.join();
+            var hospitalIds = $(checked).giveup_attrs('hospitalId');
+            var hospitalIdsSplit = hospitalIds.join();
             var doDel = false;
             if (checked.length == 1) {
-                if (confirm(`将删除 ${checked[0].name}/${checked[0].hospitalName} ，确定吗？`)) {
+                if (confirm(`将删除 ${checked[0].name}/${checked[0].headmanName} ，确定吗？`)) {
                     doDel = true;
                 }
             } else if (checked.length > 1) {
@@ -207,9 +207,9 @@
                 if (selected == null) {
                     alert('需选择一条记录')
                 } else {
-                    if (confirm(`将删除 ${selected.name}/${selected.hospitalName} ，确定吗？`)) {
+                    if (confirm(`将删除 ${selected.name}/${selected.headmanName} ，确定吗？`)) {
                         doDel = true;
-                        doctorIdsSplit = selected.doctorId;
+                        hospitalIdsSplit = selected.hospitalId;
                     }
                 }
             }
@@ -217,8 +217,8 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/hospital-doctor-delete`,
-                    data: { token: rowsPad.param.token, doctorId: doctorIdsSplit },
+                    url: `/maintain/hospital-delete`,
+                    data: { token: rowsPad.param.token, hospitalId: hospitalIdsSplit },
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
@@ -265,8 +265,8 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/hospital-doctors-delete`,
-                    data: { token: rowsPad.param.token, ...rowsPad.queryParam,password:password },
+                    url: `/maintain/hospitals-delete`,
+                    data: { token: rowsPad.param.token, ...rowsPad.queryParam, password: password },
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
@@ -306,10 +306,10 @@
             <div style="">
                 <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-search"
                 onclick="$(rowsPad.selector).find('[name=dg]').datagrid('load').datagrid('unselectAll');">查询</a>
+
                 <span style="display:inline-block;">
                 <span style="">关键字:</span>
-               
-                <input name="kw" class="easyui-textbox" data-options="
+                    <input name="kw" class="easyui-textbox" data-options="
             iconWidth:20,
             icons:[{
                 iconCls:'icon-clear',
@@ -321,107 +321,37 @@
                 rowsPad.queryParam.kw=newValue
             }" style="width:200px" /></span>
 
+            
             <span style="display:inline-block;">
-                <span style="">医院:</span>
-                <input class="easyui-combobox" name="hospitalId" style="width:200px;"
-                        data-options="
-            valueField:'hospitalId',
-            textField:'name',
-            panelHeight:'auto',
-            mode:'remote',
-            onShowPanel:function(){
-                $(this).combobox('reload')
-            },
-            loader: function (param, success, error) {
-                debugger
-                param.token = rowsPad.param.token;
-                param.kw=param.q;
-                param.ps = param.rows;
-                param.pn = param.page;
-                $.ajax({
-                    url: '/maintain/hospitals',
-                    type: 'get',
-                    data: param,
-                    success: function (data) {
-                        if (data.code != 0) {
-                            return false;
-                        } else {
-                            success(data.data);
-                        }
-    
-                    }
-                })
-            },
-            onChange:function(newValue, oldValue){
-                rowsPad.queryParam.hospitalId=newValue
-            },
-            loadFilter: function (data) {
-                debugger
-                return data.rows;
-            },
+                <span style="">&nbsp;审核:</span>
+                <input name="frozen" class="easyui-combobox" style="width:100px" data-options="editable:false,panelHeight:'auto',value:'',data:[
+           {
+                text: '未提交',
+                value: '0'
+            },{
+                text: '已提交',
+                value: '1'
+            },{
+                text: '成功',
+                value: '2'
+            },{
+                text: '失败',
+                value: '3'
+            }],
             iconWidth:20,
             icons:[{
                 iconCls:'icon-clear',
                 handler: function(e){
                     $(e.data.target).combobox('setValue','');
                 }
-            }]
-            "></span>
-
-            <span style="display:inline-block;">
-            <span style="">科室:</span>
-                <input class="easyui-combobox" name="officeId" style="width:200px;"
-                        data-options="
-            valueField:'officeId',
-            textField:'name',
-            panelHeight:'auto',
-            mode:'remote',
-            onShowPanel:function(){
-                $(this).combobox('reload')
-            },
-            loader: function (param, success, error) {
-                if(!rowsPad.queryParam.hospitalId)
-                    return;
-                debugger
-                param.token = rowsPad.param.token;
-                param.kw=param.q;
-                param.ps = param.rows;
-                param.pn = param.page;
-                param.hospitalId=rowsPad.queryParam.hospitalId;
-                $.ajax({
-                    url: '/maintain/hospital-offices',
-                    type: 'get',
-                    data: param,
-                    success: function (data) {
-                        if (data.code != 0) {
-                            return false;
-                        } else {
-                            success(data.data);
-                        }
-    
-                    }
-                })
-            },
+            }],
             onChange:function(newValue, oldValue){
-                rowsPad.queryParam.officeId=newValue
-            },
-            loadFilter: function (data) {
-                debugger
-                return data.rows;
-            },
-            iconWidth:20,
-            icons:[{
-                iconCls:'icon-clear',
-                handler: function(e){
-                    $(e.data.target).combobox('setValue','');
-                }
-            }]
-            "></span>
-
+                rowsPad.queryParam.authStatus=newValue
+            }" />
+        </span>
             <span style="display:inline-block;">
                 <span style="">添加时间 From:</span>
-                <input name="addTimeStart" class="easyui-datebox" style="width:135px"
-                        data-options="
+                <input name="addTimeStart" class="easyui-datebox" style="width:135px" data-options="
                 editable:false,
                 icons:[{
                     iconCls:'icon-clear',
@@ -432,12 +362,11 @@
             onChange:function(newValue, oldValue){
                 rowsPad.queryParam.addTimeStart=newValue
             }">
-        </span>
+            </span>
 
-        <span style="display:inline-block;">
+            <span style="display:inline-block;">
                 <span style="">To:</span>
-                <input name="addTimeEnd" class="easyui-datebox" style="width:135px"
-                        data-options="
+                <input name="addTimeEnd" class="easyui-datebox" style="width:135px" data-options="
                 editable:false,
                 icons:[{
                     iconCls:'icon-clear',
@@ -447,12 +376,11 @@
                 }],
         onChange:function(newValue, oldValue){
             rowsPad.queryParam.addTimeEnd=newValue
-        }">
-    </span>
-    <span style="display:inline-block;">
+        }"></span>
+
+         <span style="display:inline-block;">
                 <span style="">&nbsp;冻结:</span>
-               <input name="frozen" class="easyui-combobox" style="width:80px"
-                        data-options="editable:false,panelHeight:'auto',value:0,data:[
+                <input name="frozen" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:0,data:[
            {
                 text: '是',
                 value: '1'
@@ -492,10 +420,8 @@
             onChange:function(newValue, oldValue){
                 rowsPad.queryParam.del=newValue
             }" />
-                  
-            </div>
         </span>
-            
+            </div>
             <div style="margin-top:5px;"></div>
             <span name="checkedCount" style="margin-right:5px;"></span><span name="sum"></span>
         </div>
