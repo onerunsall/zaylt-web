@@ -23,15 +23,19 @@
 
 <body style="margin:0;padding:0;">
     <div style="margin-left:20px;">
-        <h3 style="">近1小时来访的IP数: <span id="onlineIpCount"></span></h3>
-        <h3 style="">来访的历史IP数: <span id="ipCount"></span></h3>
+        <h3 style="">近1小时的IP数: <span id="onlineIpCountOfOneHourRecently"></span></h3>
+        <h3 style="">近1天的IP数: <span id="onlineIpCountOfOneDayRecently"></span></h3>
+        <h3 style="">近1星期的IP数: <span id="onlineIpCountOfOneWeekRecently"></span></h3>
+        <h3 style="">历史IP数: <span id="ipCountOfHistory"></span></h3>
     </div>
 </body>
 
 <script>
    $.get('/maintain/overview',function(data){
-    $('#onlineIpCount').text(data.data.onlineIpCount)
-    $('#ipCount').text(data.data.ipCount)
+    $('#onlineIpCountOfOneHourRecently').text(data.data.onlineIpCountOfOneHourRecently)
+    $('#onlineIpCountOfOneDayRecently').text(data.data.onlineIpCountOfOneDayRecently)
+    $('#onlineIpCountOfOneWeekRecently').text(data.data.onlineIpCountOfOneWeekRecently)
+    $('#ipCountOfHistory').text(data.data.ipCountOfHistory)
    })
 </script>
 

@@ -21,7 +21,7 @@
     <script src="/libs/jQueryViewer20160329/js/viewer-jquery.min.js"></script>
     <script src="/libs/public.js"></script>
     <link rel="stylesheet" href="/libs/public.css" />
-    <script src="/libs/jquery.extend.giveup.js"></script>
+    <script src="/libs/jquery.extend.oneall.js"></script>
 
 
     <script src="/maintain/libs/public.js"></script>
@@ -187,7 +187,7 @@
             debugger
             var checked = $(rowsPad.selector).find('[name=dg]').datagrid('getChecked');
             var selected = $(rowsPad.selector).find('[name=dg]').datagrid('getSelected');
-            var clinicIds = $(checked).giveup_attrs('clinicId');
+            var clinicIds = $(checked).oneall_attrs('clinicId');
             var clinicIdsSplit = clinicIds.join();
             var doDel = false;
             if (checked.length == 1) {

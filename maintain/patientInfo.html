@@ -19,7 +19,7 @@
     <script src="../libs/jquery.min.js"></script>
     <script src="../libs/navim.js"></script>
     <script src="../libs/jquery.cookie.js"></script>
-    <script src="../libs/jquery.extend.giveup.js"></script>
+    <script src="../libs/jquery.extend.oneall.js"></script>
     <script src="../libs/layer/layer.js"></script>
     <script src="../libs/moment.js"></script>
 
@@ -214,7 +214,7 @@
     <img  class="entity" style="width:50px;cursor:pointer" onclick="giveup.imgPreview(this.src)"/>
     <span style="cursor:pointer;color:#af0000;" class="" onclick="$(this).parent('.entityPad').remove()">X</span>
     <span  style="cursor:pointer;margin:0 5px" class=" exchangePlace"
-           onclick="$(this).parent('.entityPad').giveup_exchangeDom($(this).parent('.entityPad').next('.entityPad'))"><></span>
+           onclick="$(this).parent('.entityPad').oneall_exchangeDom($(this).parent('.entityPad').next('.entityPad'))"><></span>
 </span>
 
 
@@ -462,7 +462,7 @@ debugger
      jqDom=$('#clinicId')
      param.clinicId= jqDomValue = jqDom.val();
 
-     param.invoices= $('#invoicesPad .entity').giveup_attrs('src').join(',');
+     param.invoices= $('#invoicesPad .entity').oneall_attrs('src').join(',');
 
      param.alterTime= $('#alterTime').val()?new Date($('#alterTime').val()).getTime():'';
      param.addTime= $('#addTime').val()?new Date($('#addTime').val()).getTime():'';

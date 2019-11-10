@@ -21,7 +21,7 @@
     <script src="/libs/jQueryViewer20160329/js/viewer-jquery.min.js"></script>
     <script src="/libs/public.js"></script>
     <link rel="stylesheet" href="/libs/public.css" />
-    <script src="/libs/jquery.extend.giveup.js"></script>
+    <script src="/libs/jquery.extend.oneall.js"></script>
 
 
     <script src="/maintain/libs/public.js"></script>
@@ -58,6 +58,7 @@
         queryParam: {
 
         },
+        data:{},
         beforePage: function () {
         },
         afterPage: function () {
@@ -141,6 +142,7 @@
                                 return false;
                             } else {
                                 success(data.data);
+                                rowsPad.data=data.data
                                 $(rowsPad.selector).find('[name=tb] [name=sum]').html()
                             }
 
@@ -151,7 +153,7 @@
                     debugger
                     var fdata = {
                         rows: data.rows, total: data.sum.rowCount, footer: [
-                            { "money": public.toEmpty(data.sum.totalMoney), "point": public.toEmpty(data.sum.totalPoint), "name": "汇总：" }
+                            { "money": data.sum.totalMoney||'', "point": data.sum.totalPoint||'', "name": "汇总：" }
                         ]
                     }
                     return fdata;
@@ -187,7 +189,7 @@
             debugger
             var checked = $(rowsPad.selector).find('[name=dg]').datagrid('getChecked');
             var selected = $(rowsPad.selector).find('[name=dg]').datagrid('getSelected');
-            var hospitalIds = $(checked).giveup_attrs('hospitalId');
+            var hospitalIds = $(checked).oneall_attrs('hospitalId');
             var hospitalIdsSplit = hospitalIds.join();
             var doDel = false;
             if (checked.length == 1) {
@@ -306,7 +308,6 @@
             <div style="">
                 <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-search"
                 onclick="$(rowsPad.selector).find('[name=dg]').datagrid('load').datagrid('unselectAll');">查询</a>
-
                 <span style="display:inline-block;">
                 <span style="">关键字:</span>
                     <input name="kw" class="easyui-textbox" data-options="
@@ -434,6 +435,8 @@
                 onclick="rowsPad.deleteRow()"></a>
             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-dustbin" plain="true"
                 onclick="rowsPad.deleteRows()"></a>
+                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-download" plain="true"
+                onclick="window.open(rowsPad.data.exportUrl,'_blank')"></a>
         </div>
     </div>
 </body>

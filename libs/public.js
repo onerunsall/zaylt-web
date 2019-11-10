@@ -1,11 +1,7 @@
 
 var public = {}
 
-public.toEmpty = function (value) {
-    if (value === null || value === undefined)
-        return ''
-    return value
-}
+
 
 public.subOmitRight = function (value, length) {
     if (!value)
@@ -51,8 +47,4 @@ public.queryStringObject = function(queryString) {
 }
 
 
-public.getQueryStringParam = function(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) return unescape(r[2]); return null;
-}
+

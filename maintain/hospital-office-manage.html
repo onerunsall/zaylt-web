@@ -21,7 +21,7 @@
     <script src="/libs/jQueryViewer20160329/js/viewer-jquery.min.js"></script>
     <script src="/libs/public.js"></script>
     <link rel="stylesheet" href="/libs/public.css" />
-    <script src="/libs/jquery.extend.giveup.js"></script>
+    <script src="/libs/jquery.extend.oneall.js"></script>
 
 
     <script src="/maintain/libs/public.js"></script>
@@ -139,7 +139,7 @@
                                 return false;
                             } else {
                                 success(data.data);
-                                $(rowsPad.selector).find('[name=tb] [name=sum]').html(`总浏览量:${public.toEmpty(data.data.sum.totalViewCount)}`)
+                                $(rowsPad.selector).find('[name=tb] [name=sum]').html(`总浏览量:${data.data.sum.totalViewCount||''}`)
                             }
 
                         }
@@ -149,7 +149,7 @@
                     debugger
                     var fdata = {
                         rows: data.rows, total: data.sum.rowCount, footer: [
-                            { "cover": "", "viewCount": public.toEmpty(data.sum.totalViewCount), "name": "汇总：" }
+                            { "cover": "", "viewCount":data.data.sum.totalViewCount||'', "name": "汇总：" }
                         ]
                     }
                     return fdata;
@@ -184,7 +184,7 @@
         deleteRow: function () {
             var checked = $(rowsPad.selector).find('[name=dg]').datagrid('getChecked');
             var selected = $(rowsPad.selector).find('[name=dg]').datagrid('getSelected');
-            var officeIds = $(checked).giveup_attrs('officeId');
+            var officeIds = $(checked).oneall_attrs('officeId');
             var officeIdsSplit = officeIds.join();
             var doDel = false;
             if (checked.length == 1) {
