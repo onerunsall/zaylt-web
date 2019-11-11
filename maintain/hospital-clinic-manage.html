@@ -58,6 +58,7 @@
         queryParam: {
 
         },
+        data:{},
         beforePage: function () {
         },
         afterPage: function () {
@@ -71,10 +72,14 @@
                     { field: 'hospitalName', title: '医院', width: 150, align: 'left', halign: 'center', formatter: function (value, row, index) {
                             return  `<span style="width:100%;display:inline-block;" title="${value||''}">${value||''}</span>`
                         }  },
+                        
                     { field: 'tel', title: '电话', width: 150, align: 'left', halign: 'center', formatter: function (value, row, index) {
                             return  `<span style="width:100%;display:inline-block;" title="${value||''}">${value||''}</span>`
                         }  },
                     { field: 'patientCount', title: '病员数', width: 70, align: 'right', sortable: true, halign: 'center' },
+                    { field: 'clinicPromoterName', title: '推广人', width: 150, align: 'left', halign: 'center', formatter: function (value, row, index) {
+                            return  `<span style="width:100%;display:inline-block;" title="${value||''}">${value||''}</span>`
+                        }  },
                     { field: 'orderNo', title: '排序号', width: 70, align: 'right', sortable: true, halign: 'center' },
                     {
                         field: 'addTime', title: '添加时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
@@ -140,6 +145,7 @@
                                 maintainPublic.resCodeProcess(data.code, data.codeMsg)
                                 return false;
                             } else {
+                                rowsPad.data=data.data
                                 success(data.data);
                                 $(rowsPad.selector).find('[name=tb] [name=sum]').html()
                             }
@@ -167,7 +173,7 @@
                 title: '添加门诊',
                 closable: true,
                 width: "100%",
-                content: "<iframe src='hospital-add.html' style='width:100%;height:100%;border:none;'/>",
+                content: "<iframe src='hospital-clinic-add.html' style='width:100%;height:100%;border:none;'/>",
                 tools: [{
                     iconCls: 'icon-mini-refresh',
                     handler: function () {
@@ -191,7 +197,7 @@
             var clinicIdsSplit = clinicIds.join();
             var doDel = false;
             if (checked.length == 1) {
-                if (confirm(`将删除 ${checked[0].name}/${checked[0].headmanName} ，确定吗？`)) {
+                if (confirm(`将删除 ${checked[0].name}/${checked[0].headman} ，确定吗？`)) {
                     doDel = true;
                 }
             } else if (checked.length > 1) {
@@ -207,7 +213,7 @@
                 if (selected == null) {
                     alert('需选择一条记录')
                 } else {
-                    if (confirm(`将删除 ${selected.name}/${selected.headmanName} ，确定吗？`)) {
+                    if (confirm(`将删除 ${selected.name}/${selected.headman} ，确定吗？`)) {
                         doDel = true;
                         clinicIdsSplit = selected.clinicId;
                     }
@@ -367,6 +373,52 @@
                 }
             }]
             "></span>
+            <span style="display: inline-block;">
+                    <span style="">推广人:</span>
+                    <input class="easyui-combobox" name="clinicPromoterId" style="width:200px;"
+                            data-options="
+                valueField:'clinicPromoterId',
+                textField:'name',
+                panelHeight:'auto',
+                mode:'remote',
+                onShowPanel:function(){
+                    $(this).combobox('reload')
+                },
+                loader: function (param, success, error) {
+                    debugger
+                    param.token = rowsPad.param.token;
+                    param.kw=param.q;
+                    param.ps = param.rows;
+                    param.pn = param.page;
+                    $.ajax({
+                        url: '/maintain/hospital-clinic-promoters',
+                        type: 'get',
+                        data: param,
+                        success: function (data) {
+                            if (data.code != 0) {
+                                return false;
+                            } else {
+                                success(data.data);
+                            }
+        
+                        }
+                    })
+                },
+                onChange:function(newValue, oldValue){
+                    rowsPad.queryParam.clinicPromoterId=newValue
+                },
+                loadFilter: function (data) {
+                    debugger
+                    return data.rows;
+                },
+                iconWidth:20,
+                icons:[{
+                    iconCls:'icon-clear',
+                    handler: function(e){
+                        $(e.data.target).combobox('setValue','');
+                    }
+                }]
+                "></span>
             <span style="display:inline-block;">
                 <span style="">&nbsp;审核:</span>
                 <input name="frozen" class="easyui-combobox" style="width:100px" data-options="editable:false,panelHeight:'auto',value:'',data:[
@@ -479,6 +531,8 @@
                 onclick="rowsPad.deleteRow()"></a>
             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-dustbin" plain="true"
                 onclick="rowsPad.deleteRows()"></a>
+                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-download" plain="true"
+                onclick="window.open(rowsPad.data.exportUrl,'_blank')"></a>
         </div>
     </div>
 </body>

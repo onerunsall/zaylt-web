@@ -6,23 +6,26 @@
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>忠安医联体运维平台</title>
-    <script src="libs/public.js"></script>
-    <link rel="stylesheet" href="libs/public.css" />
-    <script src="index/index.js"></script>
-    <link rel="stylesheet" href="index/index.css" />
+    <title>忠安医联体医院平台</title>
+
 
     <script src="../libs/jquery.min.js"></script>
     <script src="../libs/zTree_v3/js/jquery.ztree.all.js"></script>
     <link rel="stylesheet" href="../libs/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
     <script src="../libs/jquery.cookie.js"></script>
     <script src="../libs/layer/layer.js"></script>
-    <script src="../libs/navim.js"></script>
+    <script src="../libs/jquery.extend.oneall.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../libs/jquery-easyui-1.8.7/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="../libs/jquery-easyui-1.8.7/themes/icon.css">
     <link rel="stylesheet" type="text/css" href="../libs/jquery-easyui-1.8.7/demo/demo.css">
     <script type="text/javascript" src="../libs/jquery-easyui-1.8.7/jquery.easyui.min.js"></script>
+
+    <script src="/libs/public.js"></script>
+    <script src="libs/common.js"></script>
+    <link rel="stylesheet" href="libs/common.css" />
+    <script src="index/index.js"></script>
+    <link rel="stylesheet" href="index/index.css" />
 </head>
 <style>
     #indexPad .ztree li {
@@ -39,9 +42,9 @@
 
     <div id='indexPad'>
         <div style="height:70px;border-bottom: 1px solid darkgray;">
-            <div
+            <div id="title"
                 style="line-height: 70px;float:left;height:100%;padding:0 30px;text-align: center;font-weight: 700;font-size: 24px;">
-                忠安医联体-运维平台</div>
+                </div>
         </div>
         <div style="position: absolute;top:71px;left:0;bottom:0;right:0;">
             <div id="leftPad"
@@ -125,7 +128,7 @@
 
     if (token) {
         $.ajax({
-            url: '/maintain/login-refresh',
+            url: '/hospital/login-refresh',
             type: 'post',
             async: false,
             success: function (data) {
@@ -134,14 +137,15 @@
                 if (data.code == 0) {
                     $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
                     account = data.data.account
+                    $('#title').text('忠安医联体-医院平台-'+$(data.data).oneall_nestAttr('hospital.name'))
                 } else {
-                    maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                    hospitalCommon.resCodeProcess(data.code, data.codeMsg)
                 }
             }
         })
     } else {
         alert('请登录')
-        maintainPublic.resCodeProcess(20)
+        hospitalCommon.resCodeProcess(20)
     }
 
     $('#account').text(account)
@@ -150,35 +154,12 @@
     zNodes = []
 
     zNodes.push({ name: '概览', _url: './overview.html' })
-    zNodes.push({
-        name: '医院管理', children: [
-            { name: '医院', _url: './hospital-manage.html' },
-            { name: '用户', _url: './hospital-user-manage.html' },
-            { name: '广告', _url: './hospital-ad-manage.html' },
-            // {name: '权限管理', uurl: './userapis.html?currentPath=医院端权限管理'}
-        ]
-    })
-    zNodes.push({
-        name: '门诊管理', children: [
-            { name: '门诊', _url: './hospital-clinic-manage.html' },
-            { name: '用户', _url: './hospital-clinic-user-manage.html' },
-            // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
-        ]
-    })
-
     zNodes.push({ name: '病员管理', _url: './patient-manage.html' })
-    zNodes.push({ name: '文章管理', _url: './hospital-article-manage.html' })
-    zNodes.push({ name: '项目管理', _url: './hospital-project-manage.html' })
-    zNodes.push({ name: '活动管理', _url: './hospital-activity-manage.html' })
-    zNodes.push({ name: '科室管理', _url: './hospital-office-manage.html' })
-    zNodes.push({ name: '专家管理', _url: './hospital-doctor-manage.html' })
-    zNodes.push({ name: '广告管理', _url: './ad-manage.html' })
-    zNodes.push({ name: '页面编辑',children:[
-		{name:'用户协议',_url:'/maintain/set-page-user-protocol.html'}
-	] })
-    zNodes.push({ name: '参数管理', _url: './param-manage.html' })
-
-
+    zNodes.push({ name: '文章管理', _url: './article-manage.html' })
+    zNodes.push({ name: '项目管理', _url: './project-manage.html' })
+    zNodes.push({ name: '活动管理', _url: './activity-manage.html' })
+    zNodes.push({ name: '科室管理', _url: './office-manage.html' })
+    zNodes.push({ name: '专家管理', _url: './doctor-manage.html' })
     zNodes.push({ name: '退出登录', _url: '' })
     // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
     var setting = {
@@ -225,7 +206,7 @@
         $.removeCookie('logining', { path: '/' });
         $.ajax({
             type:'post',
-            url: '/maintain/logout',
+            url: '/hospital/logout',
             data: { token: token },
             async: true
         })

@@ -193,7 +193,7 @@
             var hospitalIdsSplit = hospitalIds.join();
             var doDel = false;
             if (checked.length == 1) {
-                if (confirm(`将删除 ${checked[0].name}/${checked[0].headmanName} ，确定吗？`)) {
+                if (confirm(`将删除 ${checked[0].name}/${checked[0].headman} ，确定吗？`)) {
                     doDel = true;
                 }
             } else if (checked.length > 1) {
@@ -209,7 +209,7 @@
                 if (selected == null) {
                     alert('需选择一条记录')
                 } else {
-                    if (confirm(`将删除 ${selected.name}/${selected.headmanName} ，确定吗？`)) {
+                    if (confirm(`将删除 ${selected.name}/${selected.headman} ，确定吗？`)) {
                         doDel = true;
                         hospitalIdsSplit = selected.hospitalId;
                     }
@@ -435,7 +435,7 @@
                 onclick="rowsPad.deleteRow()"></a>
             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-dustbin" plain="true"
                 onclick="rowsPad.deleteRows()"></a>
-                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-download" plain="true"
+            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-download" plain="true"
                 onclick="window.open(rowsPad.data.exportUrl,'_blank')"></a>
         </div>
     </div>

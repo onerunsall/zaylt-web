@@ -59,6 +59,7 @@
         queryParam: {
 
         },
+        data:{},
         beforePage: function () {
         },
         afterPage: function () {
@@ -168,6 +169,7 @@
                                 maintainPublic.resCodeProcess(data.code, data.codeMsg)
                                 return false;
                             } else {
+                                rowsPad.data=data.data
                                 success(data.data);
                                 $(rowsPad.selector).find('[name=tb] [name=sum]').html()
                             }
@@ -533,6 +535,8 @@
                 onclick="rowsPad.deleteRow()"></a>
             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-dustbin" plain="true"
                 onclick="rowsPad.deleteRows()"></a>
+                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-download" plain="true"
+                onclick="window.open(rowsPad.data.exportUrl,'_blank')"></a>
         </div>
     </div>
 </body>
