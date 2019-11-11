@@ -54,35 +54,18 @@
         row: {
 
         },
-        contentKindEditor: null,
         beforePage: function () {
         },
         afterPage: function () {
             $(rowPad.selector).find('[name=dg]').datagrid()
 
-            rowPad.contentKindEditor = KindEditor.create('#rowPad [name=content]', {
-                cssPath: '/libs/kindeditor/plugins/code/prettify.css',
-                uploadJson: '/kindeditor/upload_json.jsp',
-                fileManagerJson: '/kindeditor/file_manager_json.jsp',
-                allowFileManager: true,
-                afterCreate: function () {
-                    var self = this;
-                    KindEditor.ctrl(document, 13, function () {
-                        self.sync();
-                        document.forms['example'].submit();
-                    });
-                    KindEditor.ctrl(self.edit.doc, 13, function () {
-                        self.sync();
-                        document.forms['example'].submit();
-                    });
-                }
-            })
+           
         },
         rowAdd: function () {
             $.ajax({
                 type: 'post',
                 url: '/maintain/patient-add',
-                data: { token: rowPad.param.token, content: rowPad.contentKindEditor.html(), ...rowPad.row },
+                data: { token: rowPad.param.token,  ...rowPad.row },
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -178,11 +161,12 @@
                 </tr>
                 <tr>
                     <td>状态</td>
-                    <td><input name="status" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',value:'',data:[
+                    <td><input name="status" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
+                        value:'',data:[
                                     {
                                         text: '未确认',
                                         value: '1'
-                                    }，{
+                                    },{
                                          text: '已确认',
                                          value: '4'
                                      }],
@@ -322,7 +306,8 @@
               
                    <tr>
                     <td>冻结</td>
-                    <td><input name="frozen" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',value:0,data:[
+                    <td><input name="frozen" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
+                        value:0,data:[
                                     {
                                          text: '是',
                                          value: '1'
