@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>骨科联盟运维平台-查看配置</title>
+    <title>骨科联盟运维-查看配置</title>
     <link rel="shortcut icon" href="/resource/favicon.ico" type="image/x-icon" />
 
 
@@ -18,13 +18,13 @@
     <link rel="stylesheet" href="/libs/jQueryViewer20160329/css/viewer.min.css">
     <script src="/libs/jQueryViewer20160329/js/viewer.min.js"></script>
     <script src="/libs/jQueryViewer20160329/js/viewer-jquery.min.js"></script>
-    <script src="/libs/public.js"></script>
-    <link rel="stylesheet" href="/libs/public.css" />
+    <script src="/libs/common.js"></script>
+    <link rel="stylesheet" href="/libs/common.css" />
     <script src="/libs/jquery.extend.js"></script>
 
 
-    <script src="/maintain/libs/public.js"></script>
-    <link rel="stylesheet" href="/maintain/libs/public.css" />
+    <script src="/maintain/libs/common.js"></script>
+    <link rel="stylesheet" href="/maintain/libs/common.css" />
 </head>
 
 <style>
@@ -39,7 +39,7 @@
  
 
 
-    var queryStringObject = public.queryStringObject();
+    var queryStringObject = common.queryStringObject();
 
     var rowPad = {
         selector: "#rowPad",
@@ -60,7 +60,7 @@
                     if (data.code == 0) {
                         rowPad.row = data.data;
                     } else {
-                        maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                        maintainCommon.resCodeProcess(data.code, data.codeMsg)
                     }
                 }
             })
@@ -82,7 +82,7 @@
                             alert('操作成功')
                         location.reload()
                     } else {
-                        maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                        maintainCommon.resCodeProcess(data.code, data.codeMsg)
                     }
                 }
             })

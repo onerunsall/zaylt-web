@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>忠安医联体运维平台-用户管理</title>
+    <title>忠安医联体运维-用户管理</title>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="/resource/favicon.ico" type="image/x-icon" />
 
@@ -19,13 +19,13 @@
     <link rel="stylesheet" href="/libs/jQueryViewer20160329/css/viewer.min.css">
     <script src="/libs/jQueryViewer20160329/js/viewer.min.js"></script>
     <script src="/libs/jQueryViewer20160329/js/viewer-jquery.min.js"></script>
-    <script src="/libs/public.js"></script>
-    <link rel="stylesheet" href="/libs/public.css" />
+    <script src="/libs/common.js"></script>
+    <link rel="stylesheet" href="/libs/common.css" />
     <script src="/libs/jquery.extend.oneall.js"></script>
 
 
-    <script src="/maintain/libs/public.js"></script>
-    <link rel="stylesheet" href="/maintain/libs/public.css" />
+    <script src="/maintain/libs/common.js"></script>
+    <link rel="stylesheet" href="/maintain/libs/common.css" />
 
 
 
@@ -48,7 +48,7 @@
 
 
 
-    var queryStringObject = public.queryStringObject();
+    var queryStringObject = common.queryStringObject();
 
     var rowsPad = {
         selector: '#rowsPad',
@@ -82,7 +82,7 @@
                             debugger
                             if (value == '汇总：')
                                 return value;
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="maintainPublic.newTab('查看用户:${public.subOmitRight(row.name, 3)}','/maintain/maintain-user.html?maintainUserId=${row.maintainUserId}')">${value}</a>`;
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="maintainCommon.newTab('查看用户:${common.subOmitRight(row.name, 3)}','/maintain/maintain-user.html?maintainUserId=${row.maintainUserId}')">${value}</a>`;
                         }, styler: function (value, row, index) {
                             return ``
                         }
@@ -130,7 +130,7 @@
                         success: function (data) {
                             if (data.code != 0) {
                                 alert(data.codeMsg)
-                                maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                                maintainCommon.resCodeProcess(data.code, data.codeMsg)
                                 return false;
                             } else {
                                 success(data.data);

@@ -1,9 +1,9 @@
 
-var public = {}
+var common = {}
 
 
 
-public.subOmitRight = function (value, length) {
+common.subOmitRight = function (value, length) {
     if (!value)
         return ''
     var s = ''
@@ -14,7 +14,7 @@ public.subOmitRight = function (value, length) {
 
 
 
-public.prettyFileSize = function (size) {
+common.prettyFileSize = function (size) {
     if (!size)
         return "";
 
@@ -32,7 +32,7 @@ public.prettyFileSize = function (size) {
 }
 
 
-public.queryStringObject = function(queryString) {
+common.queryStringObject = function(queryString) {
     if (!queryString)
         queryString = window.location.search.substr(1);
     if (queryString.startsWith('?'))

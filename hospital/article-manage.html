@@ -19,8 +19,8 @@
     <link rel="stylesheet" href="/libs/jQueryViewer20160329/css/viewer.min.css">
     <script src="/libs/jQueryViewer20160329/js/viewer.min.js"></script>
     <script src="/libs/jQueryViewer20160329/js/viewer-jquery.min.js"></script>
-    <script src="/libs/public.js"></script>
-    <link rel="stylesheet" href="/libs/public.css" />
+    <script src="/libs/common.js"></script>
+    <link rel="stylesheet" href="/libs/common.css" />
     <script src="/libs/jquery.extend.oneall.js"></script>
 
 
@@ -48,7 +48,7 @@
 
 
 
-    var queryStringObject = public.queryStringObject();
+    var queryStringObject = common.queryStringObject();
 
     var rowsPad = {
         selector: '#rowsPad',
@@ -84,7 +84,7 @@
                             debugger
                             if (value == '汇总：')
                                 return value;
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="hospitalCommon.newTab('查看文章:${public.subOmitRight(row.name, 3)}','/hospital/article.html?articleId=${row.articleId}')">${value}</a>`;
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="hospitalCommon.newTab('查看文章:${common.subOmitRight(row.name, 3)}','/hospital/article.html?articleId=${row.articleId}')">${value}</a>`;
                         }, styler: function (value, row, index) {
                             return ``
                         }

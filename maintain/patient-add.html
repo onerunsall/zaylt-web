@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>忠安医联体运维平台-添加病员</title>
+    <title>忠安医联体运维-添加病员</title>
     <link rel="shortcut icon" href="/resource/favicon.ico" type="image/x-icon" />
 
 
@@ -18,8 +18,8 @@
     <link rel="stylesheet" href="/libs/jQueryViewer20160329/css/viewer.min.css">
     <script src="/libs/jQueryViewer20160329/js/viewer.min.js"></script>
     <script src="/libs/jQueryViewer20160329/js/viewer-jquery.min.js"></script>
-    <script src="/libs/public.js"></script>
-    <link rel="stylesheet" href="/libs/public.css" />
+    <script src="/libs/common.js"></script>
+    <link rel="stylesheet" href="/libs/common.css" />
     <script src="/libs/jquery.extend.oneall.js"></script>
     <link rel="stylesheet" href="/libs/kindeditor/themes/default/default.css" />
     <link rel="stylesheet" href="/libs/kindeditor/plugins/code/prettify.css" />
@@ -27,8 +27,8 @@
     <script charset="utf-8" src="/libs/kindeditor/lang/zh-CN.js"></script>
     <script charset="utf-8" src="/libs/kindeditor/plugins/code/prettify.js"></script>
 
-    <script src="/maintain/libs/public.js"></script>
-    <link rel="stylesheet" href="/maintain/libs/public.css" />
+    <script src="/maintain/libs/common.js"></script>
+    <link rel="stylesheet" href="/maintain/libs/common.css" />
 </head>
 
 <style>
@@ -46,7 +46,7 @@
         }
     });
 
-    var queryStringObject = public.queryStringObject();
+    var queryStringObject = common.queryStringObject();
 
     var rowPad = {
         selector: "#rowPad",
@@ -74,7 +74,7 @@
                             alert('操作成功')
                         location.reload()
                     } else {
-                        maintainPublic.resCodeProcess(data.code, data.codeMsg)
+                        maintainCommon.resCodeProcess(data.code, data.codeMsg)
                     }
                 }
             })

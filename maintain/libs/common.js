@@ -1,6 +1,6 @@
-var maintainPublic = {}
+var maintainCommon = {}
 
-maintainPublic.resCodeProcess = function (code, codeMsg) {
+maintainCommon.resCodeProcess = function (code, codeMsg) {
     debugger
     if (code == 20) {
         if (confirm('现在去登录>>>')) {
@@ -11,7 +11,7 @@ maintainPublic.resCodeProcess = function (code, codeMsg) {
 }
 
 
-maintainPublic.newTab = function (title, url) {
+maintainCommon.newTab = function (title, url) {
     parent.$('#indexPad-tabPad').tabs('add', {
         title: title,
         closable: true,
@@ -34,8 +34,8 @@ maintainPublic.newTab = function (title, url) {
 }
 
 
-maintainPublic.uploadImage = function (inputDom, ook) {
-    var r = prompt('已选的图片大小' + public.prettyFileSize(inputDom.files[0].size) + '，如需压缩，请输入质量1-9，取消则直接上传。', '8')
+maintainCommon.uploadImage = function (inputDom, ook) {
+    var r = prompt('已选的图片大小' + common.prettyFileSize(inputDom.files[0].size) + '，如需压缩，请输入质量1-9，取消则直接上传。', '8')
     var compressIs = false
     if (r != null) {
         r = parseInt(r);
@@ -60,10 +60,10 @@ maintainPublic.uploadImage = function (inputDom, ook) {
             if (res.codeMsg)
                 alert(res.codeMsg)
             if (res.code != 0) {
-                maintainPublic.resCodeProcess(res.code, res.codeMsg)
+                maintainCommon.resCodeProcess(res.code, res.codeMsg)
             } else {
                 if (compressIs)
-                    alert('压缩后文件大小' + public.prettyFileSize(inputDom.files[0].size))
+                    alert('压缩后文件大小' + common.prettyFileSize(inputDom.files[0].size))
                 ook(res.data.url)
             }
         }
