@@ -138,6 +138,7 @@
                     $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
                     account = data.data.account
                     $('#title').text('忠安医联体-医院平台-'+$(data.data).oneall_nestAttr('hospital.name'))
+                    $('title').text('忠安医联体-医院平台-'+$(data.data).oneall_nestAttr('hospital.name'))
                 } else {
                     hospitalCommon.resCodeProcess(data.code, data.codeMsg)
                 }

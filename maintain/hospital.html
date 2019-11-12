@@ -152,7 +152,7 @@
                             <td><input class="userId easyui-combobox" style="width:100%;" data-options="
                                 text:(rowPad.row.userName||'')+(rowPad.row.userName?'/':'')+(rowPad.row.userPhone||''),
                                 value:rowPad.row.userId,
-                                valueField:'userId',
+                                valueField:'hospitalUserId',
                                 textField:'name',
                                 panelHeight:'auto',
                                 mode:'remote',
@@ -195,11 +195,11 @@
                                 "></td>
                         </tr>
                         <tr>
-                            <td>经理</td>
+                            <td>运营用户</td>
                             <td><input class="managerId easyui-combobox" style="width:100%;" data-options="
-                                text:(rowPad.row.managerName||'')+(rowPad.row.managerName?'/':'')+(rowPad.row.managerPhone||''),
+                                text:(rowPad.row.managerName||' ')+(rowPad.row.managerName?'/':'')+(rowPad.row.managerPhone||''),
                                 value:rowPad.row.managerId,
-                                valueField:'managerId',
+                                valueField:'managerUserId',
                                 textField:'name',
                                 panelHeight:'auto',
                                 mode:'remote',
@@ -469,7 +469,7 @@
                                     }" style="width:200px"></td>
                         </tr>
                         <tr>
-                            <td>金额</td>
+                            <td>余额</td>
                             <td><input name="money" class="easyui-numberbox" style="width:100%" data-options="
                                             value:rowPad.row.money,
                                             precision:2,

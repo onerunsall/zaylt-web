@@ -165,7 +165,12 @@
             // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
         ]
     })
-
+    zNodes.push({
+        name: '运营管理', children: [
+            { name: '用户', _url: './manager-user-manage.html' },
+            // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
+        ]
+    })
     zNodes.push({ name: '病员管理', _url: './patient-manage.html' })
     zNodes.push({ name: '文章管理', _url: './hospital-article-manage.html' })
     zNodes.push({ name: '项目管理', _url: './hospital-project-manage.html' })
@@ -175,7 +180,8 @@
     zNodes.push({ name: '广告管理', _url: './ad-manage.html' })
     zNodes.push({ name: '页面编辑',children:[
 		{name:'用户协议',_url:'/maintain/set-page-user-protocol.html'}
-	] })
+    ] })
+    zNodes.push({ name: '运维用户管理', _url: './maintain-user-manage.html' })
     zNodes.push({ name: '参数管理', _url: './param-manage.html' })
 
 

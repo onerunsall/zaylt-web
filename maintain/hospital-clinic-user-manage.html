@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>忠安医联体运维平台-活动管理</title>
+    <title>忠安医联体运维平台-用户管理</title>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="/resource/favicon.ico" type="image/x-icon" />
 
@@ -47,7 +47,6 @@
 <script>
 
 
-   
 
     var queryStringObject = public.queryStringObject();
 
@@ -57,7 +56,7 @@
             token: null
         },
         queryParam: {
-            
+            del:0
         },
         beforePage: function () {
         },
@@ -69,21 +68,13 @@
                             return value ? `<span class="image-previewer"><img src='${value}' style='width:50px' data-original='${value}'/></span>` : value
                         }
                     },
-                    { field: 'viewCount', title: '浏览量', width: 70, align: 'right', sortable: true, halign: 'center' },
+                    { field: 'phone', title: '手机', width: 100, align: 'left', halign: 'center' },
+                    { field: 'money', title: '余额', width: 70, align: 'right', sortable: true, halign: 'center' },
+                    { field: 'point', title: '积分', width: 70, align: 'right', sortable: true, halign: 'center' },
                     { field: 'hospitalName', title: '医院', width: 200, align: 'left', halign: 'center' },
+                    { field: 'clinicName', title: '门诊', width: 200, align: 'left', halign: 'center' },
                     {
-                        field: 'startTime', title: '开始时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
-                            return value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : value;
-                        }
-                    },
-                    {
-                        field: 'endTime', title: '结束时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
-                            return value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : value;
-                        }
-                    },
-                    { field: 'orderNo', title: '排序号', width: 70, align: 'right', sortable: true, halign: 'center' },
-                    {
-                        field: 'addTime', title: '添加时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
+                        field: 'lastAliveTime', title: '最后活跃时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
                             return value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : value;
                         }
                     }
@@ -91,11 +82,11 @@
                 frozenColumns: [[
                     { field: 'ck', align: 'left', checkbox: true },
                     {
-                        field: 'name', title: '名称', width: 250, align: 'left', halign: 'center', formatter: function (value, row, index) {
+                        field: 'name', title: '姓名', width: 250, align: 'left', halign: 'center', formatter: function (value, row, index) {
                             debugger
                             if (value == '汇总：')
                                 return value;
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="maintainPublic.newTab('查看活动:${public.subOmitRight(row.name, 3)}','/maintain/hospital-activity.html?activityId=${row.activityId}')">${value}</a>`;
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="maintainPublic.newTab('查看用户:${public.subOmitRight(row.name, 3)}','/maintain/hospital-clinic-user.html?hospitalClinicUserId=${row.hospitalClinicUserId}')">${value}</a>`;
                         }, styler: function (value, row, index) {
                             return ``
                         }
@@ -103,7 +94,7 @@
                 ]],
                 toolbar: `${rowsPad.selector} [name=tb]`,
                 footer: `${rowsPad.selector} [name=ft]`,
-                idField: 'activityId',
+                idField: 'hospitalClinicUserId',
                 pagination: true,
                 rownumbers: true,
                 emptyMsg: '无数据',
@@ -137,7 +128,7 @@
                     param.pn = param.page;
                     Object.assign(param, rowsPad.queryParam);
                     $.ajax({
-                        url: '/maintain/hospital-activities',
+                        url: '/maintain/hospital-clinic-users',
                         type: 'get',
                         data: param,
                         success: function (data) {
@@ -147,7 +138,7 @@
                                 return false;
                             } else {
                                 success(data.data);
-                                $(rowsPad.selector).find('[name=tb] [name=sum]').html(`总浏览量:${data.data.sum.totalViewCount||''}`)
+                                $(rowsPad.selector).find('[name=tb] [name=sum]').html(``)
                             }
 
                         }
@@ -157,7 +148,7 @@
                     debugger
                     var fdata = {
                         rows: data.rows, total: data.sum.rowCount, footer: [
-                            { "cover": "", "viewCount": data.sum.totalViewCount||'', "name": "汇总：" }
+                            { "cover": "", "money": data.sum.totalMoney||'', "point": data.sum.totalPoint||'', "name": "汇总：" }
                         ]
                     }
                     return fdata;
@@ -170,10 +161,10 @@
         },
         addRow: function () {
             parent.$('#indexPad-tabPad').tabs('add', {
-                title: '添加活动',
+                title: '添加用户',
                 closable: true,
                 width: "100%",
-                content: "<iframe src='hospital-activity-add.html' style='width:100%;height:100%;border:none;'/>",
+                content: "<iframe src='hospital-clinic-user-add.html' style='width:100%;height:100%;border:none;'/>",
                 tools: [{
                     iconCls: 'icon-mini-refresh',
                     handler: function () {
@@ -190,13 +181,15 @@
             });
         },
         deleteRow: function () {
-            var checked = $(rowsPad.selector).find('[name=dg]').datagrid('getChecked');
-            var selected = $(rowsPad.selector).find('[name=dg]').datagrid('getSelected');
-            var activityIds = $(checked).oneall_attrs('activityId');
-            var activityIdsSplit = activityIds.join();
+            debugger
+            var dg = $(rowsPad.selector).find('[name=dg]');
+            var checked = dg.datagrid('getChecked');
+            var selected = dg.datagrid('getSelected');
+            var hospitalClinicUserIds = $(checked).oneall_attrs('hospitalClinicUserId');
+            var hospitalClinicUserIdsSplit = hospitalClinicUserIds.join();
             var doDel = false;
             if (checked.length == 1) {
-                if (confirm(`将删除 ${checked[0].name}/${checked[0].hospitalName} ，确定吗？`)) {
+                if (confirm(`将删除 ${ (dg.datagrid('getRowIndex',checked[0])+1) +'. '+checked[0].name} ，确定吗？`)) {
                     doDel = true;
                 }
             } else if (checked.length > 1) {
@@ -212,9 +205,9 @@
                 if (selected == null) {
                     alert('需选择一条记录')
                 } else {
-                    if (confirm(`将删除 ${selected.name}/${selected.hospitalName} ，确定吗？`)) {
+                    if (confirm(`将删除 ${(dg.datagrid('getRowIndex',selected)+1)+'. '+selected.name}，确定吗？`)) {
                         doDel = true;
-                        activityIdsSplit = selected.activityId;
+                        hospitalClinicUserIdsSplit = selected.hospitalClinicUserId;
                     }
                 }
             }
@@ -222,8 +215,8 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/hospital-activity-delete`,
-                    data: { token: rowsPad.param.token, activityId: activityIdsSplit },
+                    url: `/maintain/hospital-clinic-user-delete`,
+                    data: { token: rowsPad.param.token, hospitalClinicUserId: hospitalClinicUserIdsSplit },
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
@@ -270,8 +263,8 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/hospital-activities-delete`,
-                    data: { token: rowsPad.param.token, ...rowsPad.queryParam,password:password },
+                    url: `/maintain/hospital-clinic-users-delete`,
+                    data: { token: rowsPad.param.token, ...rowsPad.queryParam, password: password },
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
@@ -309,14 +302,12 @@
     <div id="rowsPad">
         <div name="tb" style="padding:2px 5px;">
             <div style="">
-
                 <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-search"
                 onclick="$(rowsPad.selector).find('[name=dg]').datagrid('load').datagrid('unselectAll');">查询</a>
 
-
                 <span style="display:inline-block;">
                 <span style="">关键字:</span>
-                <input name="kw" class="easyui-textbox" data-options="
+                    <input name="kw" class="easyui-textbox" data-options="
             iconWidth:20,
             icons:[{
                 iconCls:'icon-clear',
@@ -330,8 +321,7 @@
 
             <span style="display:inline-block;">
                 <span style="">医院:</span>
-                <input class="easyui-combobox" name="hospitalId" style="width:200px;"
-                        data-options="
+                <input class="easyui-combobox" name="hospitalId" style="width:200px;" data-options="
             valueField:'hospitalId',
             textField:'name',
             panelHeight:'auto',
@@ -374,11 +364,58 @@
                 }
             }]
             "></span>
-
             <span style="display:inline-block;">
-                <span style="">添加时间 From:</span>
-                <input name="addTimeStart" class="easyui-datebox" style="width:135px"
-                        data-options="
+                <span style="">门诊:</span>
+                <input class="easyui-combobox" name="clinicId" style="width:200px;" data-options="
+            valueField:'clinicId',
+            textField:'name',
+            panelHeight:'auto',
+            mode:'remote',
+            onShowPanel:function(){
+                $(this).combobox('reload')
+            },
+            loader: function (param, success, error) {
+                debugger
+                param.token = rowsPad.param.token;
+                param.kw=param.q;
+                param.ps = param.rows;
+                param.pn = param.page;
+
+                if(!rowsPad.queryParam.hospitalId)
+                    return;
+                param.hospitalId = rowsPad.queryParam.hospitalId;
+                $.ajax({
+                    url: '/maintain/hospital-clinics',
+                    type: 'get',
+                    data: param,
+                    success: function (data) {
+                        if (data.code != 0) {
+                            return false;
+                        } else {
+                            success(data.data);
+                        }
+    
+                    }
+                })
+            },
+            onChange:function(newValue, oldValue){
+                rowsPad.queryParam.clinicId=newValue
+            },
+            loadFilter: function (data) {
+                debugger
+                return data.rows;
+            },
+            iconWidth:20,
+            icons:[{
+                iconCls:'icon-clear',
+                handler: function(e){
+                    $(e.data.target).combobox('setValue','');
+                }
+            }]
+            "></span>
+            <span style="display:inline-block;">
+                <span style="">注册时间 From:</span>
+                <input name="registerTimeStart" class="easyui-datebox" style="width:135px" data-options="
                 editable:false,
                 icons:[{
                     iconCls:'icon-clear',
@@ -387,14 +424,13 @@
                     }
                 }],
             onChange:function(newValue, oldValue){
-                rowsPad.queryParam.addTimeStart=newValue
-            }"></span>
+                rowsPad.queryParam.registerTimeStart=newValue
+            }">
+            </span>
 
             <span style="display:inline-block;">
-
                 <span style="">To:</span>
-                <input name="addTimeEnd" class="easyui-datebox" style="width:135px"
-                        data-options="
+                <input name="registerTimeEnd" class="easyui-datebox" style="width:135px" data-options="
                 editable:false,
                 icons:[{
                     iconCls:'icon-clear',
@@ -403,13 +439,41 @@
                     }
                 }],
         onChange:function(newValue, oldValue){
-            rowsPad.queryParam.addTimeEnd=newValue
+            rowsPad.queryParam.registerTimeEnd=newValue
         }"></span>
 
         <span style="display:inline-block;">
+            <span style="">最后活跃时间 From:</span>
+            <input name="lastAliveTimeStart" class="easyui-datebox" style="width:135px" data-options="
+            editable:false,
+            icons:[{
+                iconCls:'icon-clear',
+                handler: function(e){
+                    $(e.data.target).datebox('setValue','');
+                }
+            }],
+        onChange:function(newValue, oldValue){
+            rowsPad.queryParam.lastAliveTimeStart=newValue
+        }">
+        </span>
+
+        <span style="display:inline-block;">
+            <span style="">To:</span>
+            <input name="lastAliveTimeEnd" class="easyui-datebox" style="width:135px" data-options="
+            editable:false,
+            icons:[{
+                iconCls:'icon-clear',
+                handler: function(e){
+                    $(e.data.target).datebox('setValue','');
+                }
+            }],
+    onChange:function(newValue, oldValue){
+        rowsPad.queryParam.lastAliveTimeEnd=newValue
+    }"></span>
+
+         <span style="display:inline-block;">
                 <span style="">&nbsp;冻结:</span>
-               <input name="frozen" class="easyui-combobox" style="width:80px"
-                        data-options="editable:false,panelHeight:'auto',value:'',data:[
+                <input name="frozen" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:'',data:[
            {
                                          text: '否',
                                          value: '0'
@@ -449,65 +513,8 @@
             onChange:function(newValue, oldValue){
                 rowsPad.queryParam.del=newValue
             }" />
-            </span>
-
-                   
+        </span>
             </div>
-
-            <span style="">开始时间 From:</span>
-                <input name="startTimeStart" class="easyui-datebox" style="width:135px"
-                        data-options="
-                editable:false,
-                icons:[{
-                    iconCls:'icon-clear',
-                    handler: function(e){
-                        $(e.data.target).datebox('setValue','');
-                    }
-                }],
-            onChange:function(newValue, oldValue){
-                rowsPad.queryParam.startTimeStart=newValue
-            }">
-
-                <span style="">To:</span>
-                <input name="startTimeEnd" class="easyui-datebox" style="width:135px"
-                        data-options="
-                editable:false,
-                icons:[{
-                    iconCls:'icon-clear',
-                    handler: function(e){
-                        $(e.data.target).datebox('setValue','');
-                    }
-                }],
-        onChange:function(newValue, oldValue){
-            rowsPad.queryParam.startTimeEnd=newValue
-        }">
-        <span style="">结束时间 From:</span>
-                <input name="endTimeStart" class="easyui-datebox" style="width:135px"
-                        data-options="
-                editable:false,
-                icons:[{
-                    iconCls:'icon-clear',
-                    handler: function(e){
-                        $(e.data.target).datebox('setValue','');
-                    }
-                }],
-            onChange:function(newValue, oldValue){
-                rowsPad.queryParam.endTimeStart=newValue
-            }">
-
-                <span style="">To:</span>
-                <input name="endTimeEnd" class="easyui-datebox" style="width:135px"
-                        data-options="
-                editable:false,
-                icons:[{
-                    iconCls:'icon-clear',
-                    handler: function(e){
-                        $(e.data.target).datebox('setValue','');
-                    }
-                }],
-        onChange:function(newValue, oldValue){
-            rowsPad.queryParam.endTimeEnd=newValue
-        }">
             <div style="margin-top:5px;"></div>
             <span name="checkedCount" style="margin-right:5px;"></span><span name="sum"></span>
         </div>

@@ -72,7 +72,7 @@
                     { field: 'tel', title: '电话', width: 150, align: 'left', halign: 'center', formatter: function (value, row, index) {
                             return  `<span style="width:100%;display:inline-block;" title="${value||''}">${value||''}</span>`
                         }  },
-                    { field: 'money', title: '金额', width: 70, align: 'right', sortable: true, halign: 'center' },
+                    { field: 'money', title: '余额', width: 70, align: 'right', sortable: true, halign: 'center' },
                     { field: 'point', title: '积分', width: 70, align: 'right', sortable: true, halign: 'center' },
                     { field: 'clinicCount', title: '门诊数', width: 70, align: 'right', sortable: true, halign: 'center' },
                     { field: 'patientCount', title: '病员数', width: 70, align: 'right', sortable: true, halign: 'center' },
@@ -321,7 +321,54 @@
             onChange:function(newValue, oldValue){
                 rowsPad.queryParam.kw=newValue
             }" style="width:200px" /></span>
-
+          
+          
+            <span style="display: inline-block;">
+                <span style="">运营用户:</span>
+                <input class="easyui-combobox" name="managerId" style="width:200px;"
+                        data-options="
+            valueField:'managerUserId',
+            textField:'name',
+            panelHeight:'auto',
+            mode:'remote',
+            onShowPanel:function(){
+                $(this).combobox('reload')
+            },
+            loader: function (param, success, error) {
+                debugger
+                param.token = rowsPad.param.token;
+                param.kw=param.q;
+                param.ps = param.rows;
+                param.pn = param.page;
+                $.ajax({
+                    url: '/maintain/manager-users',
+                    type: 'get',
+                    data: param,
+                    success: function (data) {
+                        if (data.code != 0) {
+                            return false;
+                        } else {
+                            success(data.data);
+                        }
+    
+                    }
+                })
+            },
+            onChange:function(newValue, oldValue){
+                rowsPad.queryParam.managerId=newValue
+            },
+            loadFilter: function (data) {
+                debugger
+                return data.rows;
+            },
+            iconWidth:20,
+            icons:[{
+                iconCls:'icon-clear',
+                handler: function(e){
+                    $(e.data.target).combobox('setValue','');
+                }
+            }]
+            "></span>
             
             <span style="display:inline-block;">
                 <span style="">&nbsp;审核:</span>
@@ -381,14 +428,14 @@
 
          <span style="display:inline-block;">
                 <span style="">&nbsp;冻结:</span>
-                <input name="frozen" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:0,data:[
+                <input name="frozen" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:'',data:[
            {
-                text: '是',
-                value: '1'
-            },{
-                text: '否',
-                value: '0'
-            }],
+                                         text: '否',
+                                         value: '0'
+                                     },{
+                                         text: '是',
+                                         value: '1'
+                                     }],
             iconWidth:20,
             icons:[{
                 iconCls:'icon-clear',
@@ -405,12 +452,12 @@
                 <span style="">删除:</span>
                 <input name="del" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:0,data:[
            {
-                text: '是',
-                value: '1'
-            },{
-                text: '否',
-                value: '0'
-            }],
+                                         text: '否',
+                                         value: '0'
+                                     },{
+                                         text: '是',
+                                         value: '1'
+                                     }],
             iconWidth:20,
             icons:[{
                 iconCls:'icon-clear',
