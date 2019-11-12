@@ -535,8 +535,14 @@
                 onclick="rowsPad.deleteRow()"></a>
             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-dustbin" plain="true"
                 onclick="rowsPad.deleteRows()"></a>
+                (&nbsp;<input class="easyui-checkbox"  data-options="onChange:function(checked){
+                    if(checked)
+                        rowsPad.queryParam.export=1
+                    else   
+                        rowsPad.queryParam.export=0
+                }">
                 <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-download" plain="true"
-                onclick="window.open(rowsPad.data.exportUrl,'_blank')"></a>
+                onclick="window.open(rowsPad.data.exportUrl,'_blank')"></a>)
         </div>
     </div>
 </body>
