@@ -95,7 +95,7 @@
             async: false,
             success: function (data) {
                 if (data.code == 0) {
-                    $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
+                    $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/maintain' });
                     location.href = './index.html';
                 }
             }
@@ -124,7 +124,7 @@
                             if (data.codeMsg)
                                 alert(data.codeMsg)
                             if (data.code == 0) {
-                                $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
+                                $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/maintain' });
                                 location.href = './index.html';
                             }
                             else {
