@@ -116,16 +116,6 @@
         ]
     });
 
-    $.ajaxSetup({
-        layerIndex: -1,
-        beforeSend: function () {
-            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-        },
-        complete: function () {
-            layer.close(this.layerIndex);
-        }
-    });
-
     if (token) {
         $.ajax({
             url: '/hospital/login-refresh',

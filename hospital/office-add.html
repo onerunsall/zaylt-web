@@ -36,15 +36,7 @@
 </style>
 <script>
 
-    $.ajaxSetup({
-        layerIndex: -1,
-        beforeSend: function () {
-            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-        },
-        complete: function () {
-            layer.close(this.layerIndex);
-        }
-    });
+  
 
     var queryStringObject = common.queryStringObject();
 
@@ -169,6 +161,37 @@
                             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
                                 style="vertical-align: text-bottom;"
                                 onclick="$(this).prev().prev().prev().attr('src','').attr('data-original','').hide();rowPad.row.cover='';"></a>
+
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
+                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().prev().click()"></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>图片</td>
+                    <td>
+                        <div name="imagePad">
+                            <img style="height:30px;" data-original="" style="display:none;cursor:pointer;" />
+                            <input type="file" style="display:none;" onchange="
+                            javascript:
+                            var target = this;
+                            if(this.files.length>0)
+                                hospitalCommon.uploadImage(this,function(url){
+                                    $(target).prev().attr('src',url).attr('data-original',url).show().parent().viewer({
+                                            url: 'data-original',
+                                        });
+                                        rowPad.row.image=url   
+                                })
+                        " />
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-look" plain="true"
+                                style="vertical-align: text-bottom;" onclick="javascript:
+                               $(this).prev().prev().attr('src',rowPad.row.image).attr('data-original',rowPad.row.image).show().parent().viewer({
+                                   url: 'data-original',
+                               });"></a>
+
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
+                                style="vertical-align: text-bottom;"
+                                onclick="$(this).prev().prev().prev().attr('src','').attr('data-original','').hide();rowPad.row.image='';"></a>
 
                             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
                                 style="vertical-align: text-bottom;" onclick="$(this).prev().prev().prev().click()"></a>
