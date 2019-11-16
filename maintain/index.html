@@ -86,32 +86,16 @@
     var token = $.cookie('token'), logining, account, zNodes;
 
     $('#indexPad-tabPad').tabs({
-        fit: true,
         narrow: true,
+        fit: true,
         tools: '#tab-tools',
         onSelect: function (title) {
 
         }
     });
 
-    $('#indexPad-tabPad').tabs('add', {
-        title: '概览',
-        closable: true,
-        content: "<iframe src='overview.html' style='width:100%;height:100%;border:none;'/>",
-        tools: [{
-            iconCls: 'icon-mini-refresh',
-            handler: function () {
-                var current_tab = $('#indexPad-tabPad').tabs('getSelected');
-                $('#indexPad-tabPad').tabs('update', {
-                    tab: current_tab,
-                    options: {
-                        content: current_tab.panel('options', 'content'),
-                    }
-                });
-            }
-        }
-        ]
-    });
+    maintainCommon.newTab('概览','overview.html')
+
 
     $.ajaxSetup({
         layerIndex: -1,
@@ -151,7 +135,7 @@
 
     zNodes.push({ name: '概览', _url: './overview.html' })
     zNodes.push({
-        name: '医院管理', children: [
+        name: '医院', children: [
             { name: '医院', _url: './hospital-manage.html' },
             { name: '用户', _url: './hospital-user-manage.html' },
             { name: '广告', _url: './hospital-ad-manage.html' },
@@ -159,31 +143,31 @@
         ]
     })
     zNodes.push({
-        name: '门诊管理', children: [
+        name: '门诊', children: [
             { name: '门诊', _url: './hospital-clinic-manage.html' },
             { name: '用户', _url: './hospital-clinic-user-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
         ]
     })
     zNodes.push({
-        name: '运营管理', children: [
+        name: '运营', children: [
             { name: '用户', _url: './manager-user-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
         ]
     })
-    zNodes.push({ name: '病员管理', _url: './patient-manage.html' })
-    zNodes.push({ name: '文章管理', _url: './hospital-article-manage.html' })
-    zNodes.push({ name: '项目管理', _url: './hospital-project-manage.html' })
-    zNodes.push({ name: '活动管理', _url: './hospital-activity-manage.html' })
-    zNodes.push({ name: '科室管理', _url: './hospital-office-manage.html' })
-    zNodes.push({ name: '专家管理', _url: './hospital-doctor-manage.html' })
-    zNodes.push({ name: '广告管理', _url: './ad-manage.html' })
-    zNodes.push({ name: '页面编辑',children:[
+    zNodes.push({ name: '病员', _url: './patient-manage.html' })
+    zNodes.push({ name: '文章', _url: './hospital-article-manage.html' })
+    zNodes.push({ name: '项目', _url: './hospital-project-manage.html' })
+    zNodes.push({ name: '活动', _url: './hospital-activity-manage.html' })
+    zNodes.push({ name: '科室', _url: './hospital-office-manage.html' })
+    zNodes.push({ name: '专家', _url: './hospital-doctor-manage.html' })
+    zNodes.push({ name: '广告', _url: './ad-manage.html' })
+    zNodes.push({ name: '页面',children:[
 		{name:'用户协议',_url:'/maintain/set-page-user-protocol.html'}
     ] })
-    zNodes.push({ name: '运维用户管理', _url: './maintain-user-manage.html' })
-    zNodes.push({ name: '参数管理', _url: './param-manage.html' })
-    zNodes.push({ name: '关闭项目', _url: './close-project.html' })
+    zNodes.push({ name: '运维用户', _url: './maintain-user-manage.html' })
+    zNodes.push({ name: '参数', _url: './param-manage.html' })
+    zNodes.push({ name: '外部参数', _url: './external-param-manage.html' })
 
 
     zNodes.push({ name: '退出登录', _url: '' })
@@ -199,25 +183,8 @@
                     return ;
                 }
                 if(treeNode._url)
-                    $('#indexPad-tabPad').tabs('add', {
-                        title: treeNode.name,
-                        closable: true,
-                        width: "100%",
-                        content: `<iframe src='${treeNode._url}' style='width:100%;height:100%;border:none;'/>`,
-                        tools: [{
-                            iconCls: 'icon-mini-refresh',
-                            handler: function () {
-                                var current_tab = $('#indexPad-tabPad').tabs('getSelected');
-                                $('#indexPad-tabPad').tabs('update', {
-                                    tab: current_tab,
-                                    options: {
-                                        content: current_tab.panel('options', 'content'),
-                                    }
-                                });
-                            }
-                        }
-                        ]
-                    });
+                    maintainCommon.newTab(treeNode.name,treeNode._url)
+        
                 
                 zTreeObj.expandNode(treeNode);
             }

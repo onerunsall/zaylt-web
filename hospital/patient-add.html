@@ -57,7 +57,7 @@
             $.ajax({
                 type: 'post',
                 url: '/hospital/patient-add',
-                data: { token: rowPad.param.token,  ...rowPad.row },
+                data: Object.assign({ token: rowPad.param.token},rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -94,7 +94,7 @@
     </div>
 
     <div id="rowPad">
-        <table name="dg" data-options="singleSelect:true">
+        <table name="dg" data-options="singleSelect:true,height:'700px'">
             <thead>
                 <tr>
                     <th data-options="field:'name',width:200">属性</th>
@@ -136,8 +136,16 @@
                 </tr>
                 <tr>
                     <td>身份证</td>
-                    <td><input name="idcardNo" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                    <td><input name="idcardNo" class="easyui-textbox" style="width:100%;" data-options="
                             value:'',
+                            iconWidth:20,
+                        icons:[{
+                            iconCls:'icon-clear',
+                            handler: function(e){
+                                debugger
+                                $(e.data.target).textbox('setValue','');
+                            }
+                        }],
                             onChange:function(newValue, oldValue){
                                 rowPad.row.idcardNo=newValue
                             }" style="width:200px"></td>

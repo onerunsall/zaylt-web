@@ -90,7 +90,7 @@
                             debugger
                             if (value == '汇总：')
                                 return value;
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="hospitalCommon.newTab('查看专家:${common.subOmitRight(row.name, 3)}','/hospital/doctor.html?doctorId=${row.doctorId}')">${value}</a>`;
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="hospitalCommon.newTab('专家:${common.subOmitRight(row.name, 10)}','/hospital/doctor.html?doctorId=${row.doctorId}')">${value}</a>`;
                         }, styler: function (value, row, index) {
                             return ``
                         }
@@ -266,7 +266,7 @@
                 $.ajax({
                     type: 'post',
                     url: `/hospital/doctors-delete`,
-                    data: { token: rowsPad.param.token, ...rowsPad.queryParam,password:password },
+                    data: Object.assign({ token: rowsPad.param.token,password:password },rowsPad.queryParam),
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
@@ -306,7 +306,7 @@
             <div style="">
                 <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-search"
                 onclick="$(rowsPad.selector).find('[name=dg]').datagrid('load').datagrid('unselectAll');">查询</a>
-                <span style="display:inline-block;">
+                <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                 <span style="">关键字:</span>
                
                 <input name="kw" class="easyui-textbox" data-options="
@@ -323,7 +323,7 @@
 
           
 
-            <span style="display:inline-block;">
+            <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
             <span style="">科室:</span>
                 <input class="easyui-combobox" name="officeId" style="width:200px;"
                         data-options="
@@ -373,7 +373,7 @@
             }]
             "></span>
 
-            <span style="display:inline-block;">
+            <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                 <span style="">添加时间 From:</span>
                 <input name="addTimeStart" class="easyui-datebox" style="width:135px"
                         data-options="
@@ -389,7 +389,7 @@
             }">
         </span>
 
-        <span style="display:inline-block;">
+        <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                 <span style="">To:</span>
                 <input name="addTimeEnd" class="easyui-datebox" style="width:135px"
                         data-options="
@@ -404,7 +404,7 @@
             rowsPad.queryParam.addTimeEnd=newValue
         }">
     </span>
-    <span style="display:inline-block;">
+    <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                 <span style="">&nbsp;冻结:</span>
                <input name="frozen" class="easyui-combobox" style="width:80px"
                         data-options="editable:false,panelHeight:'auto',value:'',data:[
@@ -427,7 +427,7 @@
             }" />
         </span>
 
-        <span style="display:inline-block;">
+        <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                 <span style="">删除:</span>
                 <input name="del" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:0,data:[
            {

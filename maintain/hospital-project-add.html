@@ -26,6 +26,7 @@
     <script charset="utf-8" src="/libs/kindeditor/kindeditor-all.js"></script>
     <script charset="utf-8" src="/libs/kindeditor/lang/zh-CN.js"></script>
     <script charset="utf-8" src="/libs/kindeditor/plugins/code/prettify.js"></script>
+    <script charset="utf-8" src="/libs/kindeditor/plugins/autoheight/autoheight.js"></script>
 
     <script src="/maintain/libs/common.js"></script>
     <link rel="stylesheet" href="/maintain/libs/common.css" />
@@ -36,15 +37,7 @@
 </style>
 <script>
 
-    $.ajaxSetup({
-        layerIndex: -1,
-        beforeSend: function () {
-            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-        },
-        complete: function () {
-            layer.close(this.layerIndex);
-        }
-    });
+ 
 
     var queryStringObject = common.queryStringObject();
 
@@ -56,6 +49,7 @@
         },
         contentKindEditor: null,
         beforePage: function () {
+            
         },
         afterPage: function () {
             $(rowPad.selector).find('[name=dg]').datagrid()
@@ -65,6 +59,9 @@
                 uploadJson: '/kindeditor/upload_json.jsp',
                 fileManagerJson: '/kindeditor/file_manager_json.jsp',
                 allowFileManager: true,
+                autoHeightMode:false,
+                height:'250px',
+                width: '100%',
                 afterCreate: function () {
                     var self = this;
                     KindEditor.ctrl(document, 13, function () {
@@ -82,7 +79,7 @@
             $.ajax({
                 type: 'post',
                 url: '/maintain/hospital-project-add',
-                data: { token: rowPad.param.token, content: rowPad.contentKindEditor.html(), ...rowPad.row },
+                data: Object.assign({ token: rowPad.param.token, content: rowPad.contentKindEditor.html()},rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -118,19 +115,20 @@
         <font>loading···</font>
     </div>
 
-    <div id="rowPad">
-        <table name="dg" data-options="singleSelect:true">
-            <thead>
-                <tr>
-                    <th data-options="field:'name',width:200">属性</th>
-                    <th data-options="field:'value',width:500">值</th>
-                </tr>
-            </thead>
+    <div id="rowPad" >
+            <table name="dg" data-options="singleSelect:true,height:'700px'">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'name',width:200">属性</th>
+                            <th data-options="field:'value',width:500">值</th>
+                        </tr>
+                    </thead>
             <tbody>
                 <tr>
                     <td>项目名称</td>
-                    <td><input name="name" class="easyui-textbox" style="width:100%" data-options="
+                    <td><input name="name" class="easyui-textbox"  data-options="
                         value:'',
+                        width:'100%',
                         iconWidth:20,
                         icons:[{
                             iconCls:'icon-clear',
@@ -141,15 +139,16 @@
                         }],
                         onChange:function(newValue, oldValue){
                             rowPad.row.name=newValue
-                        }" style="width:200px"></td>
+                        }" ></td>
                 </tr>
                 <tr>
                     <td>医院</td>
-                    <td><input class="easyui-combobox" name="hospitalId" style="width:100%;" data-options="
+                    <td><input class="easyui-combobox" name="hospitalId"  data-options="
                         valueField:'hospitalId',
                         textField:'name',
                         panelHeight:'auto',
                         mode:'remote',
+                        width:'100%',
                         onShowPanel:function(){
                             $(this).combobox('reload')
                         },
@@ -226,15 +225,15 @@
                             multiline:true,
                             onChange:function(newValue, oldValue){
                                 rowPad.row.intro=newValue
-                            }" style="width:200px"></td>
+                            }" ></td>
                 </tr>
                 <tr>
                     <td>内容</td>
-                    <td><textarea name="content" style="width: 100%;height: 30px;padding:1px 4px"></textarea></td>
+                    <td><textarea name="content"  ></textarea></td>
                 </tr>
                 <tr>
                     <td>基础浏览量</td>
-                    <td><input name="viewCountBase" class="easyui-numberbox" style="width:100%" data-options="
+                    <td><input name="viewCountBase" class="easyui-numberbox" style="width:100%;" data-options="
                                 prompt:0,
                                 value:'',
                                 precision:0,
@@ -251,7 +250,7 @@
                 </tr>
                 <tr>
                     <td>基础分享量</td>
-                    <td><input name="shareCountBase" class="easyui-numberbox" style="width:100%" data-options="
+                    <td><input name="shareCountBase" class="easyui-numberbox" style="width:100%;" data-options="
                                     prompt:0,
                                     value:'',
                                     precision:0,
@@ -268,7 +267,7 @@
                 </tr>
                 <tr>
                     <td>冻结</td>
-                    <td><input name="frozen" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',value:0,data:[
+                    <td><input name="frozen" class="easyui-combobox" style="width:100%;" data-options="editable:false,panelHeight:'auto',value:0,data:[
                                     {
                                          text: '否',
                                          value: '0'
@@ -289,7 +288,7 @@
                 </tr>
                 <tr>
                     <td>排序号</td>
-                    <td><input name="orderNo" class="easyui-numberbox" style="width:100%" data-options="
+                    <td><input name="orderNo" class="easyui-numberbox"  style="width:100%;" data-options="
                                     prompt:'9999',
                                     value:'',
                                     precision:2,
@@ -306,7 +305,7 @@
                 </tr>
                 <tr>
                     <td>添加时间</td>
-                    <td><input name="addTime" class="easyui-datetimebox" style="width:100%" data-options="
+                    <td><input name="addTime" class="easyui-datetimebox" style="width:100%;" data-options="
                                         prompt:moment().format('YYYY-MM-DD H:mm:ss'),
                                         value:'',
                                         editable:false,
@@ -322,7 +321,7 @@
                 </tr>
                 <tr>
                     <td>更新时间</td>
-                    <td><input name="alterTime" class="easyui-datetimebox" style="width:100%" data-options="
+                    <td><input name="alterTime" class="easyui-datetimebox" style="width:100%;" data-options="
                                             prompt:moment().format('YYYY-MM-DD H:mm:ss'),
                                             value:'',
                                             editable:false,

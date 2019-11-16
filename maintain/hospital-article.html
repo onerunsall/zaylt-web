@@ -109,7 +109,7 @@
             $.ajax({
                 type: 'post',
                 url: '/maintain/hospital-article-alter',
-                data: { token: rowPad.param.token, articleId: rowPad.param.articleId, content: rowPad.contentKindEditor.html(), ...rowPad.row },
+                data: Object.assign({ token: rowPad.param.token, articleId: rowPad.param.articleId, content: rowPad.contentKindEditor.html()},rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -147,7 +147,7 @@
     </div>
 
     <div id="rowPad">
-        <table name="dg" data-options="singleSelect:true">
+        <table name="dg" data-options="singleSelect:true,height:'700px'">
             <thead>
                 <tr>
                     <th data-options="field:'name',width:200">属性</th>
