@@ -72,13 +72,13 @@
         afterPage: function () {
             $(rowPad.selector).find('[name=dg]').datagrid()
 
-           
+
         },
         rowAlter: function () {
             $.ajax({
                 type: 'post',
                 url: '/maintain/hospital-doctor-alter',
-                data: Object.assign({ token: rowPad.param.token, doctorId: rowPad.param.doctorId},rowPad.row),
+                data: Object.assign({ token: rowPad.param.token, doctorId: rowPad.param.doctorId }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -97,7 +97,7 @@
     rowPad.beforePage()
 
     var loadingPad = {
-        param:{},
+        param: {},
         remove: function () {
             $("#loadingPad").remove();
         }
@@ -240,35 +240,28 @@
                     <td>封面</td>
                     <td>
                         <div name="coverPad">
-                            <img style="height:30px;" data-original="" style="display:none;cursor:pointer;" />
+                            <img style="height:30px;" src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.cover||"").parent().viewer({
+                                        url: "src",
+                                    });' />
                             <input type="file" style="display:none;" onchange="
-                            javascript:
-                            var target = this;
-                            if(this.files.length>0)
-                                maintainCommon.uploadImage(this,function(url){
-                                    $(target).prev().attr('src',url).attr('data-original',url).show().parent().viewer({
-                                            url: 'data-original',
-                                        });
-                                        rowPad.row.cover=url   
-                                })
-                        " />
-                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-look" plain="true"
-                                style="vertical-align: text-bottom;" onclick="javascript:
-                             $(this).prev().prev().attr('src',rowPad.row.cover).attr('data-original',rowPad.row.cover).show().parent().viewer({
-                                 url: 'data-original',
-                             });"></a>
-
+                                    javascript:
+                                    var target = this;
+                                    if(this.files.length>0)
+                                        maintainCommon.uploadImage(this,function(url){
+                                            $(target).prev().attr('src',url)
+                                                rowPad.row.cover=url   
+                                        })
+                                " />
                             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
                                 style="vertical-align: text-bottom;"
-                                onclick="$(this).prev().prev().prev().attr('src','').attr('data-original','').hide();rowPad.row.cover='';"></a>
+                                onclick="$(this).prev().prev().attr('src','');rowPad.row.cover='';"></a>
 
                             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
-                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().prev().click()"></a>
-
-
+                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
                         </div>
                     </td>
                 </tr>
+
                 <tr>
                     <td>简介</td>
                     <td><input name="intro" class="easyui-textbox" style="width:100%;height:200px;" data-options="
@@ -279,25 +272,24 @@
                             }" style="width:200px"></td>
                 </tr>
                 <tr>
-                        <td>头衔</td>
-                        <td><input name="jobTitles" class="easyui-textbox" style="width:100%;height:200px;"
-                                data-options="
+                    <td>头衔</td>
+                    <td><input name="jobTitles" class="easyui-textbox" style="width:100%;height:200px;" data-options="
                                 prompt:'多个用英文逗号(,)隔开',
                                     value:rowPad.row.jobTitles,
                                     multiline:true,
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.jobTitles=newValue
                                     }" style="width:200px"></td>
-                    </tr>
-                    <tr>
-                        <td>备注</td>
-                        <td><input name="remark" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                </tr>
+                <tr>
+                    <td>备注</td>
+                    <td><input name="remark" class="easyui-textbox" style="width:100%;height:200px;" data-options="
                             value:rowPad.row.remark,
                                         multiline:true,
                                         onChange:function(newValue, oldValue){
                                             rowPad.row.remark=newValue
                                         }" style="width:200px"></td>
-                    </tr>
+                </tr>
 
                 <tr>
                     <td>浏览量</td>

@@ -40,7 +40,7 @@
 </style>
 
 <script>
-   
+
 
 
     var queryStringObject = common.queryStringObject();
@@ -50,7 +50,7 @@
         param: { token: null, hospitalId: null },
         row: {
 
-        }, 
+        },
         beforePage: function () {
             rowPad.param.hospitalId = queryStringObject.hospitalId
 
@@ -85,7 +85,7 @@
                 complete: function () {
                     layer.close(this.layerIndex);
                 },
-                data: Object.assign({ token: rowPad.param.token, hospitalId: rowPad.param.hospitalId},rowPad.row),
+                data: Object.assign({ token: rowPad.param.token, hospitalId: rowPad.param.hospitalId }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -104,7 +104,7 @@
     rowPad.beforePage()
 
     var loadingPad = {
-        param:{},
+        param: {},
         remove: function () {
             $("#loadingPad").remove();
         }
@@ -131,9 +131,9 @@
                 </tr>
             </thead>
             <tbody>
-                    <tr>
-                            <td>医院名称</td>
-                            <td><input class="name easyui-textbox" style="width:100%" data-options="
+                <tr>
+                    <td>医院名称</td>
+                    <td><input class="name easyui-textbox" style="width:100%" data-options="
                                 value:rowPad.row.name,
                                 iconWidth:20,
                                 icons:[{
@@ -146,10 +146,10 @@
                                 onChange:function(newValue, oldValue){
                                     rowPad.row.name=newValue
                                 }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>用户</td>
-                            <td><input class="userId easyui-combobox" style="width:100%;" data-options="
+                </tr>
+                <tr>
+                    <td>用户</td>
+                    <td><input class="userId easyui-combobox" style="width:100%;" data-options="
                                 text:(rowPad.row.userName||'')+(rowPad.row.userName?'/':'')+(rowPad.row.userPhone||''),
                                 value:rowPad.row.userId,
                                 valueField:'hospitalUserId',
@@ -193,10 +193,10 @@
                                     }
                                 }]
                                 "></td>
-                        </tr>
-                        <tr>
-                            <td>运营用户</td>
-                            <td><input class="managerId easyui-combobox" style="width:100%;" data-options="
+                </tr>
+                <tr>
+                    <td>运营用户</td>
+                    <td><input class="managerId easyui-combobox" style="width:100%;" data-options="
                                 text:(rowPad.row.managerName||' ')+(rowPad.row.managerName?'/':'')+(rowPad.row.managerPhone||''),
                                 value:rowPad.row.managerId,
                                 valueField:'managerUserId',
@@ -240,15 +240,15 @@
                                     }
                                 }]
                                 "></td>
-                        </tr>
-                        <tr>
-                                <td>封面</td>
-                                <td>
-                                    <div name="coverPad">
-                                        <img style="height:30px;"  src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.cover||"").parent().viewer({
+                </tr>
+                <tr>
+                        <td>封面</td>
+                        <td>
+                            <div name="coverPad">
+                                <img style="height:30px;" src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.cover||"").parent().viewer({
                                             url: "src",
-                                        });'/>
-                                        <input type="file" style="display:none;" onchange="
+                                        });' />
+                                <input type="file" style="display:none;" onchange="
                                         javascript:
                                         var target = this;
                                         if(this.files.length>0)
@@ -257,69 +257,70 @@
                                                     rowPad.row.cover=url   
                                             })
                                     " />
-                                        <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
-                                            style="vertical-align: text-bottom;"
-                                            onclick="$(this).prev().prev().attr('src','');rowPad.row.cover='';"></a>
-            
-                                        <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
-                                            style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                    <td>营业执照</td>
-                                    <td>
-                                        <div name="licensePad">
-                                            <img style="height:30px;"  src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.license||"").parent().viewer({
-                                                url: "src",
-                                            });'/>
-                                            <input type="file" style="display:none;" onchange="
-                                            javascript:
-                                            var target = this;
-                                            if(this.files.length>0)
-                                                maintainCommon.uploadImage(this,function(url){
-                                                    $(target).prev().attr('src',url)
-                                                        rowPad.row.license=url   
-                                                })
-                                        " />
-                                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
-                                                style="vertical-align: text-bottom;"
-                                                onclick="$(this).prev().prev().attr('src','');rowPad.row.license='';"></a>
-                
-                                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
-                                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                        <tr>
-                            <td>简介</td>
-                            <td><input name="intro" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
+                                    style="vertical-align: text-bottom;"
+                                    onclick="$(this).prev().prev().attr('src','');rowPad.row.cover='';"></a>
+    
+                                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
+                                    style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
+                            </div>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td>营业执照</td>
+                        <td>
+                            <div name="licensePad">
+                                <img style="height:30px;" src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.license||"").parent().viewer({
+                                            url: "src",
+                                        });' />
+                                <input type="file" style="display:none;" onchange="
+                                        javascript:
+                                        var target = this;
+                                        if(this.files.length>0)
+                                            maintainCommon.uploadImage(this,function(url){
+                                                $(target).prev().attr('src',url)
+                                                    rowPad.row.license=url   
+                                            })
+                                    " />
+                                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
+                                    style="vertical-align: text-bottom;"
+                                    onclick="$(this).prev().prev().attr('src','');rowPad.row.license='';"></a>
+    
+                                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
+                                    style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
+                            </div>
+                        </td>
+                    </tr>
+                <tr>
+                    <td>简介</td>
+                    <td><input name="intro" class="easyui-textbox" style="width:100%;height:200px;" data-options="
                                     value:rowPad.row.intro,
                                     multiline:true,
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.intro=newValue
                                     }" style="width:200px"></td>
-                        </tr>
-                       
-                        <tr>
-                            <td>电话</td>
-                            <td><input name="tel" class="easyui-textbox" style="width:100%;" data-options="
+                </tr>
+
+                <tr>
+                    <td>电话</td>
+                    <td><input name="tel" class="easyui-textbox" style="width:100%;" data-options="
                                     value:rowPad.row.tel,
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.tel=newValue
                                     }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>院长</td>
-                            <td><input name="headman" class="easyui-textbox" style="width:100%;" data-options="
+                </tr>
+                <tr>
+                    <td>院长</td>
+                    <td><input name="headman" class="easyui-textbox" style="width:100%;" data-options="
                                     value: rowPad.row.headman,
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.headman=newValue
                                     }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>省市区</td>
-                            <td>省:<input class="managerId easyui-combobox" style="width:130px;" data-options="
+                </tr>
+                <tr>
+                    <td>省市区</td>
+                    <td>省:<input class="managerId easyui-combobox" style="width:130px;" data-options="
                                 value:rowPad.row.adminarea1Id,
                                 text:rowPad.row.adminarea1Name,
                                 valueField:'code',
@@ -354,7 +355,7 @@
                                     }
                                 }]
                                 ">
-                                市:<input class="managerId easyui-combobox" style="width:130px;" data-options="
+                        市:<input class="managerId easyui-combobox" style="width:130px;" data-options="
                                 value:rowPad.row.adminarea2Id,
                                 text:rowPad.row.adminarea2Name,
                                 valueField:'code',
@@ -392,7 +393,7 @@
                                     }
                                 }]
                                 ">
-                                区:<input class="managerId easyui-combobox" style="width:130px;" data-options="
+                        区:<input class="managerId easyui-combobox" style="width:130px;" data-options="
                                 value:rowPad.row.adminarea3Id,
                                 text:rowPad.row.adminarea3Name,
                                 valueField:'code',
@@ -430,10 +431,10 @@
                                     }
                                 }]
                                 "></td>
-                        </tr>
-                        <tr>
-                            <td>地址</td>
-                            <td><input name="address" class="easyui-textbox" style="width:100%;" data-options="
+                </tr>
+                <tr>
+                    <td>地址</td>
+                    <td><input name="address" class="easyui-textbox" style="width:100%;" data-options="
                                     value:rowPad.row.address,
                                     iconWidth:20,
                                 icons:[{
@@ -445,27 +446,27 @@
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.address=newValue
                                     }" style="width:200px"></td>
-                        </tr>
-                        
-                        <tr>
-                            <td>经度</td>
-                            <td><input name="longitude" class="easyui-textbox" style="width:100%;" data-options="
+                </tr>
+
+                <tr>
+                    <td>经度</td>
+                    <td><input name="longitude" class="easyui-textbox" style="width:100%;" data-options="
                                     value:rowPad.row.longitude,
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.longitude=newValue
                                     }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>纬度</td>
-                            <td><input name="latitude" class="easyui-textbox" style="width:100%;" data-options="
+                </tr>
+                <tr>
+                    <td>纬度</td>
+                    <td><input name="latitude" class="easyui-textbox" style="width:100%;" data-options="
                                     value:rowPad.row.latitude,
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.latitude=newValue
                                     }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>余额</td>
-                            <td><input name="money" class="easyui-numberbox" style="width:100%" data-options="
+                </tr>
+                <tr>
+                    <td>余额</td>
+                    <td><input name="money" class="easyui-numberbox" style="width:100%" data-options="
                                             value:rowPad.row.money,
                                             precision:2,
                                             iconWidth:20,
@@ -478,10 +479,10 @@
                                             onChange:function(newValue, oldValue){
                                                 rowPad.row.money=newValue
                                             }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>积分</td>
-                            <td><input name="point" class="easyui-numberbox" style="width:100%" data-options="
+                </tr>
+                <tr>
+                    <td>积分</td>
+                    <td><input name="point" class="easyui-numberbox" style="width:100%" data-options="
                                             value:rowPad.row.point,
                                             precision:0,
                                             iconWidth:20,
@@ -494,10 +495,10 @@
                                             onChange:function(newValue, oldValue){
                                                 rowPad.row.point=newValue
                                             }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>认证</td>
-                            <td><input name="authStatus" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
+                </tr>
+                <tr>
+                    <td>认证</td>
+                    <td><input name="authStatus" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
                                             value:rowPad.row.authStatus,data:[
                                             {
                                                  text: '未提交',
@@ -522,28 +523,29 @@
                                              onChange:function(newValue, oldValue){
                                                 rowPad.row.authStatus=newValue
                                              }" /></td>
-                        </tr>
-                        <tr>
-                            <td>认证失败原因</td>
-                            <td><input name="authFailReason" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                </tr>
+                <tr>
+                    <td>认证失败原因</td>
+                    <td><input name="authFailReason" class="easyui-textbox" style="width:100%;height:200px;"
+                            data-options="
                                     value:rowPad.row.authFailReason,
                                     multiline:true,
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.authFailReason=newValue
                                     }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>备注</td>
-                            <td><input name="remark" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                </tr>
+                <tr>
+                    <td>备注</td>
+                    <td><input name="remark" class="easyui-textbox" style="width:100%;height:200px;" data-options="
                                     value:rowPad.row.remark,
                                     multiline:true,
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.remark=newValue
                                     }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>冻结</td>
-                            <td><input name="frozen" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
+                </tr>
+                <tr>
+                    <td>冻结</td>
+                    <td><input name="frozen" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
                                         value:rowPad.row.frozen,data:[
                                             {
                                                 text: '否',
@@ -562,19 +564,19 @@
                                              onChange:function(newValue, oldValue){
                                                 rowPad.row.frozen=newValue
                                              }" /></td>
-                        </tr>
-                        <tr>
-                            <td>冻结原因</td>
-                            <td><input name="frozenReason" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                </tr>
+                <tr>
+                    <td>冻结原因</td>
+                    <td><input name="frozenReason" class="easyui-textbox" style="width:100%;height:200px;" data-options="
                                     value:rowPad.row.frozenReason,
                                     multiline:true,
                                     onChange:function(newValue, oldValue){
                                         rowPad.row.frozenReason=newValue
                                     }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>排序号</td>
-                            <td><input name="orderNo" class="easyui-numberbox" style="width:100%" data-options="
+                </tr>
+                <tr>
+                    <td>排序号</td>
+                    <td><input name="orderNo" class="easyui-numberbox" style="width:100%" data-options="
                                             value:rowPad.row.orderNo,
                                             precision:2,
                                             iconWidth:20,
@@ -587,10 +589,10 @@
                                             onChange:function(newValue, oldValue){
                                                 rowPad.row.orderNo=newValue
                                             }" style="width:200px"></td>
-                        </tr>
-                        <tr>
-                            <td>添加时间</td>
-                            <td><input name="addTime" class="easyui-datetimebox" style="width:100%" data-options="
+                </tr>
+                <tr>
+                    <td>添加时间</td>
+                    <td><input name="addTime" class="easyui-datetimebox" style="width:100%" data-options="
                                                 value:moment(rowPad.row.addTime).format('YYYY-MM-DD H:mm:ss'),
                                                 editable:false,
                                                 icons:[{
@@ -602,10 +604,10 @@
                                                 onChange:function(newValue, oldValue){
                                                     rowPad.row.addTime=newValue
                                                 }"></td>
-                        </tr>
-                        <tr>
-                            <td>更新时间</td>
-                            <td><input name="alterTime" class="easyui-datetimebox" style="width:100%" data-options="
+                </tr>
+                <tr>
+                    <td>更新时间</td>
+                    <td><input name="alterTime" class="easyui-datetimebox" style="width:100%" data-options="
                                                     value:moment(rowPad.row.alterTime).format('YYYY-MM-DD H:mm:ss'),
                                                     editable:false,
                                                     icons:[{
@@ -617,10 +619,10 @@
                                                     onChange:function(newValue, oldValue){
                                                         rowPad.row.alterTime=newValue
                                                     }"></td>
-                        </tr>
-                        <tr>
-                            <td>删除</td>
-                            <td><input name="del" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
+                </tr>
+                <tr>
+                    <td>删除</td>
+                    <td><input name="del" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
                                 value:rowPad.row.del,data:[
                                             {
                                                 text: '否',
@@ -639,7 +641,7 @@
                                              onChange:function(newValue, oldValue){
                                                 rowPad.row.del=newValue
                                              }" /></td>
-                        </tr>
+                </tr>
             </tbody>
         </table>
         <div style="margin-top:5px;">

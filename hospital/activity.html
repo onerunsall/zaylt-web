@@ -40,7 +40,7 @@
 </style>
 
 <script>
-   
+
 
     var queryStringObject = common.queryStringObject();
 
@@ -100,7 +100,7 @@
             $.ajax({
                 type: 'post',
                 url: '/hospital/activity-alter',
-                data: Object.assign({ token: rowPad.param.token, activityId: rowPad.param.activityId, content: rowPad.contentKindEditor.html() },rowPad.row),
+                data: Object.assign({ token: rowPad.param.token, activityId: rowPad.param.activityId, content: rowPad.contentKindEditor.html() }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -119,7 +119,7 @@
     rowPad.beforePage()
 
     var loadingPad = {
-        param:{},
+        param: {},
         remove: function () {
             $("#loadingPad").remove();
         }
@@ -162,40 +162,34 @@
                             rowPad.row.name=newValue
                         }" style="width:200px"></td>
                 </tr>
-              
+
                 <tr>
                     <td>封面</td>
                     <td>
                         <div name="coverPad">
-                            <img style="height:30px;" data-original="" style="display:none;cursor:pointer;" />
+                            <img style="height:30px;" src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.cover||"").parent().viewer({
+                                            url: "src",
+                                        });' />
                             <input type="file" style="display:none;" onchange="
-                            javascript:
-                            var target = this;
-                            if(this.files.length>0)
-                                hospitalCommon.uploadImage(this,function(url){
-                                    $(target).prev().attr('src',url).attr('data-original',url).show().parent().viewer({
-                                            url: 'data-original',
-                                        });
-                                        rowPad.row.cover=url   
-                                })
-                        " />
-                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-look" plain="true"
-                                style="vertical-align: text-bottom;" onclick="javascript:
-                             $(this).prev().prev().attr('src',rowPad.row.cover).attr('data-original',rowPad.row.cover).show().parent().viewer({
-                                 url: 'data-original',
-                             });"></a>
-
+                                        javascript:
+                                        var target = this;
+                                        if(this.files.length>0)
+                                            maintainCommon.uploadImage(this,function(url){
+                                                $(target).prev().attr('src',url)
+                                                    rowPad.row.cover=url   
+                                            })
+                                    " />
                             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
                                 style="vertical-align: text-bottom;"
-                                onclick="$(this).prev().prev().prev().attr('src','').attr('data-original','').hide();rowPad.row.cover='';"></a>
+                                onclick="$(this).prev().prev().attr('src','');rowPad.row.cover='';"></a>
 
                             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
-                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().prev().click()"></a>
-
-
+                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
                         </div>
                     </td>
                 </tr>
+
+
                 <tr>
                     <td>简介</td>
                     <td><input name="intro" class="easyui-textbox" style="width:100%;height:200px;" data-options="
@@ -206,8 +200,8 @@
                             }" style="width:200px"></td>
                 </tr>
                 <tr>
-                        <td>地址</td>
-                        <td><input name="address" class="easyui-textbox" style="width:100%" data-options="
+                    <td>地址</td>
+                    <td><input name="address" class="easyui-textbox" style="width:100%" data-options="
                             value:rowPad.row.address,
                             iconWidth:20,
                             icons:[{
@@ -220,7 +214,7 @@
                             onChange:function(newValue, oldValue){
                                 rowPad.row.address=newValue
                             }" style="width:200px"></td>
-                    </tr>
+                </tr>
                 <tr>
                     <td>内容</td>
                     <td><textarea name="content" style="width: 100%;height: 30px;padding:1px 4px"></textarea></td>
@@ -272,8 +266,8 @@
                                     }" style="width:200px"></td>
                 </tr>
                 <tr>
-                        <td>开始时间</td>
-                        <td><input name="startTime" class="easyui-datetimebox" style="width:100%" data-options="
+                    <td>开始时间</td>
+                    <td><input name="startTime" class="easyui-datetimebox" style="width:100%" data-options="
                                             value:rowPad.row.startTime?moment(rowPad.row.startTime).format('YYYY-MM-DD H:mm:ss'):'',
                                             editable:false,
                                             icons:[{
@@ -285,10 +279,10 @@
                                             onChange:function(newValue, oldValue){
                                                 rowPad.row.startTime=newValue
                                             }"></td>
-                    </tr>
-                    <tr>
-                            <td>结束时间</td>
-                            <td><input name="endTime" class="easyui-datetimebox" style="width:100%" data-options="
+                </tr>
+                <tr>
+                    <td>结束时间</td>
+                    <td><input name="endTime" class="easyui-datetimebox" style="width:100%" data-options="
                                                 value:rowPad.row.startTime?moment(rowPad.row.endTime).format('YYYY-MM-DD H:mm:ss'):'',
                                                 editable:false,
                                                 icons:[{
@@ -300,7 +294,7 @@
                                                 onChange:function(newValue, oldValue){
                                                     rowPad.row.endTime=newValue
                                                 }"></td>
-                        </tr>
+                </tr>
                 <tr>
                     <td>冻结</td>
                     <td><input name="frozen" class="easyui-combobox" style="width:100%" data-options="

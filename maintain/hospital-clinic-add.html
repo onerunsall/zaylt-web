@@ -36,7 +36,7 @@
 </style>
 <script>
 
- 
+
 
     var queryStringObject = common.queryStringObject();
 
@@ -56,7 +56,7 @@
             $.ajax({
                 type: 'post',
                 url: '/maintain/hospital-clinic-add',
-                data: Object.assign({ token: rowPad.param.token},rowPad.row),
+                data: Object.assign({ token: rowPad.param.token }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -163,8 +163,8 @@
                         "></td>
                 </tr>
                 <tr>
-                        <td>医院</td>
-                        <td><input class="hospitalId easyui-combobox" style="width:100%;" data-options="
+                    <td>医院</td>
+                    <td><input class="hospitalId easyui-combobox" style="width:100%;" data-options="
                             valueField:'hospitalId',
                             textField:'name',
                             panelHeight:'auto',
@@ -206,7 +206,7 @@
                                 }
                             }]
                             "></td>
-                    </tr>
+                </tr>
                 <tr>
                     <td>推广人</td>
                     <td><input class="clinicPromoterId easyui-combobox" style="width:100%;" data-options="
@@ -256,64 +256,52 @@
                     <td>封面</td>
                     <td>
                         <div name="coverPad">
-                            <img style="height:30px;" data-original="" style="display:none;cursor:pointer;" />
+                            <img style="height:30px;" src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.cover||"").parent().viewer({
+                                    url: "src",
+                                });' />
                             <input type="file" style="display:none;" onchange="
-                            javascript:
-                            var target = this;
-                            if(this.files.length>0)
-                                maintainCommon.uploadImage(this,function(url){
-                                    $(target).prev().attr('src',url).attr('data-original',url).show().parent().viewer({
-                                            url: 'data-original',
-                                        });
-                                        rowPad.row.cover=url   
-                                })
-                        " />
-                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-look" plain="true"
-                                style="vertical-align: text-bottom;" onclick="javascript:
-                               $(this).prev().prev().attr('src',rowPad.row.cover).attr('data-original',rowPad.row.cover).show().parent().viewer({
-                                   url: 'data-original',
-                               });"></a>
-
-                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
-                                style="vertical-align: text-bottom;"
-                                onclick="$(this).prev().prev().prev().attr('src','').attr('data-original','').hide();rowPad.row.cover='';"></a>
-
-                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
-                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().prev().click()"></a>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                        <td>营业执照</td>
-                        <td>
-                            <div name="licensePad">
-                                <img style="height:30px;" data-original="" style="display:none;cursor:pointer;" />
-                                <input type="file" style="display:none;" onchange="
                                 javascript:
                                 var target = this;
                                 if(this.files.length>0)
                                     maintainCommon.uploadImage(this,function(url){
-                                        $(target).prev().attr('src',url).attr('data-original',url).show().parent().viewer({
-                                                url: 'data-original',
-                                            });
-                                            rowPad.row.license=url   
+                                        $(target).prev().attr('src',url)
+                                            rowPad.row.cover=url   
                                     })
                             " />
-                                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-look" plain="true"
-                                    style="vertical-align: text-bottom;" onclick="javascript:
-                                   $(this).prev().prev().attr('src',rowPad.row.license).attr('data-original',rowPad.row.license).show().parent().viewer({
-                                       url: 'data-original',
-                                   });"></a>
-    
-                                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
-                                    style="vertical-align: text-bottom;"
-                                    onclick="$(this).prev().prev().prev().attr('src','').attr('data-original','').hide();rowPad.row.license='';"></a>
-    
-                                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
-                                    style="vertical-align: text-bottom;" onclick="$(this).prev().prev().prev().click()"></a>
-                            </div>
-                        </td>
-                    </tr>
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
+                                style="vertical-align: text-bottom;"
+                                onclick="$(this).prev().prev().attr('src','');rowPad.row.cover='';"></a>
+
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
+                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>营业执照</td>
+                    <td>
+                        <div name="licensePad">
+                            <img style="height:30px;" src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.license||"").parent().viewer({
+                                        url: "src",
+                                    });' />
+                            <input type="file" style="display:none;" onchange="
+                                    javascript:
+                                    var target = this;
+                                    if(this.files.length>0)
+                                        maintainCommon.uploadImage(this,function(url){
+                                            $(target).prev().attr('src',url)
+                                                rowPad.row.license=url   
+                                        })
+                                " />
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
+                                style="vertical-align: text-bottom;"
+                                onclick="$(this).prev().prev().attr('src','');rowPad.row.license='';"></a>
+
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
+                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
+                        </div>
+                    </td>
+                </tr>
                 <tr>
                     <td>简介</td>
                     <td><input name="intro" class="easyui-textbox" style="width:100%;height:200px;" data-options="
@@ -323,7 +311,7 @@
                                 rowPad.row.intro=newValue
                             }" style="width:200px"></td>
                 </tr>
-               
+
                 <tr>
                     <td>电话</td>
                     <td><input name="tel" class="easyui-textbox" style="width:100%;" data-options="
@@ -340,7 +328,7 @@
                                 rowPad.row.headman=newValue
                             }" style="width:200px"></td>
                 </tr>
-                
+
                 <tr>
                     <td>地址</td>
                     <td><input name="address" class="easyui-textbox" style="width:100%;" data-options="
@@ -356,8 +344,8 @@
                                 rowPad.row.address=newValue
                             }" style="width:200px"></td>
                 </tr>
-                
-              
+
+
                 <tr>
                     <td>认证</td>
                     <td><input name="authStatus" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',value:0,data:[
@@ -387,7 +375,8 @@
                 </tr>
                 <tr>
                     <td>认证失败原因</td>
-                    <td><input name="authFailReason" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                    <td><input name="authFailReason" class="easyui-textbox" style="width:100%;height:200px;"
+                            data-options="
                             value:'',
                             multiline:true,
                             onChange:function(newValue, oldValue){
