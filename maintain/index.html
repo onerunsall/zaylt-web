@@ -48,7 +48,7 @@
         </div>
         <div data-options="region:'west',split:true" title=" " style="width:200px;">
             <div style="width:100%;border-bottom:1px solid #e4e5e7;text-align:center;padding:10px 0;">
-                <img src="./index/resource/head.png" style="width:60px;">
+                <img class="cover" src="./index/resource/head.png" style="width:60px;">
                 <div class="account" style="color: rgb(119, 119, 119);">&nbsp;</div>
             </div>
             <ul class="menu ztree"
@@ -86,7 +86,7 @@
                 if (data.codeMsg)
                     alert(data.codeMsg)
                 if (data.code == 0) {
-                    logining=data.data
+                    logining = data.data
                     $.cookie('logining', JSON.stringify(logining), { expires: 30, path: '/maintain' });
                 } else {
                     maintainCommon.resCodeProcess(data.code, data.codeMsg)
@@ -99,11 +99,13 @@
     }
 
     $('.account').text(logining.account)
+    if (logining.cover)
+        $('.cover').attr('src', logining.cover)
 
 
     zNodes = []
 
-    zNodes.push({  name: '概览', _url: './overview.html' })
+    zNodes.push({ name: '概览', _url: './overview.html' })
     zNodes.push({
         name: '医院', children: [
             { name: '医院', _url: './hospital-manage.html' },
@@ -179,8 +181,8 @@
     }
 
 
-    $(document).ready(function(){
-        maintainCommon.newTab('概览','./overview.html')
+    $(document).ready(function () {
+        maintainCommon.newTab('概览', './overview.html')
 
     })
 </script>
