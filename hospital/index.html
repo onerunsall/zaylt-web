@@ -7,99 +7,75 @@
     <link rel="shortcut icon" href="../resource/favicon.ico" type="image/x-icon" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>忠安医联体医院平台</title>
-
+    <script src="libs/common.js"></script>
+    <link rel="stylesheet" href="libs/common.css" />
+    <script src="index/index.js"></script>
+    <link rel="stylesheet" href="index/index.css" />
 
     <script src="../libs/jquery.min.js"></script>
     <script src="../libs/zTree_v3/js/jquery.ztree.all.js"></script>
     <link rel="stylesheet" href="../libs/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
     <script src="../libs/jquery.cookie.js"></script>
     <script src="../libs/layer/layer.js"></script>
-    <script src="../libs/jquery.extend.oneall.js"></script>
+    <script src="../libs/navim.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../libs/jquery-easyui-1.8.7/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="../libs/jquery-easyui-1.8.7/themes/icon.css">
     <link rel="stylesheet" type="text/css" href="../libs/jquery-easyui-1.8.7/demo/demo.css">
     <script type="text/javascript" src="../libs/jquery-easyui-1.8.7/jquery.easyui.min.js"></script>
-
-    <script src="/libs/common.js"></script>
-    <script src="libs/common.js"></script>
-    <link rel="stylesheet" href="libs/common.css" />
-    <script src="index/index.js"></script>
-    <link rel="stylesheet" href="index/index.css" />
 </head>
 <style>
-    #indexPad .ztree li {
-        margin: 3px;
-    }
 
-    #indexPad .ztree * {
-        font-size: 14px;
-
-    }
 </style>
 
 <body style="margin:0;padding:0;">
 
-    <div id='indexPad'>
-        <div style="height:70px;border-bottom: 1px solid darkgray;">
-            <div id="title"
-                style="line-height: 70px;float:left;height:100%;padding:0 30px;text-align: center;font-weight: 700;font-size: 24px;">
-                </div>
+    <div class="easyui-layout" style="width:100%;position:absolute;top:0;bottom:0;">
+        <style>
+            .ztree * {
+                font-size: 16px;
+            }
+
+            .ztree li {
+                margin: 4px;
+            }
+        </style>
+        <div data-options="region:'north'" style="height:80px">
+            <div style="margin-top:18px;">
+                <span style="padding-left:10px;font-size: 26px;font-weight: 700;">忠安医疗</span>
+                <span style="padding-left:10px;font-size: 22px;">医联体-医院平台（<span class="hospitalName"></span>）</span>
+            </div>
         </div>
-        <div style="position: absolute;top:71px;left:0;bottom:0;right:0;">
-            <div id="leftPad"
-                style="vertical-align: top;width:150px;height: 100%;display: inline-block;text-align: center;overflow: auto;">
-                <div style="width:100%;border-bottom:1px solid #e4e5e7;text-align:center;padding:10px 0;">
-                    <img src="./index/resource/head.png" style="width:60px;">
-                    <div id="account" style="color: rgb(119, 119, 119);"></div>
-                </div>
-                <ul id="menu" class="ztree" style="padding:0;margin:0;    margin-top: 5px;"></ul>
+        <div data-options="region:'west',split:true" title=" " style="width:200px;">
+            <div style="width:100%;border-bottom:1px solid #e4e5e7;text-align:center;padding:10px 0;">
+                <img src="./index/resource/head.png" style="width:60px;">
+                <div class="account" style="color: rgb(119, 119, 119);">&nbsp;</div>
             </div>
-            <div id="middlePad"
-                style="vertical-align: top;width:10px;display: inline-block;height: 100%;cursor: pointer;position:relative;background-color: darkgray;color: #ffffff"
-                onclick="hideLeftPad()">
-                <div style="position:absolute;top:50%;transform: translateY(-50%);width:100%;text-align: center;">
-                    .<br />
-                    .<br />
-                    .<br />
-                    .<br />
-                    .<br />
-                    .<br />
-                </div>
+            <ul class="menu ztree"
+                style="width:100%;padding:0;margin:0;background-color: unset;border:none;position:relative;font-size:18px;">
+            </ul>
+        </div>
+        <div data-options="region:'center'">
+            <div id="tabPad" class="easyui-tabs" style="width:100%" data-options="
+            narrow: true,
+            fit: true,
+            tools: '#tab-tools'">
             </div>
-            <div style="height: 100%;display: inline-block;position: absolute;left:165px;top:0;bottom:0;right:0;">
-                <div id="indexPad-tabPad" class="easyui-tabs" style="width:100%">
-
-                </div>
-                <div id="tab-tools">
-                    <a href="javascript:void(0)" class="easyui-linkbutton"
-                        data-options="plain:true,iconCls:'icon-dustbin'"
-                        onclick="
-						if(confirm('确定关闭所有标签页吗？'))
-						$($('#indexPad-tabPad').tabs('tabs')).each(function(index,ele){ $('#indexPad-tabPad').tabs('close',),index})   "></a>
-                </div>
+            <div id="tab-tools">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-dustbin'"
+                    onclick="
+                            if(confirm('确定关闭所有标签页吗？'))
+                                $($('#tabPad').tabs('tabs')).each(function(index,ele){ $('#tabPad').tabs('close',),index})   "></a>
             </div>
-
         </div>
     </div>
 </body>
-
 <script>
+    var token = $.cookie('token'), logining, zNodes;
 
-    var token = $.cookie('token'), logining, account, zNodes;
 
-    $('#indexPad-tabPad').tabs({
-        fit: true,
-        narrow: true,
-        tools: '#tab-tools',
-        onSelect: function (title) {
 
-        }
-    });
 
-    hospitalCommon.newTab('概览','overview.html')
-
-    
 
     if (token) {
         $.ajax({
@@ -107,13 +83,11 @@
             type: 'post',
             async: false,
             success: function (data) {
-                if(data.codeMsg)
+                if (data.codeMsg)
                     alert(data.codeMsg)
                 if (data.code == 0) {
-                    $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
-                    account = data.data.account
-                    $('#title').text('忠安医联体-医院平台-'+$(data.data).oneall_nestAttr('hospital.name'))
-                    $('title').text('忠安医联体-医院平台-'+$(data.data).oneall_nestAttr('hospital.name'))
+                    logining = data.data
+                    $.cookie('logining', JSON.stringify(logining), { expires: 30, path: '/hospital' });
                 } else {
                     hospitalCommon.resCodeProcess(data.code, data.codeMsg)
                 }
@@ -124,8 +98,9 @@
         hospitalCommon.resCodeProcess(20)
     }
 
-    $('#account').text(account)
-
+    $('.account').text(logining.account)
+    $('.hospitalName').text(logining.hospital.name)
+    
 
     zNodes = []
 
@@ -146,24 +121,25 @@
             onClick: function (e, treeId, treeNode) {
                 if (treeNode.name == '退出登录') {
                     logout();
-                    return ;
+                    return;
                 }
-                if(treeNode._url)
-                    hospitalCommon.newTab(treeNode.name,treeNode._url)
+                if (treeNode._url)
+                    hospitalCommon.newTab(treeNode.name, treeNode._url)
+
 
                 zTreeObj.expandNode(treeNode);
             }
         }
     };
     // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-    var zTreeObj = $.fn.zTree.init($("#menu"), setting, zNodes);
+    var zTreeObj = $.fn.zTree.init($(".menu"), setting, zNodes);
 
 
     function logout() {
         $.removeCookie('token', { path: '/hospital' });
         $.removeCookie('logining', { path: '/hospital' });
         $.ajax({
-            type:'post',
+            type: 'post',
             url: '/hospital/logout',
             data: { token: token },
             async: true
@@ -171,16 +147,10 @@
         location.href = './login.html';
     }
 
-    function hideLeftPad() {
-        if ($('#leftPad').is(':hidden')) {
-            $('#leftPad').show();
-            $('#indexPad-tabPad').css("left", "165px")
-        }
-        else {
-            $('#leftPad').hide();
-            $('#indexPad-tabPad').css("left", "11px")
-        }
-    }
+
+    $(document).ready(function(){
+        hospitalCommon.newTab('概览','./overview.html')
+    })
 </script>
 
 </html>

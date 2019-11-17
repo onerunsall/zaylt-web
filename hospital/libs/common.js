@@ -12,7 +12,7 @@ hospitalCommon.resCodeProcess = function (code, codeMsg) {
 
 
 hospitalCommon.newTab = function (title, url) {
-    parent.$('#indexPad-tabPad').tabs('add', {
+    parent.$('#tabPad').tabs('add', {
         title: title,
         closable: true,
         width: '100%',
@@ -20,8 +20,8 @@ hospitalCommon.newTab = function (title, url) {
         tools: [{
             iconCls: 'icon-mini-refresh',
             handler: function () {
-                var current_tab = parent.$('#indexPad-tabPad').tabs('getSelected');
-                parent.$('#indexPad-tabPad').tabs('update', {
+                var current_tab = parent.$('#tabPad').tabs('getSelected');
+                parent.$('#tabPad').tabs('update', {
                     tab: current_tab,
                     options: {
                         content: current_tab.panel('options', 'content'),

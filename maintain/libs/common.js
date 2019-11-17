@@ -12,7 +12,9 @@ maintainCommon.resCodeProcess = function (code, codeMsg) {
 
 
 maintainCommon.newTab = function (title, url) {
-    parent.$('#indexPad-tabPad').tabs('add', {
+    tabPad = $('#tabPad').length==0?parent.$('#tabPad'):$('#tabPad')
+
+    tabPad.tabs('add', {
         title: title,
         closable: true,
         width: '100%',
@@ -20,8 +22,8 @@ maintainCommon.newTab = function (title, url) {
         tools: [{
             iconCls: 'icon-mini-refresh',
             handler: function () {
-                var current_tab = parent.$('#indexPad-tabPad').tabs('getSelected');
-                parent.$('#indexPad-tabPad').tabs('update', {
+                var current_tab = tabPad.tabs('getSelected');
+                tabPad.tabs('update', {
                     tab: current_tab,
                     options: {
                         content: current_tab.panel('options', 'content'),

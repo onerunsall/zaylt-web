@@ -25,57 +25,86 @@
     <script type="text/javascript" src="../libs/jquery-easyui-1.8.7/jquery.easyui.min.js"></script>
 </head>
 <style>
+    #indexPad .ztree li {
+        margin: 3px;
+    }
 
+    #indexPad .ztree * {
+        font-size: 14px;
+
+    }
 </style>
 
 <body style="margin:0;padding:0;">
 
-    <div class="easyui-layout" style="width:100%;position:absolute;top:0;bottom:0;">
-        <style>
-            .ztree * {
-                font-size: 16px;
-            }
+    <div id='indexPad'>
+        <div style="height:70px;border-bottom: 1px solid darkgray;">
+            <div
+                style="line-height: 70px;float:left;height:100%;padding:0 30px;text-align: center;font-weight: 700;font-size: 24px;">
+                忠安医联体-运维</div>
+        </div>
+        <div style="position: absolute;top:71px;left:0;bottom:0;right:0;">
+            <div id="leftPad"
+                style="vertical-align: top;width:150px;height: 100%;display: inline-block;text-align: center;overflow: auto;">
+                <div style="width:100%;border-bottom:1px solid #e4e5e7;text-align:center;padding:10px 0;">
+                    <img src="./index/resource/head.png" style="width:60px;">
+                    <div id="account" style="color: rgb(119, 119, 119);"></div>
+                </div>
+                <ul id="menu" class="ztree" style="padding:0;margin:0;    margin-top: 5px;"></ul>
+            </div>
+            <div id="middlePad"
+                style="vertical-align: top;width:10px;display: inline-block;height: 100%;cursor: pointer;position:relative;background-color: darkgray;color: #ffffff"
+                onclick="hideLeftPad()">
+                <div style="position:absolute;top:50%;transform: translateY(-50%);width:100%;text-align: center;">
+                    .<br />
+                    .<br />
+                    .<br />
+                    .<br />
+                    .<br />
+                    .<br />
+                </div>
+            </div>
+            <div style="height: 100%;display: inline-block;position: absolute;left:165px;top:0;bottom:0;right:0;">
+                <div id="tabPad" class="easyui-tabs" style="width:100%">
 
-            .ztree li {
-                margin: 4px;
-            }
-        </style>
-        <div data-options="region:'north'" style="height:80px">
-            <div style="margin-top:18px;">
-                <span style="padding-left:10px;font-size: 26px;font-weight: 700;">忠安医疗</span>
-                <span style="padding-left:10px;font-size: 22px;">医联体-运维平台</span>
+                </div>
+                <div id="tab-tools">
+                    <a href="javascript:void(0)" class="easyui-linkbutton"
+                        data-options="plain:true,iconCls:'icon-dustbin'"
+                        onclick="
+						if(confirm('确定关闭所有标签页吗？'))
+						    $($('#tabPad').tabs('tabs')).each(function(index,ele){ $('#tabPad').tabs('close',),index})   "></a>
+                </div>
             </div>
-        </div>
-        <div data-options="region:'west',split:true" title=" " style="width:200px;">
-            <div style="width:100%;border-bottom:1px solid #e4e5e7;text-align:center;padding:10px 0;">
-                <img src="./index/resource/head.png" style="width:60px;">
-                <div class="account" style="color: rgb(119, 119, 119);">&nbsp;</div>
-            </div>
-            <ul class="menu ztree"
-                style="width:100%;padding:0;margin:0;background-color: unset;border:none;position:relative;font-size:18px;">
-            </ul>
-        </div>
-        <div data-options="region:'center'">
-            <div id="tabPad" class="easyui-tabs" style="width:100%" data-options="
-            narrow: true,
-            fit: true,
-            tools: '#tab-tools'">
-            </div>
-            <div id="tab-tools">
-                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-dustbin'"
-                    onclick="
-                            if(confirm('确定关闭所有标签页吗？'))
-                                $($('#tabPad').tabs('tabs')).each(function(index,ele){ $('#tabPad').tabs('close',),index})   "></a>
-            </div>
+
         </div>
     </div>
 </body>
+
 <script>
-    var token = $.cookie('token'), logining, zNodes;
+
+    var token = $.cookie('token'), logining, account, zNodes;
+
+    $('#tabPad').tabs({
+        narrow: true,
+        fit: true,
+        tools: '#tab-tools',
+        onSelect: function (title,index) {
+        }
+    });
+
+    maintainCommon.newTab('概览','overview.html')
 
 
-
-
+    $.ajaxSetup({
+        layerIndex: -1,
+        beforeSend: function () {
+            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+        },
+        complete: function () {
+            layer.close(this.layerIndex);
+        }
+    });
 
     if (token) {
         $.ajax({
@@ -83,11 +112,11 @@
             type: 'post',
             async: false,
             success: function (data) {
-                if (data.codeMsg)
+                if(data.codeMsg)
                     alert(data.codeMsg)
                 if (data.code == 0) {
-                    logining=data.data
-                    $.cookie('logining', JSON.stringify(logining), { expires: 30, path: '/maintain' });
+                    $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
+                    account = data.data.account
                 } else {
                     maintainCommon.resCodeProcess(data.code, data.codeMsg)
                 }
@@ -98,12 +127,12 @@
         maintainCommon.resCodeProcess(20)
     }
 
-    $('.account').text(logining.account)
+    $('#account').text(account)
 
 
     zNodes = []
 
-    zNodes.push({  name: '概览', _url: './overview.html' })
+    zNodes.push({ id:'gaiLan',name: '概览', _url: './overview.html' })
     zNodes.push({
         name: '医院', children: [
             { name: '医院', _url: './hospital-manage.html' },
@@ -132,11 +161,9 @@
     zNodes.push({ name: '科室', _url: './hospital-office-manage.html' })
     zNodes.push({ name: '专家', _url: './hospital-doctor-manage.html' })
     zNodes.push({ name: '广告', _url: './ad-manage.html' })
-    zNodes.push({
-        name: '页面', children: [
-            { name: '用户协议', _url: '/maintain/set-page-user-protocol.html' }
-        ]
-    })
+    zNodes.push({ name: '页面',children:[
+		{name:'用户协议',_url:'/maintain/set-page-user-protocol.html'}
+    ] })
     zNodes.push({ name: '运维用户', _url: './maintain-user-manage.html' })
     zNodes.push({ name: '参数', _url: './param-manage.html' })
     zNodes.push({ name: '外部参数', _url: './external-param-manage.html' })
@@ -152,25 +179,25 @@
             onClick: function (e, treeId, treeNode) {
                 if (treeNode.name == '退出登录') {
                     logout();
-                    return;
+                    return ;
                 }
-                if (treeNode._url)
-                    maintainCommon.newTab(treeNode.name, treeNode._url)
-
-
+                if(treeNode._url)
+                    maintainCommon.newTab(treeNode.name,treeNode._url)
+        
+                
                 zTreeObj.expandNode(treeNode);
             }
         }
     };
     // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-    var zTreeObj = $.fn.zTree.init($(".menu"), setting, zNodes);
+    var zTreeObj = $.fn.zTree.init($("#menu"), setting, zNodes);
 
 
     function logout() {
         $.removeCookie('token', { path: '/maintain' });
         $.removeCookie('logining', { path: '/maintain' });
         $.ajax({
-            type: 'post',
+            type:'post',
             url: '/maintain/logout',
             data: { token: token },
             async: true
@@ -178,11 +205,16 @@
         location.href = './login.html';
     }
 
-
-    $(document).ready(function(){
-        maintainCommon.newTab('概览','./overview.html')
-
-    })
+    function hideLeftPad() {
+        if ($('#leftPad').is(':hidden')) {
+            $('#leftPad').show();
+            $('#tabPad').css("left", "165px")
+        }
+        else {
+            $('#leftPad').hide();
+            $('#tabPad').css("left", "11px")
+        }
+    }
 </script>
 
 </html>

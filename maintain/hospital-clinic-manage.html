@@ -169,7 +169,7 @@
             });
         },
         addRow: function () {
-            parent.$('#indexPad-tabPad').tabs('add', {
+            parent.$('#tabPad').tabs('add', {
                 title: '添加门诊',
                 closable: true,
                 width: "100%",
@@ -177,8 +177,8 @@
                 tools: [{
                     iconCls: 'icon-mini-refresh',
                     handler: function () {
-                        var current_tab = parent.$('#indexPad-tabPad').tabs('getSelected');
-                        parent.$('#indexPad-tabPad').tabs('update', {
+                        var current_tab = parent.$('#tabPad').tabs('getSelected');
+                        parent.$('#tabPad').tabs('update', {
                             tab: current_tab,
                             options: {
                                 content: current_tab.panel('options', 'content'),
