@@ -35,11 +35,11 @@ hospitalCommon.newTab = function (title, url) {
 
 
 hospitalCommon.uploadImage = function (inputDom, ook) {
-    var r = prompt('已选的图片大小' + common.prettyFileSize(inputDom.files[0].size) + '，如需压缩，请输入质量1-9，取消则直接上传。', '8')
+    var r = prompt('已选的图片大小' + common.prettyFileSize(inputDom.files[0].size) + '，如需压缩，请输入质量0-10，取消则直接上传。', '8')
     var compressIs = false
     if (r != null) {
         r = parseInt(r);
-        if (isNaN(r) || r < 1 || r > 9) {
+        if (isNaN(r) || r < 0 || r > 10) {
             alert('输入有误')
             return;
         }
@@ -63,7 +63,7 @@ hospitalCommon.uploadImage = function (inputDom, ook) {
                 hospitalCommon.resCodeProcess(res.code, res.codeMsg)
             } else {
                 if (compressIs)
-                    alert('压缩后文件大小' + common.prettyFileSize(inputDom.files[0].size))
+                    alert('压缩后文件大小' + common.prettyFileSize(res.data.size))
                 ook(res.data.url)
             }
         }
