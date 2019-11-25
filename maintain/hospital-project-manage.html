@@ -363,7 +363,7 @@
             "></span>
             <span style="display: inline-block;">
                 <span style="">添加时间 From:</span>
-                <input name="addTimeStart" class="easyui-datebox" style="width:135px" data-options="
+                <input name="addTimeFrom" class="easyui-datebox" style="width:135px" data-options="
                 editable:false,
                 icons:[{
                     iconCls:'icon-clear',
@@ -372,12 +372,12 @@
                     }
                 }],
             onChange:function(newValue, oldValue){
-                rowsPad.queryParam.addTimeStart=newValue
+                rowsPad.queryParam.addTimeFrom=newValue
             }">
             </span>
             <span style="display: inline-block;">
                 <span style="">To:</span>
-                <input name="addTimeEnd" class="easyui-datebox" style="width:135px" data-options="
+                <input name="addTimeTo" class="easyui-datebox" style="width:135px" data-options="
                 editable:false,
                 icons:[{
                     iconCls:'icon-clear',
@@ -386,7 +386,7 @@
                     }
                 }],
         onChange:function(newValue, oldValue){
-            rowsPad.queryParam.addTimeEnd=newValue
+            rowsPad.queryParam.addTimeTo=newValue
         }">
             </span>
             <span style="display: inline-block;">

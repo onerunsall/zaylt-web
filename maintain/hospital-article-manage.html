@@ -55,8 +55,10 @@
         param: {
             token: null
         },
-        queryParam: {
-
+        data: {
+            queryParam: {},
+            alterRows: {},
+            rowsData: {}
         },
         beforePage: function () {
         },
@@ -70,6 +72,7 @@
                     },
                     { field: 'viewCount', title: '浏览量', width: 70, align: 'right', sortable: true, halign: 'center' },
                     { field: 'hospitalName', title: '医院', width: 200, align: 'left', halign: 'center' },
+                    { field: 'remark', title: '备注', width: 200, align: 'left', halign: 'center' },
                     { field: 'orderNo', title: '排序号', width: 70, align: 'right', sortable: true, halign: 'center' },
                     {
                         field: 'addTime', title: '添加时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
@@ -84,7 +87,7 @@
                             debugger
                             if (value == '汇总：')
                                 return value;
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value||''}" onclick="maintainCommon.newTab('文章:${common.subOmitRight(row.name, 10)}','/maintain/hospital-article.html?articleId=${row.articleId}')">${value}</a>`;
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value || ''}" onclick="maintainCommon.newTab('文章:${common.subOmitRight(row.name, 10)}','/maintain/hospital-article.html?hospitalArticleId=${row.hospitalArticleId}')">${value}</a>`;
                         }, styler: function (value, row, index) {
                             return ``
                         }
@@ -92,17 +95,18 @@
                 ]],
                 toolbar: `${rowsPad.selector} [name=tb]`,
                 footer: `${rowsPad.selector} [name=ft]`,
-                idField: 'articleId',
+                idField: 'hospitalArticleId',
                 pagination: true,
                 rownumbers: true,
                 emptyMsg: '无数据',
-                singleSelect: true,
+                singleSelect: false,
                 ctrlSelect: true,
-                checkOnSelect: false,
-                selectOnCheck: false,
+                checkOnSelect: true,
+                selectOnCheck: true,
                 multiSort: true,
                 autoRowHeight: false,
                 showFooter: true,
+
                 onCheck: function (index, row) {
                     $(rowsPad.selector).find('[name=tb] [name=checkedCount]').html(`已选:${$(rowsPad.selector).find('[name=dg]').datagrid('getChecked').length}`)
                 },
@@ -120,11 +124,11 @@
                 },
                 loader: function (param, success, error) {
                     debugger
-                    $(rowsPad.selector).find('[name=dg]').datagrid('clearChecked');
+
                     param.token = rowsPad.param.token;
                     param.ps = param.rows;
                     param.pn = param.page;
-                    Object.assign(param, rowsPad.queryParam);
+                    Object.assign(param, rowsPad.data.queryParam);
                     $.ajax({
                         url: '/maintain/hospital-articles',
                         type: 'get',
@@ -135,8 +139,9 @@
                                 maintainCommon.resCodeProcess(data.code, data.codeMsg)
                                 return false;
                             } else {
-                                success(data.data);
-                                $(rowsPad.selector).find('[name=tb] [name=sum]').html(`总浏览量:${data.data.sum.totalViewCount||''}`)
+                                rowsPad.data.rowsData = data.data;
+                                success(rowsPad.data.rowsData);
+                                $(rowsPad.selector).find('[name=tb] [name=sum]').html(`总浏览量:${rowsPad.data.rowsData.sum.totalViewCount || ''}`)
                             }
 
                         }
@@ -146,7 +151,7 @@
                     debugger
                     var fdata = {
                         rows: data.rows, total: data.sum.rowCount, footer: [
-                            { "cover": "", "viewCount": data.sum.totalViewCount||'', "name": "汇总：" }
+                            { "cover": "", "viewCount": data.sum.totalViewCount || '', "name": "汇总：" }
                         ]
                     }
                     return fdata;
@@ -178,95 +183,87 @@
                 ]
             });
         },
-        deleteRow: function () {
-            var checked = $(rowsPad.selector).find('[name=dg]').datagrid('getChecked');
-            var selected = $(rowsPad.selector).find('[name=dg]').datagrid('getSelected');
-            var articleIds = $(checked).oneall_attrs('articleId');
-            var articleIdsSplit = articleIds.join();
-            var doDel = false;
-            if (checked.length == 1) {
-                if (confirm(`将删除 ${checked[0].name}/${checked[0].hospitalName} ，确定吗？`)) {
-                    doDel = true;
-                }
-            } else if (checked.length > 1) {
-                var r = prompt(`将删除 ${checked.length} 条记录，确定吗？`, `输入删除数量`);
+        alterRowsStart: function () {
+            var selections = $(rowsPad.selector).find('[name=dg]').datagrid('getSelections');
+            var selectionIdArr = null;
+            var count = 0;
+            var todo = false;
+            if (selections == null || selections.length == 0) {
+                count = rowsPad.data.rowsData.sum.rowCount
+            } else if (selections.length == 1) {
+                selectionIdArr = $(selections).oneall_attrs('hospitalArticleId');
+                count = 1;
+            } else {
+                debugger
+                selectionIdArr = $(selections).oneall_attrs('hospitalArticleId');
+                count = selectionIdArr.length;
+
+            }
+            $('#alterRowsPad').window('open')
+
+            $('#alterRowsPad .expectedRowCount').text(count)
+        },
+        alterRows: function () {
+            var selections = $(rowsPad.selector).find('[name=dg]').datagrid('getSelections');
+            var selectionIdArr = null;
+            var count = 0;
+            var todo = false;
+            if (selections == null || selections.length == 0) {
+                var r = prompt(`你没有选择任何记录，将操作当前全部 ${rowsPad.data.rowsData.sum.rowCount} 条记录 ，确定吗？`, `请输入确认数量`);
                 if (r != null) {
-                    if (r == checked.length) {
-                        doDel = true;
+                    if (r == rowsPad.data.rowsData.sum.rowCount) {
+                        todo = true;
                     } else {
-                        alert('删除数量有误')
+                        alert('输入有误')
+                        return;
                     }
                 }
-            } else {
-                if (selected == null) {
-                    alert('需选择一条记录')
-                } else {
-                    if (confirm(`将删除 ${selected.name}/${selected.hospitalName} ，确定吗？`)) {
-                        doDel = true;
-                        articleIdsSplit = selected.articleId;
-                    }
-                }
-            }
+                count = rowsPad.data.rowsData.sum.rowCount
+            } else if (selections.length == 1) {
+                selectionIdArr = $(selections).oneall_attrs('hospitalArticleId');
+                count = 1;
 
-            if (doDel) {
-                $.ajax({
-                    type: 'post',
-                    url: `/maintain/hospital-article-delete`,
-                    data: { token: rowsPad.param.token, articleId: articleIdsSplit },
-                    success: function (data) {
-                        if (data.codeMsg)
-                            alert(data.codeMsg)
-                        if (data.code == 0) {
-                            $(rowsPad.selector).find('[name=dg]').datagrid('reload')
-                            $(rowsPad.selector).find('[name=dg]').datagrid('clearChecked')
-                        }
-                    }
-                })
-            }
-
-        }, deleteRows: function () {
-            var doDel = false;
-            var rowCount = $(rowsPad.selector).find('[name=dg]').datagrid('getPager').pagination('options').total;
-            var n = prompt(`将删除全部 ${rowCount} 条记录，确定吗？`, `请输入删除数量`)
-            if (n != null) {
-                if (n.length == 0) {
-                    alert('请输入删除数量')
+                if (!confirm(`将操作记录 ${selections[0].name} ，确定吗？`))
                     return;
+                todo = true
+            } else {
+                debugger
+                selectionIdArr = $(selections).oneall_attrs('hospitalArticleId');
+                count = selectionIdArr.length;
+
+                var r = prompt(`你选择了 ${count} 条记录 ，确定吗？`, `请输入确认数量`);
+                if (r != null) {
+                    if (r == selections.length) {
+                        todo = true;
+                    } else {
+                        alert('输入有误')
+                        return;
+                    }
                 }
-                if (n == rowCount) {
+            }
+            if (todo) {
+                var password = prompt(`危险操作，请输入密码。`, ``)
+                if (password != null) {
+                    if (password.length == 0) {
+                        alert('请输入密码')
+                        return;
+                    }
                     doDel = true;
                 } else {
-                    alert('删除数量有误')
                     return;
                 }
-            } else {
-                return;
-            }
 
-
-
-            var password = prompt(`危险操作，请输入密码。`, ``)
-            if (password != null) {
-                if (password.length == 0) {
-                    alert('请输入密码')
-                    return;
-                }
-                doDel = true;
-            } else {
-                return;
-            }
-
-            if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/hospital-articles-delete`,
-                    data: Object.assign({ token: rowsPad.param.token, password: password },rowsPad.queryParam),
+                    url: `/maintain/hospital-articles-alter`,
+                    data: Object.assign({ password: password, expectedRowCount: count, hospitalArticleId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam, rowsPad.data.alterRows),
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
                         if (data.code == 0) {
                             $(rowsPad.selector).find('[name=dg]').datagrid('reload')
-                            $(rowsPad.selector).find('[name=dg]').datagrid('clearChecked')
+                            $('#ff').form('clear');
+                            $('#alterRowsPad').window('close')
                         }
                     }
                 })
@@ -287,6 +284,8 @@
         loadingPad.remove()
     }
 
+
+
 </script>
 
 <body style="margin:0;padding:0;">
@@ -299,10 +298,10 @@
         <div name="tb" style="padding:2px 5px;">
             <div style="">
                 <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-search"
-                onclick="$(rowsPad.selector).find('[name=dg]').datagrid('load').datagrid('unselectAll');">查询</a>
+                    onclick="$(rowsPad.selector).find('[name=dg]').datagrid('load').datagrid('clearChecked');">查询</a>
 
                 <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                <span style="">关键字:</span>
+                    <span style="">关键字:</span>
                     <input name="kw" class="easyui-textbox" data-options="
             iconWidth:20,
             icons:[{
@@ -312,12 +311,12 @@
                 }
             }],
             onChange:function(newValue, oldValue){
-                rowsPad.queryParam.kw=newValue
+                rowsPad.data.queryParam.kw=newValue
             }" style="width:200px" /></span>
 
-            <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                <span style="">医院:</span>
-                <input class="easyui-combobox" name="hospitalId" style="width:200px;" data-options="
+                <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
+                    <span style="">医院:</span>
+                    <input class="easyui-combobox" name="hospitalId" style="width:200px;" data-options="
             valueField:'hospitalId',
             textField:'name',
             panelHeight:'auto',
@@ -346,7 +345,7 @@
                 })
             },
             onChange:function(newValue, oldValue){
-                rowsPad.queryParam.hospitalId=newValue
+                rowsPad.data.queryParam.hospitalId=newValue
             },
             loadFilter: function (data) {
                 debugger
@@ -361,9 +360,9 @@
             }]
             "></span>
 
-            <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                <span style="">添加时间 From:</span>
-                <input name="addTimeStart" class="easyui-datebox" style="width:135px" data-options="
+                <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
+                    <span style="">添加时间 From:</span>
+                    <input name="addTimeFrom" class="easyui-datebox" style="width:135px" data-options="
                 editable:false,
                 icons:[{
                     iconCls:'icon-clear',
@@ -372,13 +371,13 @@
                     }
                 }],
             onChange:function(newValue, oldValue){
-                rowsPad.queryParam.addTimeStart=newValue
+                rowsPad.data.queryParam.addTimeFrom=newValue
             }">
-            </span>
+                </span>
 
-            <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                <span style="">To:</span>
-                <input name="addTimeEnd" class="easyui-datebox" style="width:135px" data-options="
+                <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
+                    <span style="">To:</span>
+                    <input name="addTimeTo" class="easyui-datebox" style="width:135px" data-options="
                 editable:false,
                 icons:[{
                     iconCls:'icon-clear',
@@ -387,12 +386,12 @@
                     }
                 }],
         onChange:function(newValue, oldValue){
-            rowsPad.queryParam.addTimeEnd=newValue
+            rowsPad.data.queryParam.addTimeTo=newValue
         }"></span>
 
-         <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                <span style="">&nbsp;冻结:</span>
-                <input name="frozen" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:'',data:[
+                <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
+                    <span style="">&nbsp;冻结:</span>
+                    <input name="frozen" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:'',data:[
            {
                                          text: '否',
                                          value: '0'
@@ -408,13 +407,13 @@
                 }
             }],
             onChange:function(newValue, oldValue){
-                rowsPad.queryParam.frozen=newValue
+                rowsPad.data.queryParam.frozen=newValue
             }" />
-        </span>
+                </span>
 
-        <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                <span style="">删除:</span>
-                <input name="del" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:0,data:[
+                <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
+                    <span style="">删除:</span>
+                    <input name="del" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:0,data:[
            {
                                          text: '否',
                                          value: '0'
@@ -430,9 +429,9 @@
                 }
             }],
             onChange:function(newValue, oldValue){
-                rowsPad.queryParam.del=newValue
+                rowsPad.data.queryParam.del=newValue
             }" />
-        </span>
+                </span>
             </div>
             <div style="margin-top:5px;"></div>
             <span name="checkedCount" style="margin-right:5px;"></span><span name="sum"></span>
@@ -440,14 +439,162 @@
         <table name="dg" style="width:100%;min-height:420px">
         </table>
         <div name="ft" style="padding:2px 5px;">
-            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true"
+            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-add" title="新增记录" plain="true"
                 onclick="rowsPad.addRow()"></a>
-            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true"
-                onclick="rowsPad.deleteRow()"></a>
-            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-dustbin" plain="true"
-                onclick="rowsPad.deleteRows()"></a>
+            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" title="批量操作" plain="true"
+                onclick="rowsPad.alterRowsStart()">批量操作</a>
         </div>
+
+        <div id="alterRowsPad" style="padding:5px;display:none;" class="easyui-window" title="批量操作" data-options="modal:true,closed:true,closable:true,
+        width:600">
+            <strong style="color:red">本操作是危险操作，若未选择任何记录，将操作当前查出的全部记录！</strong><br />
+            <span>当前将操作 <strong style="color:red" class="expectedRowCount"></strong> 条记录，请仔细核对！！！</span>
+
+
+            <form id="ff" method="post">
+                <div>
+                    <div style="">医院:</div>
+                    <input class="easyui-combobox" name="hospitalId" style="width:100%" data-options="
+        valueField:'hospitalId',
+        textField:'name',
+        panelHeight:'auto',
+        mode:'remote',
+        onShowPanel:function(){
+            $(this).combobox('reload')
+        },
+        loader: function (param, success, error) {
+            debugger
+            param.token = rowsPad.param.token;
+            param.kw=param.q;
+            param.ps = param.rows;
+            param.pn = param.page;
+            $.ajax({
+                url: '/maintain/hospitals',
+                type: 'get',
+                data: param,
+                success: function (data) {
+                    if (data.code != 0) {
+                        return false;
+                    } else {
+                        success(data.data);
+                    }
+
+                }
+            })
+        },
+        onChange:function(newValue, oldValue){
+            rowsPad.data.alterRows.hospitalIdNew=newValue
+        },
+        loadFilter: function (data) {
+            debugger
+            return data.rows;
+        },
+        iconWidth:20,
+        icons:[{
+            iconCls:'icon-clear',
+            handler: function(e){
+                $(e.data.target).combobox('setValue','');
+            }
+        }]
+        ">
+                </div>
+                <input name="frozen" class="easyui-combobox" style="width:100%" label="冻结:" labelPosition="top"
+                    data-options="editable:false,panelHeight:'auto',value:'',data:[
+                                {
+                                    text: '否',
+                                    value: '0'
+                                },{
+                                     text: '是',
+                                     value: '1'
+                                 }],
+                                 iconWidth:20,
+                                 icons:[{
+                                     iconCls:'icon-clear',
+                                     handler: function(e){
+                                         $(e.data.target).combobox('setValue','');
+                                     }
+                                 }],
+                                 onChange:function(newValue, oldValue){
+                                    rowsPad.data.alterRows.frozenNew=newValue
+                                 }" />
+                <input name="frozenReason" class="easyui-textbox" style="width:100%;height:200px;" label="冻结原因:"
+                    labelPosition="top" data-options="
+                        value:'',
+                        multiline:true,
+                        onChange:function(newValue, oldValue){
+                            rowsPad.data.alterRows.frozenReasonNew=newValue
+                        }" style="width:200px">
+
+                <input name="orderNo" class="easyui-numberbox" style="width:100%" label="排序:" labelPosition="top"
+                    data-options="
+                                value:'',
+                                precision:2,
+                                iconWidth:20,
+                                icons:[{
+                                    iconCls:'icon-clear',
+                                    handler: function(e){
+                                        $(e.data.target).textbox('setValue','');
+                                    }
+                                }],
+                                onChange:function(newValue, oldValue){
+                                    rowsPad.data.alterRows.orderNoNew=newValue
+                                }" style="width:200px">
+                <input name="addTime" class="easyui-datetimebox" style="width:100%" label="添加时间:" labelPosition="top"
+                    data-options="
+                                    value:'',
+                                    editable:false,
+                                    icons:[{
+                                        iconCls:'icon-clear',
+                                        handler: function(e){
+                                            $(e.data.target).datetimebox('setValue','');
+                                        }
+                                    }],
+                                    onChange:function(newValue, oldValue){
+                                        rowsPad.data.alterRows.addTimeNew=newValue
+                                    }">
+                <input name="alterTime" class="easyui-datetimebox" style="width:100%" label="更新时间:" labelPosition="top"
+                    data-options="
+                                        value:'',
+                                        editable:false,
+                                        icons:[{
+                                            iconCls:'icon-clear',
+                                            handler: function(e){
+                                                $(e.data.target).datetimebox('setValue','');
+                                            }
+                                        }],
+                                        onChange:function(newValue, oldValue){
+                                            rowsPad.data.alterRows.alterTimeNew=newValue
+                                        }"><input name="del" class="easyui-combobox" style="width:100%" label="删除:"
+                    labelPosition="top" data-options="editable:false,panelHeight:'auto',value:'',data:[
+                                {
+                                    text: '否',
+                                    value: '0'
+                                },{
+                                     text: '是',
+                                     value: '1'
+                                 }],
+                                 iconWidth:20,
+                                 icons:[{
+                                     iconCls:'icon-clear',
+                                     handler: function(e){
+                                         $(e.data.target).combobox('setValue','');
+                                     }
+                                 }],
+                                 onChange:function(newValue, oldValue){
+                                    rowsPad.data.alterRows.delNew=newValue
+                                 }" />
+            </form>
+            <div style="margin-top:5px;">
+                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-save"
+                    onclick="rowsPad.alterRows()">确定</a>
+                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+                    onclick="$('#ff').form('clear');$('#alterRowsPad').window('close');">取消</a>
+            </div>
+        </div>
+
     </div>
+
+
 </body>
 <script>
 

@@ -36,7 +36,7 @@ common.queryStringObject = function(queryString) {
     if (!queryString)
         queryString = window.location.search.substr(1);
     if (queryString.startsWith('?'))
-        queryString.substr(1)
+        queryString=queryString.substr(1)
     const queryList = queryString.split('&')
     let result = {}
     queryString && queryList.map((item) => {
