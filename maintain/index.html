@@ -25,7 +25,9 @@
     <script type="text/javascript" src="../libs/jquery-easyui-1.8.7/jquery.easyui.min.js"></script>
 </head>
 <style>
-
+.ztree li a.curSelectedNode {
+    height:18px!important;
+}
 </style>
 
 <body style="margin:0;padding:0;">
@@ -60,7 +62,13 @@
             narrow: true,
             border:false,
             fit: true,
-            tools: '#tab-tools'">
+            tools: '#tab-tools',
+            onSelect:function(title,index){
+                debugger
+               var tab= $(this).tabs('getTab',index);
+               var url=tab.panel('options').url;
+               zTreeObj.selectNode( zTreeObj.getNodesByFilter(function(node){if(node['_url']===url) return true; else return false;})[0])
+            }">
             </div>
             <div id="tab-tools">
                 <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-dustbin'"
@@ -113,20 +121,20 @@
             { name: '用户', _url: './hospital-user-manage.html' },
             { name: '广告', _url: './hospital-ad-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=医院端权限管理'}
-        ]
+        ],_url:null
     })
     zNodes.push({
         name: '门诊', children: [
             { name: '门诊', _url: './hospital-clinic-manage.html' },
             { name: '用户', _url: './hospital-clinic-user-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
-        ]
+        ],_url:null
     })
     zNodes.push({
         name: '运营', children: [
             { name: '用户', _url: './manager-user-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
-        ]
+        ],_url:null
     })
     zNodes.push({ name: '病员', _url: './patient-manage.html' })
     zNodes.push({ name: '文章', _url: './hospital-article-manage.html' })
@@ -138,7 +146,7 @@
     zNodes.push({
         name: '页面', children: [
             { name: '用户协议', _url: '/maintain/set-page-user-protocol.html' }
-        ]
+        ],_url:null
     })
     zNodes.push({ name: '运维用户', _url: './maintain-user-manage.html' })
     zNodes.push({ name: '参数', _url: './param-manage.html' })

@@ -15,6 +15,8 @@ maintainCommon.newTab = function (title, url) {
     tabPad = $('#tabPad').length==0?parent.$('#tabPad'):$('#tabPad')
 
     tabPad.tabs('add', {
+        url:url,
+        selected:true,
         title: title,
         closable: true,
         width: '100%',
