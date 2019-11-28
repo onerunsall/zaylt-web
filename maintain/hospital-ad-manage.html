@@ -72,7 +72,7 @@
                     },
                     {
                         field: 'type', title: '类型', width: 80, align: 'left', halign: 'center', formatter: function (value, row, index) {
-                            return value == 0 ? '无' : value == 1 ? '网页' : value == 2 ? '文章' : value == 3 ? '专家' :value == 4 ? '案例' :value == 5 ? '活动' :value == 6 ? '医院' :value == 7? '专家列表' :value == 8 ? '科室列表' : value == 9 ? '自描述' :'未知';
+                            return value == 0 ? '无' : value == 1 ? '网页' : value == 2 ? '文章' : value == 3 ? '专家' :value == 4 ? '案例' :value == 5 ? '活动' :value == 6 ? '医院主页' :value == 7? '专家列表' :value == 8 ? '科室列表' :'未知';
                         }
                     },
                     {
@@ -144,7 +144,7 @@
                     param.pn = param.page;
                     Object.assign(param, rowsPad.data.queryParam);
                     $.ajax({
-                        url: '/maintain/hosptial-ads',
+                        url: '/maintain/hospital-ads',
                         type: 'get',
                         data: param,
                         success: function (data) {
@@ -345,7 +345,6 @@
 
             <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                     <span style="">类型:</span>
-                    <!-- 0无;1网页;2文章详情;3专家详情;4案例详情;5活动详情;6医院介绍;7专家列表;8科室列表;9自描述; -->
         <input name="type" class="easyui-combobox" 
         data-options="editable:false,panelHeight:'auto',value:'',data:[{
 			text: '无',
@@ -366,7 +365,7 @@
 			text: '活动',
 			value: '5'
 		},{
-			text: '医院介绍',
+			text: '医院主页',
 			value: '6'
 		},{
 			text: '专家列表',
@@ -374,9 +373,6 @@
 		},{
 			text: '科室列表',
 			value: '8'
-		},{
-			text: '9自描述',
-			value: '9'
 		}],
                      iconWidth:20,
                      icons:[{

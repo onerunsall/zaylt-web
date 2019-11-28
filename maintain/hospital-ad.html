@@ -47,16 +47,16 @@
 
     var rowPad = {
         selector: "#rowPad",
-        param: { token: null, adId: null },
+        param: { token: null, hospitalAdId: null },
         row: {
 
         }, contentKindEditor: null,
         beforePage: function () {
-            rowPad.param.adId = queryStringObject.adId
+            rowPad.param.hospitalAdId = queryStringObject.hospitalAdId
 
             $.ajax({
                 type: 'get',
-                url: `/maintain/ad/${rowPad.param.adId}`,
+                url: `/maintain/hospital-ad/${rowPad.param.hospitalAdId}`,
                 async: false,
                 data: { token: rowPad.param.token },
                 success: function (data) {
@@ -101,8 +101,8 @@
         rowAlter: function () {
             $.ajax({
                 type: 'post',
-                url: '/maintain/ad-alter',
-                data: Object.assign({  adId: rowPad.param.adId, content: rowPad.contentKindEditor.html()},rowPad.row),
+                url: '/maintain/hospital-ad-alter',
+                data: Object.assign({  hospitalAdId: rowPad.param.hospitalAdId, content: rowPad.contentKindEditor.html()},rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -168,16 +168,33 @@
                         <td>类型</td>
                         <td><input name="type" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
                             value:rowPad.row.type
-                            ,data:[
-                            {
-                                 text: '无',
-                                 value: '0'
-                             },{
-                                 text: '网页',
-                                 value: '1'
-                             },{
+                            ,data:[{
+                                text: '无',
+                                value: '0'
+                            },{
+                                text: '网页',
+                                value: '1'
+                            },{
                                 text: '文章',
                                 value: '2'
+                            },{
+                                text: '专家',
+                                value: '3'
+                            },{
+                                text: '案例',
+                                value: '4'
+                            },{
+                                text: '活动',
+                                value: '5'
+                            },{
+                                text: '医院主页',
+                                value: '6'
+                            },{
+                                text: '专家列表',
+                                value: '7'
+                            },{
+                                text: '科室列表',
+                                value: '8'
                             }],
                              iconWidth:20,
                              icons:[{
@@ -196,7 +213,7 @@
                                 value:rowPad.row.place ,
                                 data:[
                                 {
-                                    text: '集采轮播图',
+                                    text: '首页轮播图',
                                     value: '0'
                                 }],
                                  iconWidth:20,
@@ -258,6 +275,53 @@
                                         style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td>医院</td>
+                            <td><input class="easyui-combobox" name="hospitalId" style="width:100%;" data-options="
+                                text:rowPad.row.hospitalName,
+                                value:rowPad.row.hospitalId,
+                                valueField:'hospitalId',
+                                textField:'name',
+                                panelHeight:'auto',
+                                mode:'remote',
+                                onShowPanel:function(){
+                                    $(this).combobox('reload')
+                                },
+                                loader: function (param, success, error) {
+                                    debugger
+                                    param.kw=param.q;
+                                    param.ps = param.rows;
+                                    param.pn = param.page;
+                                    $.ajax({
+                                        url: '/maintain/hospitals',
+                                        type: 'get',
+                                        data: param,
+                                        success: function (data) {
+                                            if (data.code != 0) {
+                                                return false;
+                                            } else {
+                                                success(data.data);
+                                            }
+                        
+                                        }
+                                    })
+                                },
+                                onChange:function(newValue, oldValue){
+                                    rowPad.row.hospitalId=newValue
+                                },
+                                loadFilter: function (data) {
+                                    debugger
+                                    return data.rows;
+                                },
+                                iconWidth:20,
+                                icons:[{
+                                    iconCls:'icon-clear',
+                                    handler: function(e){
+                                        $(e.data.target).combobox('setValue','');
+                                    }
+                                }]
+                                "></td>
                         </tr>
                 <tr>
                     <td>简介</td>

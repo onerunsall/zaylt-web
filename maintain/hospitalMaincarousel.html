@@ -152,7 +152,7 @@
                                                                                                     onclick="giveup.imgPreview(this.src)"> </span>
                 <span class="cell " :title="item.hospitalName"
                       v-html="giveup.strongKeyword(item.hospitalName, queryParams.kw, queryParams.ew)"></span>
-                <span class="cell ">{{item.jump==0?'无':item.jump==1?'网页':item.jump==2?'文章':item.jump==3?'专家':item.jump==4?'案例':item.jump==5?'活动':item.jump==6?'医院介绍':item.jump==7?'专家列表':item.jump==8?'科室列表':''}}</span>
+                <span class="cell ">{{item.jump==0?'无':item.jump==1?'网页':item.jump==2?'文章':item.jump==3?'专家':item.jump==4?'案例':item.jump==5?'活动':item.jump==6?'医院主页':item.jump==7?'专家列表':item.jump==8?'科室列表':''}}</span>
                 <span class="cell " style="text-align: right;width:50px" v-html="item.orderNo"></span>
                 <span class="cell ">{{item.addTime?moment(item.addTime).format('YYYY-MM-DD HH:mm:ss'):''}}</span>
                 <span class="cell ">
