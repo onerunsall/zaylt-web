@@ -99,7 +99,7 @@
 
                     debugger
                     if (rowPad.row.contentBtId)
-                        $.get(`/bigtxt/${rowPad.row.contentBtId}/${rowPad.row.contentBtId}`, function (data) {
+                        $.get(`/bigtxt/${rowPad.row.contentBtId}/${rowPad.row.contentBtId}?rand=${Math.random()}`, function (data) {
                             self.html(data)
                         })
                 }
