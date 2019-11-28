@@ -160,8 +160,8 @@
 
 
     function logout() {
-        $.removeCookie('token', { path: '/hospital' });
-        $.removeCookie('logining', { path: '/hospital' });
+        $.removeCookie('token', { path: '/' });
+        $.removeCookie('logining', { path: '/' });
         $.ajax({
             type:'post',
             url: '/hospital/logout',

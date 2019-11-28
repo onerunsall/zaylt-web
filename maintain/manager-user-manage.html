@@ -100,7 +100,7 @@
                 selectOnCheck: false,
                 multiSort: true,
                 autoRowHeight: false,
-                showFooter: true,
+                
                 onCheck: function (index, row) {
                     $(rowsPad.selector).find('[name=tb] [name=checkedCount]').html(`已选:${$(rowsPad.selector).find('[name=dg]').datagrid('getChecked').length}`)
                 },
@@ -143,9 +143,7 @@
                 loadFilter: function (data) {
                     debugger
                     var fdata = {
-                        rows: data.rows, total: data.sum.rowCount, footer: [
-                            { "cover": "", "money": data.sum.totalMoney||'', "name": "汇总：" }
-                        ]
+                        rows: data.rows, total: data.sum.rowCount
                     }
                     return fdata;
                 }, onLoadSuccess: function () {

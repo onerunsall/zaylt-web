@@ -95,7 +95,7 @@
                 selectOnCheck: false,
                 multiSort: true,
                 autoRowHeight: false,
-                showFooter: true,
+                
                 onCheck: function (index, row) {
                     $(rowsPad.selector).find('[name=tb] [name=checkedCount]').html(`已选:${$(rowsPad.selector).find('[name=dg]').datagrid('getChecked').length}`)
                 },

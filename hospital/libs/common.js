@@ -13,6 +13,7 @@ hospitalCommon.resCodeProcess = function (code, codeMsg) {
 
 hospitalCommon.newTab = function (title, url) {
     parent.$('#tabPad').tabs('add', {
+        url: url,
         title: title,
         closable: true,
         width: '100%',
