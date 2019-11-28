@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>忠安医联体医院平台-添加病员</title>
+    <title>忠安医联体医院平台-添加科室</title>
     <link rel="shortcut icon" href="/resource/favicon.ico" type="image/x-icon" />
 
 
@@ -27,8 +27,8 @@
     <script charset="utf-8" src="/libs/kindeditor/lang/zh-CN.js"></script>
     <script charset="utf-8" src="/libs/kindeditor/plugins/code/prettify.js"></script>
 
-    <script src="/hospital/libs/common.js"></script>
-    <link rel="stylesheet" href="/hospital/libs/common.css" />
+    <script src="/hospital/maintain/libs/common.js"></script>
+    <link rel="stylesheet" href="/hospital/maintain/libs/common.css" />
 </head>
 
 <style>
@@ -36,7 +36,7 @@
 </style>
 <script>
 
-  
+
 
     var queryStringObject = common.queryStringObject();
 
@@ -46,18 +46,35 @@
         row: {
 
         },
+        contentKindEditor: null,
         beforePage: function () {
         },
         afterPage: function () {
             $(rowPad.selector).find('[name=dg]').datagrid()
 
-           
+            rowPad.contentKindEditor = KindEditor.create('#rowPad [name=content]', {
+                cssPath: '/libs/kindeditor/plugins/code/prettify.css',
+                uploadJson: '/kindeditor/upload_json.jsp',
+                fileManagerJson: '/kindeditor/file_manager_json.jsp',
+                allowFileManager: true,
+                afterCreate: function () {
+                    var self = this;
+                    KindEditor.ctrl(document, 13, function () {
+                        self.sync();
+                        document.forms['example'].submit();
+                    });
+                    KindEditor.ctrl(self.edit.doc, 13, function () {
+                        self.sync();
+                        document.forms['example'].submit();
+                    });
+                }
+            })
         },
         rowAdd: function () {
             $.ajax({
                 type: 'post',
-                url: '/hospital/patient-add',
-                data: Object.assign({ token: rowPad.param.token},rowPad.row),
+                url: '/hospital/maintain/office-add',
+                data: Object.assign({ token: rowPad.param.token, content: rowPad.contentKindEditor.html() }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -103,7 +120,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>病员名称</td>
+                    <td>科室名称</td>
                     <td><input name="name" class="easyui-textbox" style="width:100%" data-options="
                         value:'',
                         iconWidth:20,
@@ -119,36 +136,55 @@
                         }" style="width:200px"></td>
                 </tr>
                 <tr>
-                    <td>电话</td>
-                    <td><input name="tel" class="easyui-textbox" style="width:100%" data-options="
-                        value:'',
-                        iconWidth:20,
-                        icons:[{
-                            iconCls:'icon-clear',
-                            handler: function(e){
-                                debugger
-                                $(e.data.target).textbox('setValue','');
-                            }
-                        }],
-                        onChange:function(newValue, oldValue){
-                            rowPad.row.tel=newValue
-                        }" style="width:200px"></td>
+                    <td>封面</td>
+                    <td>
+                        <div name="coverPad">
+                            <img style="height:30px;" src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.cover||"").parent().viewer({
+                                            url: "src",
+                                        });' />
+                            <input type="file" style="display:none;" onchange="
+                                        javascript:
+                                        var target = this;
+                                        if(this.files.length>0)
+                                            common.uploadImage(this,function(url){
+                                                $(target).prev().attr('src',url)
+                                                    rowPad.row.cover=url   
+                                            })
+                                    " />
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
+                                style="vertical-align: text-bottom;"
+                                onclick="$(this).prev().prev().attr('src','');rowPad.row.cover='';"></a>
+
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
+                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
+                        </div>
+                    </td>
                 </tr>
+
                 <tr>
-                    <td>身份证</td>
-                    <td><input name="idcardNo" class="easyui-textbox" style="width:100%;" data-options="
-                            value:'',
-                            iconWidth:20,
-                        icons:[{
-                            iconCls:'icon-clear',
-                            handler: function(e){
-                                debugger
-                                $(e.data.target).textbox('setValue','');
-                            }
-                        }],
-                            onChange:function(newValue, oldValue){
-                                rowPad.row.idcardNo=newValue
-                            }" style="width:200px"></td>
+                    <td>图片</td>
+                    <td>
+                        <div name="imagePad">
+                            <img style="height:30px;" src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.image||"").parent().viewer({
+                                            url: "src",
+                                        });' />
+                            <input type="file" style="display:none;" onchange="
+                                        javascript:
+                                        var target = this;
+                                        if(this.files.length>0)
+                                            common.uploadImage(this,function(url){
+                                                $(target).prev().attr('src',url)
+                                                    rowPad.row.image=url   
+                                            })
+                                    " />
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
+                                style="vertical-align: text-bottom;"
+                                onclick="$(this).prev().prev().attr('src','');rowPad.row.image='';"></a>
+
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
+                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>简介</td>
@@ -160,110 +196,83 @@
                             }" style="width:200px"></td>
                 </tr>
                 <tr>
-                    <td>状态</td>
-                    <td><input name="status" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
-                        value:'1',data:[
-                                    {
-                                        text: '未确认',
-                                        value: '1'
-                                    },{
-                                         text: '已确认',
-                                         value: '4'
-                                     }],
-                                     iconWidth:20,
-                                     icons:[{
-                                         iconCls:'icon-clear',
-                                         handler: function(e){
-                                             $(e.data.target).combobox('setValue','');
-                                         }
-                                     }],
-                                     onChange:function(newValue, oldValue){
-                                        rowPad.row.status=newValue
-                                     }" /></td>
+                    <td>内容</td>
+                    <td><textarea name="content" style="width: 100%;height: 30px;padding:1px 4px"></textarea></td>
                 </tr>
                 <tr>
-                        <td>确认时间</td>
-                        <td><input name="confirmedTime" class="easyui-datetimebox" style="width:100%" data-options="
-                                            prompt:'',
-                                            value:'',
-                                            editable:false,
-                                            icons:[{
-                                                iconCls:'icon-clear',
-                                                handler: function(e){
-                                                    $(e.data.target).datetimebox('setValue','');
-                                                }
-                                            }],
-                                            onChange:function(newValue, oldValue){
-                                                rowPad.row.confirmedTime=newValue
-                                            }"></td>
-                    </tr>
-               
+                    <td>整疗技术</td>
+                    <td><input name="zhenLiaoJiShu" class="easyui-textbox" style="width:100%;height:200px;"
+                            data-options="
+                                value:'',
+                                multiline:true,
+                                onChange:function(newValue, oldValue){
+                                    rowPad.row.zhenLiaoJiShu=newValue
+                                }" style="width:200px"></td>
+                </tr>
                 <tr>
-                    <td>门诊</td>
-                    <td><input class="easyui-combobox" name="clinicId" style="width:100%;" data-options="
-                        valueField:'clinicId',
-                        textField:'name',
-                        panelHeight:'auto',
-                        mode:'remote',
-                        onShowPanel:function(){
-                            $(this).combobox('reload')
-                        },
-                        loader: function (param, success, error) {
-                            debugger
-                            if(!rowPad.row.hospitalId)
-                                return;
-                            param.kw=param.q;
-                            param.ps = param.rows;
-                            param.pn = param.page;
-                            param.hospitalId =  rowPad.row.hospitalId;
-                            $.ajax({
-                                url: '/hospital/clinics',
-                                type: 'get',
-                                data: param,
-                                success: function (data) {
-                                    if (data.code != 0) {
-                                        return false;
-                                    } else {
-                                        success(data.data);
+                    <td>特色</td>
+                    <td><input name="teSe" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                                    value:'',
+                                    multiline:true,
+                                    onChange:function(newValue, oldValue){
+                                        rowPad.row.teSe=newValue
+                                    }" style="width:200px"></td>
+                </tr>
+                <tr>
+                    <td>优势</td>
+                    <td><input name="youShi" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                                value:'',
+                                multiline:true,
+                                onChange:function(newValue, oldValue){
+                                    rowPad.row.youShi=newValue
+                                }" style="width:200px"></td>
+                </tr>
+                <tr>
+                    <td>适应症</td>
+                    <td><input name="shiYingZheng" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                                    value:'',
+                                    multiline:true,
+                                    onChange:function(newValue, oldValue){
+                                        rowPad.row.shiYingZheng=newValue
+                                    }" style="width:200px"></td>
+                </tr>
+                <tr>
+                    <td>基础浏览量</td>
+                    <td><input name="viewCountBase" class="easyui-numberbox" style="width:100%" data-options="
+                                prompt:0,
+                                value:'',
+                                precision:0,
+                                iconWidth:20,
+                                icons:[{
+                                    iconCls:'icon-clear',
+                                    handler: function(e){
+                                        $(e.data.target).textbox('setValue','');
                                     }
-                
-                                }
-                            })
-                        },
-                        onChange:function(newValue, oldValue){
-                            rowPad.row.clinicId=newValue
-                        },
-                        loadFilter: function (data) {
-                            debugger
-                            return data.rows;
-                        },
-                        iconWidth:20,
-                        icons:[{
-                            iconCls:'icon-clear',
-                            handler: function(e){
-                                $(e.data.target).combobox('setValue','');
-                            }
-                        }]
-                        "></td>
+                                }],
+                                onChange:function(newValue, oldValue){
+                                    rowPad.row.viewCountBase=newValue
+                                }" style="width:200px"></td>
                 </tr>
-                
-               
-             
+                <tr>
+                    <td>基础分享量</td>
+                    <td><input name="shareCountBase" class="easyui-numberbox" style="width:100%" data-options="
+                                    prompt:0,
+                                    value:'',
+                                    precision:0,
+                                    iconWidth:20,
+                                    icons:[{
+                                        iconCls:'icon-clear',
+                                        handler: function(e){
+                                            $(e.data.target).textbox('setValue','');
+                                        }
+                                    }],
+                                    onChange:function(newValue, oldValue){
+                                        rowPad.row.shareCountBase=newValue
+                                    }" style="width:200px"></td>
+                </tr>
 
-                 <tr>
-                    <td>备注</td>
-                    <td><input name="remark" class="easyui-textbox" style="width:100%;height:200px;" data-options="
-                            value:'',
-                            multiline:true,
-                            onChange:function(newValue, oldValue){
-                                rowPad.row.remark=newValue
-                            }" style="width:200px"></td>
-                </tr>
-              
-                   <tr>
-                    <td>冻结</td>
-                    <td><input name="frozen" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
-                        value:0,data:[
+                <td>冻结</td>
+                <td><input name="frozen" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',value:0,data:[
                                     {
                                          text: '否',
                                          value: '0'
@@ -281,15 +290,6 @@
                                      onChange:function(newValue, oldValue){
                                         rowPad.row.frozen=newValue
                                      }" /></td>
-                </tr>
-                <tr>
-                    <td>冻结原因</td>
-                    <td><input name="frozenReason" class="easyui-textbox" style="width:100%;height:200px;" data-options="
-                            value:'',
-                            multiline:true,
-                            onChange:function(newValue, oldValue){
-                                rowPad.row.frozenReason=newValue
-                            }" style="width:200px"></td>
                 </tr>
                 <tr>
                     <td>排序号</td>

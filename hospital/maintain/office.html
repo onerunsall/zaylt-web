@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>忠安医联体医院平台-查看专家</title>
+    <title>忠安医联体医院平台-查看科室</title>
     <link rel="shortcut icon" href="/resource/favicon.ico" type="image/x-icon" />
 
 
@@ -27,8 +27,8 @@
     <script charset="utf-8" src="/libs/kindeditor/lang/zh-CN.js"></script>
     <script charset="utf-8" src="/libs/kindeditor/plugins/code/prettify.js"></script>
 
-    <script src="/hospital/libs/common.js"></script>
-    <link rel="stylesheet" href="/hospital/libs/common.css" />
+    <script src="/hospital/maintain/libs/common.js"></script>
+    <link rel="stylesheet" href="/hospital/maintain/libs/common.css" />
 </head>
 
 <style>
@@ -42,20 +42,21 @@
 <script>
 
 
+
     var queryStringObject = common.queryStringObject();
 
     var rowPad = {
         selector: "#rowPad",
-        param: { token: null, doctorId: null },
+        param: { token: null, officeId: null },
         row: {
 
         }, contentKindEditor: null,
         beforePage: function () {
-            rowPad.param.doctorId = queryStringObject.doctorId
+            rowPad.param.officeId = queryStringObject.officeId
 
             $.ajax({
                 type: 'get',
-                url: `/hospital/doctor/${rowPad.param.doctorId}`,
+                url: `/hospital/office/${rowPad.param.officeId}`,
                 async: false,
                 data: { token: rowPad.param.token },
                 success: function (data) {
@@ -72,13 +73,35 @@
         afterPage: function () {
             $(rowPad.selector).find('[name=dg]').datagrid()
 
+            rowPad.contentKindEditor = KindEditor.create('#rowPad [name=content]', {
+                cssPath: '/libs/kindeditor/plugins/code/prettify.css',
+                uploadJson: '/kindeditor/upload_json.jsp',
+                fileManagerJson: '/kindeditor/file_manager_json.jsp',
+                allowFileManager: true,
+                afterCreate: function () {
+                    var self = this;
+                    KindEditor.ctrl(document, 13, function () {
+                        self.sync();
+                        document.forms['example'].submit();
+                    });
+                    KindEditor.ctrl(self.edit.doc, 13, function () {
+                        self.sync();
+                        document.forms['example'].submit();
+                    });
 
+                    debugger
+                    if (rowPad.row.contentBtId)
+                        $.get(`/bigtxt/${rowPad.row.contentBtId}/${rowPad.row.contentBtId}?rand=${Math.random()}`, function (data) {
+                            self.html(data)
+                        })
+                }
+            })
         },
         rowAlter: function () {
             $.ajax({
                 type: 'post',
-                url: '/hospital/doctor-alter',
-                data: Object.assign({ token: rowPad.param.token, doctorId: rowPad.param.doctorId }, rowPad.row),
+                url: '/hospital/maintain/office-alter',
+                data: Object.assign({ token: rowPad.param.token, officeId: rowPad.param.officeId, content: rowPad.contentKindEditor.html() }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
                         alert(data.codeMsg)
@@ -125,7 +148,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>专家名称</td>
+                    <td>科室名称</td>
                     <td><input name="name" class="easyui-textbox" style="width:100%" data-options="
                         value:rowPad.row.name,
                         iconWidth:20,
@@ -141,55 +164,6 @@
                         }" style="width:200px"></td>
                 </tr>
 
-                <tr>
-                    <td>科室</td>
-                    <td><input class="easyui-combobox" name="officeId" style="width:100%;" data-options="
-                        text:rowPad.row.officeName,
-                        value:rowPad.row.officeId,
-                        valueField:'officeId',
-                        textField:'name',
-                        panelHeight:'auto',
-                        mode:'remote',
-                        onShowPanel:function(){
-                            $(this).combobox('reload')
-                        },
-                        loader: function (param, success, error) {
-                            debugger
-                            
-                            param.kw=param.q;
-                            param.ps = param.rows;
-                            param.pn = param.page;
-                            param.hospitalId = rowPad.row.hospitalId;
-                            $.ajax({
-                                url: '/hospital/offices',
-                                type: 'get',
-                                data: param,
-                                success: function (data) {
-                                    if (data.code != 0) {
-                                        return false;
-                                    } else {
-                                        success(data.data);
-                                    }
-                
-                                }
-                            })
-                        },
-                        onChange:function(newValue, oldValue){
-                            rowPad.row.officeId=newValue
-                        },
-                        loadFilter: function (data) {
-                            debugger
-                            return data.rows;
-                        },
-                        iconWidth:20,
-                        icons:[{
-                            iconCls:'icon-clear',
-                            handler: function(e){
-                                $(e.data.target).combobox('setValue','');
-                            }
-                        }]
-                        "></td>
-                </tr>
                 <tr>
                     <td>封面</td>
                     <td>
@@ -216,7 +190,31 @@
                     </td>
                 </tr>
 
+                <tr>
+                    <td>图片</td>
+                    <td>
+                        <div name="imagePad">
+                            <img style="height:30px;" src="./resource/loadholder.jpg" style="cursor:pointer;" onload='$(this).attr("src",rowPad.row.image||"").parent().viewer({
+                                            url: "src",
+                                        });' />
+                            <input type="file" style="display:none;" onchange="
+                                        javascript:
+                                        var target = this;
+                                        if(this.files.length>0)
+                                            common.uploadImage(this,function(url){
+                                                $(target).prev().attr('src',url)
+                                                    rowPad.row.image=url   
+                                            })
+                                    " />
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true"
+                                style="vertical-align: text-bottom;"
+                                onclick="$(this).prev().prev().attr('src','');rowPad.row.image='';"></a>
 
+                            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-choose" plain="true"
+                                style="vertical-align: text-bottom;" onclick="$(this).prev().prev().click()"></a>
+                        </div>
+                    </td>
+                </tr>
                 <tr>
                     <td>简介</td>
                     <td><input name="intro" class="easyui-textbox" style="width:100%;height:200px;" data-options="
@@ -227,24 +225,47 @@
                             }" style="width:200px"></td>
                 </tr>
                 <tr>
-                    <td>头衔</td>
-                    <td><input name="jobTitles" class="easyui-textbox" style="width:100%;height:200px;" data-options="
-                                prompt:'多个用英文逗号(,)隔开',
-                                    value:rowPad.row.jobTitles,
+                    <td>内容</td>
+                    <td><textarea name="content" style="width: 100%;height: 30px;padding:1px 4px"></textarea></td>
+                </tr>
+                <tr>
+                    <td>整疗技术</td>
+                    <td><input name="zhenLiaoJiShu" class="easyui-textbox" style="width:100%;height:200px;"
+                            data-options="
+                                    value:rowPad.row.zhenLiaoJiShu,
                                     multiline:true,
                                     onChange:function(newValue, oldValue){
-                                        rowPad.row.jobTitles=newValue
+                                        rowPad.row.zhenLiaoJiShu=newValue
                                     }" style="width:200px"></td>
                 </tr>
                 <tr>
-                    <td>备注</td>
-                    <td><input name="remark" class="easyui-textbox" style="width:100%;height:200px;" data-options="
-                            value:rowPad.row.remark,
+                    <td>特色</td>
+                    <td><input name="teSe" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                            value:rowPad.row.teSe,
                                         multiline:true,
                                         onChange:function(newValue, oldValue){
-                                            rowPad.row.remark=newValue
+                                            rowPad.row.teSe=newValue
                                         }" style="width:200px"></td>
                 </tr>
+                <tr>
+                    <td>优势</td>
+                    <td><input name="youShi" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                                value:rowPad.row.youShi,
+                                    multiline:true,
+                                    onChange:function(newValue, oldValue){
+                                        rowPad.row.youShi=newValue
+                                    }" style="width:200px"></td>
+                </tr>
+                <tr>
+                    <td>适应症</td>
+                    <td><input name="shiYingZheng" class="easyui-textbox" style="width:100%;height:200px;" data-options="
+                                    value:rowPad.row.shiYingZheng,
+                                        multiline:true,
+                                        onChange:function(newValue, oldValue){
+                                            rowPad.row.shiYingZheng=newValue
+                                        }" style="width:200px"></td>
+                </tr>
+                <tr>
 
                 <tr>
                     <td>浏览量</td>

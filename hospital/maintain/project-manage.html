@@ -24,8 +24,8 @@
     <script src="/libs/jquery.extend.oneall.js"></script>
 
 
-    <script src="/hospital/libs/common.js"></script>
-    <link rel="stylesheet" href="/hospital/libs/common.css" />
+    <script src="/hospital/maintain/libs/common.js"></script>
+    <link rel="stylesheet" href="/hospital/maintain/libs/common.css" />
 
 
 
@@ -85,7 +85,7 @@
                             debugger
                             if (value == '汇总：')
                                 return value;
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;height:100%;" title="${value||''}" onclick="hospitalCommon.newTab('项目:${common.subOmitRight(row.name, 10)}','/hospital/project.html?projectId=${row.projectId}')">${value}</a>`;
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;height:100%;" title="${value||''}" onclick="hospitalCommon.newTab('项目:${common.subOmitRight(row.name, 10)}','/hospital/maintain/project.html?projectId=${row.projectId}')">${value}</a>`;
                         }, styler: function (value, row, index) {
                             return ``
                         }
@@ -127,7 +127,7 @@
                     param.pn = param.page;
                     Object.assign(param, rowsPad.queryParam);
                     $.ajax({
-                        url: '/hospital/projects',
+                        url: '/hospital/maintain/projects',
                         type: 'get',
                         data: param,
                         success: function (data) {

@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>忠安医联体医院平台-添加项目</title>
+    <title>忠安医联体医院平台-添加文章</title>
     <link rel="shortcut icon" href="/resource/favicon.ico" type="image/x-icon" />
 
 
@@ -27,15 +27,14 @@
     <script charset="utf-8" src="/libs/kindeditor/lang/zh-CN.js"></script>
     <script charset="utf-8" src="/libs/kindeditor/plugins/code/prettify.js"></script>
 
-    <script src="/hospital/libs/common.js"></script>
-    <link rel="stylesheet" href="/hospital/libs/common.css" />
+    <script src="/hospital/maintain/libs/common.js"></script>
+    <link rel="stylesheet" href="/hospital/maintain/libs/common.css" />
 </head>
 
 <style>
 
 </style>
 <script>
-
 
 
     var queryStringObject = common.queryStringObject();
@@ -73,7 +72,7 @@
         rowAdd: function () {
             $.ajax({
                 type: 'post',
-                url: '/hospital/project-add',
+                url: '/hospital/maintain/article-add',
                 data: Object.assign({ token: rowPad.param.token, content: rowPad.contentKindEditor.html() }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
@@ -120,7 +119,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>项目名称</td>
+                    <td>文章名称</td>
                     <td><input name="name" class="easyui-textbox" style="width:100%" data-options="
                         value:'',
                         iconWidth:20,
@@ -161,7 +160,6 @@
                         </div>
                     </td>
                 </tr>
-
 
                 <tr>
                     <td>简介</td>
