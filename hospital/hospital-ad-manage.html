@@ -24,8 +24,8 @@
     <script src="/libs/jquery.extend.oneall.js"></script>
 
 
-    <script src="/maintain/libs/common.js"></script>
-    <link rel="stylesheet" href="/maintain/libs/common.css" />
+    <script src="/hospital/libs/common.js"></script>
+    <link rel="stylesheet" href="/hospital/libs/common.css" />
 
 
 
@@ -80,7 +80,6 @@
                             return value == 0 ? '首页轮播图' : '未知';
                         }
                     },
-                    { field: 'hospitalName', title: '医院', width: 150, align: 'left',  halign: 'center' },
                     { field: 'viewCount', title: '浏览量', width: 70, align: 'right', sortable: true, halign: 'center' },
                     { field: 'remark', title: '备注', width: 200, align: 'left', halign: 'center' },
                     {
@@ -102,7 +101,7 @@
                             debugger
                             if (value == '汇总：')
                                 return value;
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;height:100%;" title="${value || ''}" onclick="maintainCommon.newTab('医院广告:${common.subOmitRight(row.name, 10)}','/maintain/hospital-ad.html?hospitalAdId=${row.hospitalAdId}')">${value}</a>`;
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;height:100%;" title="${value || ''}" onclick="hospitalCommon.newTab('医院广告:${common.subOmitRight(row.name, 10)}','/hospital/hospital-ad.html?hospitalAdId=${row.hospitalAdId}')">${value}</a>`;
                         }, styler: function (value, row, index) {
                             return ``
                         }
@@ -144,25 +143,25 @@
                     param.pn = param.page;
                     Object.assign(param, rowsPad.data.queryParam);
                     $.ajax({
-                        url: '/maintain/hospital-ads',
+                        url: '/hospital/hospital-ads',
                         type: 'get',
                         data: param,
                         success: function (data) {
                             if (data.code != 0) {
                                 alert(data.codeMsg)
-                                maintainCommon.resCodeProcess(data.code, data.codeMsg)
+                                hospitalCommon.resCodeProcess(data.code, data.codeMsg)
                                 return false;
                             } else {
                                 rowsPad.data.rowsData.rows = data.data.rows;
                                 $.ajax({
-                                    url: '/maintain/hospital-ads-sum',
+                                    url: '/hospital/hospital-ads-sum',
                                     type: 'get',
                                     async: false,
                                     data: param,
                                     success: function (data) {
                                         if (data.code != 0) {
                                             alert(data.codeMsg)
-                                            maintainCommon.resCodeProcess(data.code, data.codeMsg)
+                                            hospitalCommon.resCodeProcess(data.code, data.codeMsg)
                                             return false;
                                         } else {
                                             rowsPad.data.rowsData.sum = data.data;
@@ -284,7 +283,7 @@
 
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/hospital-ads-alter`,
+                    url: `/hospital/hospital-ads-alter`,
                     data: Object.assign({ password: password, expectedRowCount: count, hospitalAdId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam, rowsPad.data.alterRows),
                     success: function (data) {
                         if (data.codeMsg)
@@ -404,52 +403,7 @@
                      }" />
 </span>
 
-<span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-    <span style="">医院:</span>
-    <input class="easyui-combobox" name="hospitalId" style="width:200px;"
-            data-options="
-valueField:'hospitalId',
-textField:'name',
-panelHeight:'auto',
-mode:'remote',
-onShowPanel:function(){
-    $(this).combobox('reload')
-},
-loader: function (param, success, error) {
-    debugger
-    param.token = rowsPad.param.token;
-    param.kw=param.q;
-    param.ps = param.rows;
-    param.pn = param.page;
-    $.ajax({
-        url: '/maintain/hospitals',
-        type: 'get',
-        data: param,
-        success: function (data) {
-            if (data.code != 0) {
-                return false;
-            } else {
-                success(data.data);
-            }
 
-        }
-    })
-},
-onChange:function(newValue, oldValue){
-    rowsPad.queryParam.hospitalId=newValue
-},
-loadFilter: function (data) {
-    debugger
-    return data.rows;
-},
-iconWidth:20,
-icons:[{
-    iconCls:'icon-clear',
-    handler: function(e){
-        $(e.data.target).combobox('setValue','');
-    }
-}]
-"></span>
                 <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                     <span style="">添加时间 From:</span>
                     <input name="addTimeFrom" class="easyui-datebox" style="width:135px" data-options="
