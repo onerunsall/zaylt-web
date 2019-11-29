@@ -41,7 +41,8 @@
 
 <script>
     
-
+    var loginingStr = $.cookie('logining');
+    var logining = loginingStr?JSON.parse($.cookie('logining')):loginingStr;
 
     var queryStringObject = common.queryStringObject();
 
@@ -49,7 +50,7 @@
         selector: "#rowPad",
         param: { token: null, patientId: null },
         row: {
-
+            hospitalId:logining.hospital.hospitalId
         }, contentKindEditor: null,
         beforePage: function () {
             rowPad.param.patientId = queryStringObject.patientId
@@ -249,7 +250,7 @@
                             param.pn = param.page;
                             param.hospitalId =  rowPad.row.hospitalId;
                             $.ajax({
-                                url: '/hospital/maintain/clinics',
+                                url: '/hospital/maintain/hospital-clinics',
                                 type: 'get',
                                 data: param,
                                 success: function (data) {

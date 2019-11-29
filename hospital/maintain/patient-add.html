@@ -35,7 +35,8 @@
 
 </style>
 <script>
-
+ var loginingStr = $.cookie('logining');
+    var logining = loginingStr?JSON.parse($.cookie('logining')):loginingStr;
   
 
     var queryStringObject = common.queryStringObject();
@@ -44,7 +45,7 @@
         selector: "#rowPad",
         param: { token: null },
         row: {
-
+            hospitalId:logining.hospital.hospitalId
         },
         beforePage: function () {
         },
@@ -217,7 +218,7 @@
                             param.pn = param.page;
                             param.hospitalId =  rowPad.row.hospitalId;
                             $.ajax({
-                                url: '/hospital/maintain/clinics',
+                                url: '/hospital/maintain/hospital-clinics',
                                 type: 'get',
                                 data: param,
                                 success: function (data) {
