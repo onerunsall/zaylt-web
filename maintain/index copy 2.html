@@ -194,8 +194,8 @@
 
 
     function logout() {
-        $.removeCookie('token', { path: '/maintain' });
-        $.removeCookie('logining', { path: '/maintain' });
+        $.removeCookie('token', { path: '/' });
+        $.removeCookie('logining', { path: '/' });
         $.ajax({
             type:'post',
             url: '/maintain/logout',
