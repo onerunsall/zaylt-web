@@ -80,19 +80,17 @@
   
 
 
-    if (token) {
         $.ajax({
             url: '/hospital/login-refresh',
             type: 'post',
             async: false,
             success: function (data) {
                 if (data.code == 0) {
-                    $.cookie('hospital-logining', JSON.stringify(data.data), { expires: 30, path: '/' });
+                    $.cookie('hospital-logining', JSON.stringify(data.data), { expires: 365, path: '/' });
                     location.href = './index.html';
                 }
             }
         })
-    }
 
 
     function login() {
@@ -116,7 +114,7 @@
                             if (data.codeMsg)
                                 alert(data.codeMsg)
                             if (data.code == 0) {
-                                $.cookie('hospital-logining', JSON.stringify(data.data), { expires: 30, path: '/' });
+                                $.cookie('hospital-logining', JSON.stringify(data.data), { expires: 365, path: '/' });
                                 location.href = './index.html';
                             }
                             else {

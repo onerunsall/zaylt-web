@@ -86,7 +86,6 @@
 
 
 
-    if (token) {
         $.ajax({
             url: '/hospital/login-refresh',
             type: 'post',
@@ -96,16 +95,12 @@
                     alert(data.codeMsg)
                 if (data.code == 0) {
                     logining = data.data
-                    $.cookie('hospital-logining', JSON.stringify(logining), { expires: 30, path: '/' });
+                    $.cookie('hospital-logining', JSON.stringify(logining), { expires: 365, path: '/' });
                 } else {
                     hospitalCommon.resCodeProcess(data.code, data.codeMsg)
                 }
             }
         })
-    } else {
-        alert('请登录')
-        hospitalCommon.resCodeProcess(20)
-    }
 
     $('.account').text(logining.account)
     $('.hospitalName').text(logining.hospital.name)

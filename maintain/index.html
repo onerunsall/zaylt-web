@@ -86,7 +86,6 @@
 
 
 
-    if (token) {
         $.ajax({
             url: '/maintain/login-refresh',
             type: 'post',
@@ -96,16 +95,12 @@
                     alert(data.codeMsg)
                 if (data.code == 0) {
                     logining = data.data
-                    $.cookie('maintain-logining', JSON.stringify(logining), { expires: 30, path: '/' });
+                    $.cookie('maintain-logining', JSON.stringify(logining), { expires: 365, path: '/' });
                 } else {
                     maintainCommon.resCodeProcess(data.code, data.codeMsg)
                 }
             }
         })
-    } else {
-        alert('请登录')
-        maintainCommon.resCodeProcess(20)
-    }
 
     $('.account').text(logining.account)
     if (logining.cover)
