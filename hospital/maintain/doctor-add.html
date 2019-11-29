@@ -36,13 +36,16 @@
 </style>
 <script>
 
+var loginingStr = $.cookie('logining');
+    var logining = loginingStr?JSON.parse($.cookie('logining')):loginingStr;
+    
     var queryStringObject = common.queryStringObject();
 
     var rowPad = {
         selector: "#rowPad",
         param: { token: null },
         row: {
-
+            hospitalId:logining.hospital.hospitalId
         },
         beforePage: function () {
         },

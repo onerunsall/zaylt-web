@@ -244,7 +244,7 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/hospital/patient-delete`,
+                    url: `/hospital/maintain/patient-delete`,
                     data: { token: rowsPad.param.token, patientId: patientIdsSplit },
                     success: function (data) {
                         if (data.codeMsg)
@@ -292,7 +292,7 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/hospital/patients-delete`,
+                    url: `/hospital/maintain/patients-delete`,
                     data: Object.assign({ token: rowsPad.param.token, password: password },rowsPad.queryParam),
                     success: function (data) {
                         if (data.codeMsg)

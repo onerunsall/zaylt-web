@@ -209,7 +209,7 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/hospital/article-delete`,
+                    url: `/hospital/maintain/article-delete`,
                     data: { token: rowsPad.param.token, articleId: articleIdsSplit },
                     success: function (data) {
                         if (data.codeMsg)
@@ -257,7 +257,7 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/hospital/articles-delete`,
+                    url: `/hospital/maintain/articles-delete`,
                     data: Object.assign({ token: rowsPad.param.token, password: password },rowsPad.queryParam),
                     success: function (data) {
                         if (data.codeMsg)

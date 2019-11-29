@@ -41,21 +41,22 @@
 
 <script>
 
-
+var loginingStr = $.cookie('logining');
+    var logining = loginingStr?JSON.parse($.cookie('logining')):loginingStr;
     var queryStringObject = common.queryStringObject();
 
     var rowPad = {
         selector: "#rowPad",
         param: { token: null, doctorId: null },
         row: {
-
+            hospitalId:logining.hospital.hospitalId
         }, contentKindEditor: null,
         beforePage: function () {
             rowPad.param.doctorId = queryStringObject.doctorId
 
             $.ajax({
                 type: 'get',
-                url: `/hospital/doctor/${rowPad.param.doctorId}`,
+                url: `/hospital/maintain/doctor/${rowPad.param.doctorId}`,
                 async: false,
                 data: { token: rowPad.param.token },
                 success: function (data) {

@@ -46,6 +46,9 @@
 
 <script>
 
+    var loginingStr = $.cookie('logining');
+    var logining = loginingStr?JSON.parse($.cookie('logining')):loginingStr;
+
 
 
     var queryStringObject = common.queryStringObject();
@@ -56,6 +59,7 @@
             token: null
         },
         queryParam: {
+            hospitalId:logining.hospital.hospitalId,
             del:0
         },
         beforePage: function () {
@@ -215,7 +219,7 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/hospital/doctor-delete`,
+                    url: `/hospital/maintain/doctor-delete`,
                     data: { token: rowsPad.param.token, doctorId: doctorIdsSplit },
                     success: function (data) {
                         if (data.codeMsg)
@@ -263,7 +267,7 @@
             if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/hospital/doctors-delete`,
+                    url: `/hospital/maintain/doctors-delete`,
                     data: Object.assign({ token: rowsPad.param.token,password:password },rowsPad.queryParam),
                     success: function (data) {
                         if (data.codeMsg)

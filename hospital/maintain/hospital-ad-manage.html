@@ -283,7 +283,7 @@
 
                 $.ajax({
                     type: 'post',
-                    url: `/hospital/hospital-ads-alter`,
+                    url: `/hospital/maintain/hospital-ads-alter`,
                     data: Object.assign({ password: password, expectedRowCount: count, hospitalAdId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam, rowsPad.data.alterRows),
                     success: function (data) {
                         if (data.codeMsg)

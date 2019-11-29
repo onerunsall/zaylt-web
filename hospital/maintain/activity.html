@@ -55,7 +55,7 @@
 
             $.ajax({
                 type: 'get',
-                url: `/hospital/activity/${rowPad.param.activityId}`,
+                url: `/hospital/maintain/activity/${rowPad.param.activityId}`,
                 async: false,
                 data: { token: rowPad.param.token },
                 success: function (data) {

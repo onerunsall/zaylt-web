@@ -33,7 +33,7 @@
 </body>
 
 <script>
-   $.get('/hospital/overview',function(data){
+   $.get('/hospital/maintain/overview',function(data){
     $('#patientCountOfOneDayRecently').text(data.data.patientCountOfOneDayRecently)
     $('#patientCountOfOneWeekRecently').text(data.data.patientCountOfOneWeekRecently)
     $('#patientCountOfHistory').text(data.data.patientCountOfHistory)
