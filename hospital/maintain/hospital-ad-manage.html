@@ -149,7 +149,7 @@
                         success: function (data) {
                             if (data.code != 0) {
                                 alert(data.codeMsg)
-                                hospitalCommon.resCodeProcess(data.code, data.codeMsg)
+                                hospitalCommon.breakCodeProcess(data.code, data.codeMsg)
                                 return false;
                             } else {
                                 rowsPad.data.rowsData.rows = data.data.rows;
@@ -161,7 +161,7 @@
                                     success: function (data) {
                                         if (data.code != 0) {
                                             alert(data.codeMsg)
-                                            hospitalCommon.resCodeProcess(data.code, data.codeMsg)
+                                            hospitalCommon.breakCodeProcess(data.code, data.codeMsg)
                                             return false;
                                         } else {
                                             rowsPad.data.rowsData.sum = data.data;

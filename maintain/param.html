@@ -60,7 +60,7 @@
                     if (data.code == 0) {
                         rowPad.row = data.data;
                     } else {
-                        maintainCommon.resCodeProcess(data.code, data.codeMsg)
+                        maintainCommon.breakCodeProcess(data.code, data.codeMsg)
                     }
                 }
             })
@@ -82,7 +82,7 @@
                             alert('操作成功')
                         location.reload()
                     } else {
-                        maintainCommon.resCodeProcess(data.code, data.codeMsg)
+                        maintainCommon.breakCodeProcess(data.code, data.codeMsg)
                     }
                 }
             })

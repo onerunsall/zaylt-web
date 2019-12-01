@@ -135,7 +135,7 @@
                         success: function (data) {
                             if (data.code != 0) {
                                 alert(data.codeMsg)
-                                hospitalCommon.resCodeProcess(data.code, data.codeMsg)
+                                hospitalCommon.breakCodeProcess(data.code, data.codeMsg)
                                 return false;
                             } else {
                                 success(data.data);

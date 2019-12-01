@@ -100,7 +100,7 @@
                 } else {
                     $.removeCookie('token', {path: '/'});
                     $.removeCookie('logining', {path: '/'});
-                    resCodeProcess(res.code,res.codeMsg)
+                    breakCodeProcess(res.code,res.codeMsg)
                 }
             }
         })

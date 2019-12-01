@@ -97,7 +97,7 @@
                     logining = data.data
                     $.cookie('maintain-logining', JSON.stringify(logining), { expires: 365, path: '/' });
                 } else {
-                    maintainCommon.resCodeProcess(data.code, data.codeMsg)
+                    maintainCommon.breakCodeProcess(data.code, data.codeMsg)
                 }
             }
         })

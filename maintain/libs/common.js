@@ -1,6 +1,6 @@
 var maintainCommon = {}
 
-maintainCommon.resCodeProcess = function (code, codeMsg) {
+maintainCommon.breakCodeProcess = function (code, codeMsg) {
     debugger
     if (code == 20) {
         if (confirm('现在去登录>>>')) {

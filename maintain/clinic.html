@@ -294,7 +294,7 @@
                                 if (res.code == 0) {
                                     this.items.splice(this.items.indexOf(item), 1);
                                 } else {
-                                    resCodeProcess(res.code, res.codeMsg)
+                                    breakCodeProcess(res.code, res.codeMsg)
                                 }
                             }
                         })
@@ -348,7 +348,7 @@
                                 this.items.push(item)
                             })
                         } else {
-                            resCodeProcess(res.code,res.codeMsg)
+                            breakCodeProcess(res.code,res.codeMsg)
                         }
                     }
                 })
@@ -401,7 +401,7 @@
                                     }
                                 }
                             } else {
-                                resCodeProcess(res.code, res.codeMsg)
+                                breakCodeProcess(res.code, res.codeMsg)
                             }
                         }
                     })

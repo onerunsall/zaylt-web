@@ -118,13 +118,13 @@
                     $.cookie('logining', JSON.stringify(data.data), { expires: 30, path: '/' });
                     account = data.data.account
                 } else {
-                    maintainCommon.resCodeProcess(data.code, data.codeMsg)
+                    maintainCommon.breakCodeProcess(data.code, data.codeMsg)
                 }
             }
         })
     } else {
         alert('请登录')
-        maintainCommon.resCodeProcess(20)
+        maintainCommon.breakCodeProcess(20)
     }
 
     $('#account').text(account)

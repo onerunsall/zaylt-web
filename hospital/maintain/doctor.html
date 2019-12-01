@@ -65,7 +65,7 @@ var loginingStr = $.cookie('hospital-logining');
                     if (data.code == 0) {
                         rowPad.row = data.data;
                     } else {
-                        hospitalCommon.resCodeProcess(data.code, data.codeMsg)
+                        hospitalCommon.breakCodeProcess(data.code, data.codeMsg)
                     }
                 }
             })
@@ -88,7 +88,7 @@ var loginingStr = $.cookie('hospital-logining');
                             alert('操作成功')
                         location.reload()
                     } else {
-                        hospitalCommon.resCodeProcess(data.code, data.codeMsg)
+                        hospitalCommon.breakCodeProcess(data.code, data.codeMsg)
                     }
                 }
             })

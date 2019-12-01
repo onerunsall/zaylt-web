@@ -225,7 +225,7 @@
                             }
                         }
                     } else {
-                        resCodeProcess(res.code,res.codeMsg)
+                        breakCodeProcess(res.code,res.codeMsg)
                     }
                 }
             })
@@ -280,7 +280,7 @@
                             }
                         }
                     } else {
-                        resCodeProcess(res.code,res.codeMsg)
+                        breakCodeProcess(res.code,res.codeMsg)
                     }
                 }
             })
@@ -344,7 +344,7 @@
                 if (res.code == 0) {
                     alert('成功')
                 } else {
-                    resCodeProcess(res.code,res.codeMsg)
+                    breakCodeProcess(res.code,res.codeMsg)
                 }
             }
         })
@@ -383,7 +383,7 @@
                         $('#cover').attr('src', res.data.url).show();
                         $('#coverDel').show();
                     } else {
-                        resCodeProcess(res.code,res.codeMsg)
+                        breakCodeProcess(res.code,res.codeMsg)
                     }
                     $(inputDom).remove()
                 }

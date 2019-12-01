@@ -372,7 +372,7 @@
                         $('#license').attr('src', res.data.url).show();
                         $('#licenseDel').show();
                     } else {
-                        resCodeProcess(res.code,res.codeMsg)
+                        breakCodeProcess(res.code,res.codeMsg)
                     }
                     $(inputDom).remove()
                 }
@@ -412,7 +412,7 @@
                         $('#cover').attr('src', res.data.url).show();
                         $('#coverDel').show();
                     } else {
-                        resCodeProcess(res.code,res.codeMsg)
+                        breakCodeProcess(res.code,res.codeMsg)
                     }
                     $(inputDom).remove()
                 }
@@ -487,7 +487,7 @@
                 $('#orderNo').val(vb.orderNo);
                 $('#orderNoShow').text(vb.orderNo);
             } else {
-                resCodeProcess(res.code,res.codeMsg)
+                breakCodeProcess(res.code,res.codeMsg)
             }
         }
     })
@@ -585,7 +585,7 @@
                 if (res.code == 0) {
                     location.reload()
                 } else {
-                    resCodeProcess(res.code,res.codeMsg)
+                    breakCodeProcess(res.code,res.codeMsg)
                 }
             }
         })

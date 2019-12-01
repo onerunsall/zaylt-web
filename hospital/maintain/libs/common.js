@@ -1,6 +1,6 @@
 var hospitalCommon = {}
 
-hospitalCommon.resCodeProcess = function (code, codeMsg) {
+hospitalCommon.breakCodeProcess = function (code) {
     debugger
     if (code == 20) {
         if (confirm('现在去登录>>>')) {
