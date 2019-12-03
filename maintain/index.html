@@ -95,7 +95,7 @@
                     alert(data.codeMsg)
                 if (data.code == 0) {
                     logining = data.data
-                    $.cookie('maintain-logining', JSON.stringify(logining), { expires: 365, path: '/' });
+                    $.cookie('maintainLogin', JSON.stringify(logining), { expires: 365, path: '/' });
                 } else {
                     maintainCommon.breakCodeProcess(data.code, data.codeMsg)
                 }
@@ -173,8 +173,7 @@
 
 
     function logout() {
-        $.removeCookie('maintain-token', { path: '/' });
-        $.removeCookie('maintain-logining', { path: '/' });
+       
         $.ajax({
             type: 'post',
             url: '/maintain/logout',

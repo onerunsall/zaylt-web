@@ -43,7 +43,7 @@
         var hospitaler;
       var  queryParamMap = giveup.parseQueryStr(location.search.substr(1));
       var  token = $.cookie('token');
-      var  loginStatus = $.cookie('maintain-logining');
+      var  loginStatus = $.cookie('maintainLogin');
      var   currentPath = queryParamMap.currentPath;
      var hospitalerId=queryParamMap.hospitalerId;
     </script>
@@ -345,7 +345,7 @@ function  alterPwd(){
             var fd = new FormData()
             fd.append('file', file);
             $.ajax({
-                url: rootDis+'imgupload?' + $.param({quality: r}),
+                url: rootDis+'upload-static-file?' + $.param({quality: r/10}),
                 type: 'POST',
                 data: fd,
                 cache: false,

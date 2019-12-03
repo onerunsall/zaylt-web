@@ -95,7 +95,7 @@
                     alert(data.codeMsg)
                 if (data.code == 0) {
                     logining = data.data
-                    $.cookie('hospital-logining', JSON.stringify(logining), { expires: 365, path: '/' });
+                    $.cookie('hospitalLogin', JSON.stringify(logining), { expires: 365, path: '/' });
                 } else {
                     hospitalCommon.breakCodeProcess(data.code, data.codeMsg)
                 }
@@ -141,8 +141,6 @@
 
 
     function logout() {
-        $.removeCookie('hospital-token', { path: '/' });
-        $.removeCookie('hospital-logining', { path: '/' });
         $.ajax({
             type: 'post',
             url: '/hospital/logout',

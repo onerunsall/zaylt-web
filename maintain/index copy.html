@@ -160,8 +160,7 @@
 
 
     function logout() {
-        $.removeCookie('token', {path: '/'});
-        $.removeCookie('logining', {path: '/'});
+     
         $.ajax({
             url:'/maintain/logout',
             data: {token: token},

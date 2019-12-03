@@ -64,7 +64,7 @@ common.uploadImage = function (inputDom, ook) {
     var fd = new FormData()
     fd.append('file', file);
     $.ajax({
-        url: '/imgupload?' + $.param({ quality: r }),
+        url: '/upload-static-file?' + $.param({ quality: r/10 }),
         type: 'POST',
         data: fd,
         cache: false,
