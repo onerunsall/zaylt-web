@@ -72,9 +72,16 @@
                             return value ? `<span class="image-previewer"><img src='${value}' style='width:50px' data-original='${value}'/></span>` : value
                         }
                     },
-                    { field: 'viewCount', title: '浏览量', width: 70, align: 'right', sortable: true, halign: 'center' },
+                    { field: 'done', title: '完成', width: 70, align: 'right', sortable: true, halign: 'center' , formatter: function (value, row, index) {
+                            return value==0 ? '未完成':value==1?'已完成':"未知"
+                        }
+                    },
                     { field: 'hospitalName', title: '医院', width: 200, align: 'left', halign: 'center' },
                     { field: 'remark', title: '备注', width: 200, align: 'left', halign: 'center' },
+                    { field: 'frozen', title: '冻结', width: 70, align: 'right', sortable: true, halign: 'center' , formatter: function (value, row, index) {
+                            return value==0 ? '否':value==1?'是':"未知"
+                        }
+                    },
                     { field: 'orderNo', title: '排序号', width: 70, align: 'right', sortable: true, halign: 'center' },
                     {
                         field: 'addTime', title: '添加时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
