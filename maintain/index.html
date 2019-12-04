@@ -25,9 +25,9 @@
     <script type="text/javascript" src="../libs/jquery-easyui-1.8.7/jquery.easyui.min.js"></script>
 </head>
 <style>
-.ztree li a.curSelectedNode {
-    height:18px!important;
-}
+    .ztree li a.curSelectedNode {
+        height: 18px !important;
+    }
 </style>
 
 <body style="margin:0;padding:0;">
@@ -80,27 +80,24 @@
     </div>
 </body>
 <script>
-    var token = $.cookie('token'), logining, zNodes;
+    var logining, zNodes;
 
 
-
-
-
-        $.ajax({
-            url: '/maintain/login-refresh',
-            type: 'post',
-            async: false,
-            success: function (data) {
-                if (data.codeMsg)
-                    alert(data.codeMsg)
-                if (data.code == 0) {
-                    logining = data.data
-                    $.cookie('maintainLogin', JSON.stringify(logining), { expires: 365, path: '/' });
-                } else {
-                    maintainCommon.breakCodeProcess(data.code, data.codeMsg)
-                }
+    $.ajax({
+        url: '/maintain/login-refresh',
+        type: 'post',
+        async: false,
+        success: function (data) {
+            if (data.codeMsg)
+                alert(data.codeMsg)
+            if (data.code == 0) {
+                logining = data.data
+                $.cookie('maintainLogin', JSON.stringify(logining), { expires: 365, path: '/' });
+            } else {
+                maintainCommon.breakCodeProcess(data.code, data.codeMsg)
             }
-        })
+        }
+    })
 
     $('.account').text(logining.account)
     if (logining.cover)
@@ -116,21 +113,21 @@
             { name: '用户', _url: './hospital-user-manage.html' },
             { name: '广告', _url: './hospital-ad-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=医院端权限管理'}
-        ],_url:null
+        ], _url: null
     })
     zNodes.push({
         name: '门诊', children: [
             { name: '门诊', _url: './hospital-clinic-manage.html' },
             { name: '用户', _url: './hospital-clinic-user-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
-        ],_url:null
+        ], _url: null
     })
     zNodes.push({ name: '运营手册', _url: './operating-manual-manage.html' })
     zNodes.push({
         name: '运营', children: [
             { name: '用户', _url: './manager-user-manage.html' },
             // {name: '权限管理', uurl: './userapis.html?currentPath=门诊端权限管理'}
-        ],_url:null
+        ], _url: null
     })
     zNodes.push({ name: '病员', _url: './patient-manage.html' })
     zNodes.push({ name: '文章', _url: './hospital-article-manage.html' })
@@ -143,11 +140,12 @@
     zNodes.push({
         name: '页面', children: [
             { name: '用户协议', _url: '/maintain/set-page-user-protocol.html' }
-        ],_url:null
+        ], _url: null
     })
-    zNodes.push({ name: '运维用户', _url: './maintain-user-manage.html' })
-    zNodes.push({ name: '参数', _url: './param-manage.html' })
-
+    if (logining.maintainUserId='100000000000000000000000000000000') {
+        zNodes.push({ name: '运维用户', _url: './maintain-user-manage.html' })
+        zNodes.push({ name: '参数', _url: './param-manage.html' })
+    }
 
     zNodes.push({ name: '退出登录', _url: '' })
     // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
@@ -174,11 +172,10 @@
 
 
     function logout() {
-       
+
         $.ajax({
             type: 'post',
             url: '/maintain/logout',
-            data: { token: token },
             async: true
         })
         location.href = './login.html';
