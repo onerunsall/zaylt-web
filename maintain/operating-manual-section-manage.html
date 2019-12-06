@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
 
+  
     <script src="/libs/jquery.min.js"></script>
     <script src="/libs/jquery.cookie.js"></script>
     <script src="/libs/layer/layer.js"></script>
@@ -26,6 +27,7 @@
 
     <script src="/maintain/libs/common.js"></script>
     <link rel="stylesheet" href="/maintain/libs/common.css" />
+
 
 
 
@@ -53,11 +55,10 @@
     var rowsPad = {
         selector: '#rowsPad',
         param: {
-            token: null
+            
         },
         data: {
-            queryParam: {
-            },
+            queryParam: {},
             alterRows: {},
             rowsData: {}
         },
@@ -66,9 +67,12 @@
         afterPage: function () {
             $(rowsPad.selector).find('[name=dg]').datagrid({
                 columns: [[
+                   
                     {
-                        field: 'cover', title: '封面', width: 60, align: 'center', halign: 'center', formatter: function (value, row, index) {
-                            return value ? `<span class="image-previewer"><img src='${value}' style='width:50px' data-original='${value}'/></span>` : value
+                        field: 'lowerCount', title: '下级数', width: 70, align: 'right', sortable: true, halign: 'center', formatter: function (value, row, index) {
+                            debugger
+
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value || ''}" onclick="maintainCommon.newTab('下级章节:${common.subOmitRight(row.name, 10)}','/maintain/operating-manual-section-manage.html?operatingManualId=${row.operatingManualId}&upperId=${row.operatingManualSectionId}&upperName=${row.name}')">${value}</a>`;
                         }
                     },
                     {
@@ -76,28 +80,10 @@
                             return value == 0 ? '否' : value == 1 ? '是' : "未知"
                         }
                     },
-                    { field: 'hospitalName', title: '医院', width: 200, align: 'left', halign: 'center' },
-                    {
-                        field: 'operatingManualSectionCount', title: '章节数', width: 70, align: 'right', sortable: true, halign: 'center', formatter: function (value, row, index) {
-                            debugger
-
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value || ''}" onclick="maintainCommon.newTab('章节:${common.subOmitRight(row.name, 10)}','/maintain/operating-manual-section-manage.html?operatingManualId=${row.operatingManualId}')">${value}</a>`;
-                        }
-                    },
-                    {
-                        field: 'hide', title: '隐藏', width: 70, align: 'center',  halign: 'center', formatter: function (value, row, index) {
-                            return value == 0 ? '否' : value == 1 ? '是' : "未知"
-                        }
-                    },
-                    {
-                        field: 'sample', title: '模板', width: 70, align: 'center',  halign: 'center', formatter: function (value, row, index) {
-                            return value == 0 ? '否' : value == 1 ? '是' : "未知"
-                        }
-                    },
                     { field: 'remark', title: '备注', width: 200, align: 'left', halign: 'center' },
                     {
-                        field: 'frozen', title: '冻结', width: 70, align: 'center',  halign: 'center', formatter: function (value, row, index) {
-                            return value == 0 ? '否' : value == 1 ? '是' : "未知"
+                        field: 'frozen', title: '冻结', width: 50, align: 'center', halign: 'center', formatter: function (value, row, index) {
+                            return  value==1?'是':'否';
                         }
                     },
                     { field: 'orderNo', title: '排序号', width: 70, align: 'right', sortable: true, halign: 'center' },
@@ -119,7 +105,7 @@
                             debugger
                             if (value == '汇总：')
                                 return value;
-                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;height:100%;" title="${value || ''}" onclick="maintainCommon.newTab('运营手册:${common.subOmitRight(row.name, 10)}','/maintain/operating-manual.html?operatingManualId=${row.operatingManualId}')">${value}</a>`;
+                            return `<a href="JavaScript:void(0)" style="width:100%;display:inline-block;" title="${value || ''}" onclick="maintainCommon.newTab('手册章节:${common.subOmitRight(row.name, 10)}','/maintain/operating-manual-section.html?operatingManualSectionId=${row.operatingManualSectionId}')">${value}</a>`;
                         }, styler: function (value, row, index) {
                             return ``
                         }
@@ -127,7 +113,7 @@
                 ]],
                 toolbar: `${rowsPad.selector} [name=tb]`,
                 footer: `${rowsPad.selector} [name=ft]`,
-                idField: 'operatingManualId',
+                idField: 'operatingManualSectionId',
                 pagination: true,
                 rownumbers: true,
                 emptyMsg: '无数据',
@@ -137,7 +123,6 @@
                 selectOnCheck: true,
                 multiSort: true,
                 autoRowHeight: false,
-
 
                 onCheck: function (index, row) {
                     $(rowsPad.selector).find('[name=tb] [name=checkedCount]').html(`已选:${$(rowsPad.selector).find('[name=dg]').datagrid('getChecked').length}`)
@@ -156,44 +141,47 @@
                 },
                 loader: function (param, success, error) {
                     debugger
-
-                    param.token = rowsPad.param.token;
                     param.ps = param.rows;
                     param.pn = param.page;
-                    Object.assign(param, rowsPad.data.queryParam);
+                    Object.assign(param,queryStringObject, rowsPad.param, rowsPad.data.queryParam);
+
                     $.ajax({
-                        url: '/maintain/operating-manuals',
+                        url: '/maintain/operating-manual-sections',
                         type: 'get',
                         data: param,
                         success: function (data) {
                             if (data.code != 0) {
                                 alert(data.codeMsg)
-                                maintainCommon.breakCodeProcess(data.code, data.codeMsg)
+                                maintainCommon.resCodeProcess(data.code, data.codeMsg)
                                 return false;
                             } else {
-                                rowsPad.data.rowsData = data.data;
-                                $.ajax({
-                                    url: '/maintain/operating-manuals-sum',
-                                    type: 'get',
-                                    data: param,
-                                    success: function (data) {
-                                        if (data.code != 0) {
-                                            alert(data.codeMsg)
-                                            maintainCommon.breakCodeProcess(data.code, data.codeMsg)
-                                            return false;
-                                        } else {
-                                            rowsPad.data.rowsData.sum = data.data;
-                                            success(rowsPad.data.rowsData);
-                                            $(rowsPad.selector).find('[name=tb] [name=sum]').html(`总浏览量:${rowsPad.data.rowsData.sum.totalViewCount || ''}`)
+                                rowsPad.data.rowsData.rows = data.data.rows;
+                                if (param.page == 1){
+                                    $.ajax({
+                                        url: '/maintain/operating-manual-sections-sum',
+                                        type: 'get',
+                                        data: param,
+                                        async:false,
+                                        success: function (data) {
+                                            if (data.code != 0) {
+                                                alert(data.codeMsg)
+                                                maintainCommon.resCodeProcess(data.code, data.codeMsg)
+                                                return false;
+                                            } else {
+                                                rowsPad.data.rowsData.sum = data.data;
+                                            }
+
                                         }
-
-                                    }
-                                })
-
+                                    })
+                                }
+                                $(rowsPad.selector).find('[name=tb] [name=sum]').html(``)
+                                success(rowsPad.data.rowsData);
                             }
 
                         }
                     })
+
+
                 },
                 loadFilter: function (data) {
                     debugger
@@ -210,10 +198,10 @@
         },
         addRow: function () {
             parent.$('#tabPad').tabs('add', {
-                title: '添加运营手册',
+                title: '新增手册章节:' + (queryStringObject.upperName||''),
                 closable: true,
                 width: "100%",
-                content: "<iframe src='operating-manual-add.html' style='width:100%;height:100%;border:none;'/>",
+                content: `<iframe src='operating-manual-section-add.html?${$.param(queryStringObject)}' style='width:100%;height:100%;border:none;'/>`,
                 tools: [{
                     iconCls: 'icon-mini-refresh',
                     handler: function () {
@@ -237,11 +225,11 @@
             if (selections == null || selections.length == 0) {
                 count = rowsPad.data.rowsData.sum.rowCount
             } else if (selections.length == 1) {
-                selectionIdArr = $(selections).oneall_attrs('operatingManualId');
+                selectionIdArr = $(selections).oneall_attrs('operatingManualSectionId');
                 count = 1;
             } else {
                 debugger
-                selectionIdArr = $(selections).oneall_attrs('operatingManualId');
+                selectionIdArr = $(selections).oneall_attrs('operatingManualSectionId');
                 count = selectionIdArr.length;
 
             }
@@ -266,7 +254,7 @@
                 }
                 count = rowsPad.data.rowsData.sum.rowCount
             } else if (selections.length == 1) {
-                selectionIdArr = $(selections).oneall_attrs('operatingManualId');
+                selectionIdArr = $(selections).oneall_attrs('operatingManualSectionId');
                 count = 1;
 
                 if (!confirm(`将操作记录 ${selections[0].name} ，确定吗？`))
@@ -274,7 +262,7 @@
                 todo = true
             } else {
                 debugger
-                selectionIdArr = $(selections).oneall_attrs('operatingManualId');
+                selectionIdArr = $(selections).oneall_attrs('operatingManualSectionId');
                 count = selectionIdArr.length;
 
                 var r = prompt(`你选择了 ${count} 条记录 ，确定吗？`, `请输入确认数量`);
@@ -288,13 +276,13 @@
                 }
             }
             if (todo) {
-                var password = prompt(`再次确认将修改 ${count} 条记录。确认请输入密码。`, `请输入密码`)
+                var password = prompt(`再次确认将删除 ${count} 条记录。确认请输入密码。`, `请输入密码`)
                 if (password != null) {
                     if (password.length == 0) {
                         alert('请输入密码')
                         return;
                     }
-                   var  password2 = prompt(`最后确认将修改 ${count} 条记录。确认请输入密码。`, `请输入密码`)
+                    var  password2 = prompt(`最后确认将修改 ${count} 条记录。确认请输入密码。`, `请输入密码`)
                     if (password2 != null) {
                         if (password2.length == 0) {
                             alert('再次输入密码')
@@ -311,11 +299,10 @@
                     return;
                 }
 
-
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/operating-manuals-alter`,
-                    data: Object.assign({ password: password, expectedRowCount: count, operatingManualId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam, rowsPad.data.alterRows),
+                    url: `/maintain/operating-manual-sections-alter`,
+                    data: Object.assign({ password: password, expectedRowCount: count, operatingManualSectionId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.param, rowsPad.data.queryParam, rowsPad.data.alterRows),
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
@@ -329,6 +316,9 @@
             }
         },
         deleteRows: function () {
+            if (!confirm(`删除可能导致关联数据出现错误，建议通过修改将其冻结。继续删除吗？`))
+                    return;
+
             var selections = $(rowsPad.selector).find('[name=dg]').datagrid('getSelections');
             var selectionIdArr = null;
             var count = 0;
@@ -345,7 +335,7 @@
                 }
                 count = rowsPad.data.rowsData.sum.rowCount
             } else if (selections.length == 1) {
-                selectionIdArr = $(selections).oneall_attrs('adId');
+                selectionIdArr = $(selections).oneall_attrs('operatingManualSectionId');
                 count = 1;
 
                 if (!confirm(`将删除记录 "${selections[0].name}" ，确定吗？`))
@@ -353,7 +343,7 @@
                 todo = true
             } else {
                 debugger
-                selectionIdArr = $(selections).oneall_attrs('adId');
+                selectionIdArr = $(selections).oneall_attrs('operatingManualSectionId');
                 count = selectionIdArr.length;
 
                 var r = prompt(`将删除 ${count} 条记录 ，确定吗？`, `请输入确认数量`);
@@ -392,8 +382,8 @@
 
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/operating-manuals-delete`,
-                    data: Object.assign({ password: password, expectedRowCount: count, operatingManualsId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam),
+                    url: `/maintain/operating-manual-sections-delete`,
+                    data: Object.assign({ password: password, expectedRowCount: count, operatingManualSectionId: selectionIdArr ? selectionIdArr.join() : '' },rowsPad.param, rowsPad.data.queryParam),
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
@@ -404,6 +394,7 @@
                 })
             }
         }
+        
     }
 
     rowsPad.beforePage();
@@ -449,101 +440,9 @@
                 rowsPad.data.queryParam.kw=newValue
             }" style="width:200px" /></span>
 
-                <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                    <span style="">医院:</span>
-                    <input class="easyui-combobox" name="hospitalId" style="width:200px;" data-options="
-            valueField:'hospitalId',
-            textField:'name',
-            panelHeight:'auto',
-            mode:'remote',
-            onShowPanel:function(){
-                $(this).combobox('reload')
-            },
-            loader: function (param, success, error) {
-                debugger
-                param.token = rowsPad.param.token;
-                param.kw=param.q;
-                param.ps = param.rows;
-                param.pn = param.page;
-                $.ajax({
-                    url: '/maintain/hospitals',
-                    type: 'get',
-                    data: param,
-                    success: function (data) {
-                        if (data.code != 0) {
-                            return false;
-                        } else {
-                            success(data.data);
-                        }
-    
-                    }
-                })
-            },
-            onChange:function(newValue, oldValue){
-                rowsPad.data.queryParam.hospitalId=newValue
-            },
-            loadFilter: function (data) {
-                debugger
-                return data.rows;
-            },
-            iconWidth:20,
-            icons:[{
-                iconCls:'icon-clear',
-                handler: function(e){
-                    $(e.data.target).combobox('setValue','');
-                }
-            }]
-            "></span>
-
             <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                    <span style="">完成:</span>
+                    <span style="">&nbsp;完成:</span>
                     <input name="done" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:'',data:[
-   {
-                                 text: '否',
-                                 value: '0'
-                             },{
-                                 text: '是',
-                                 value: '1'
-                             }],
-    iconWidth:20,
-    icons:[{
-        iconCls:'icon-clear',
-        handler: function(e){
-            $(e.data.target).combobox('setValue','');
-        }
-    }],
-    onChange:function(newValue, oldValue){
-        rowsPad.data.queryParam.done=newValue
-    }" />
-                </span>
-
-
-                <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                        <span style="">隐藏:</span>
-                        <input name="hide" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:'',data:[
-       {
-                                     text: '否',
-                                     value: '0'
-                                 },{
-                                     text: '是',
-                                     value: '1'
-                                 }],
-        iconWidth:20,
-        icons:[{
-            iconCls:'icon-clear',
-            handler: function(e){
-                $(e.data.target).combobox('setValue','');
-            }
-        }],
-        onChange:function(newValue, oldValue){
-            rowsPad.data.queryParam.hide=newValue
-        }" />
-                    </span>
-
-
-                    <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                            <span style="">模板:</span>
-                            <input name="sample" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:'',data:[
            {
                                          text: '否',
                                          value: '0'
@@ -559,9 +458,9 @@
                 }
             }],
             onChange:function(newValue, oldValue){
-                rowsPad.data.queryParam.sample=newValue
+                rowsPad.data.queryParam.done=newValue
             }" />
-                        </span>
+                </span>
 
                 <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                     <span style="">添加时间 From:</span>
@@ -592,9 +491,6 @@
             rowsPad.data.queryParam.addTimeTo=newValue
         }"></span>
 
-
-               
-
                 <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                     <span style="">&nbsp;冻结:</span>
                     <input name="frozen" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:'',data:[
@@ -617,19 +513,20 @@
             }" />
                 </span>
 
+               
             </div>
             <div style="margin-top:5px;"></div>
-            <span name="checkedCount" style="margin-right:5px;"></span><span name="sum"></span>
+            <span name="checkedCount" style="margin-right:5px;">已选:0</span><span name="sum"></span>
         </div>
         <table name="dg" style="width:100%;min-height:420px">
         </table>
         <div name="ft" style="padding:2px 5px;">
             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-add" title="新增" plain="true"
-                onclick="rowsPad.addRow()">新增</a>
-                <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" title="批量修改" plain="true"
-                onclick="rowsPad.alterRowsStart()">批量修改</a>
-            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-dustbin" title="删除" plain="true"
-                onclick="rowsPad.deleteRows()">删除</a>
+            onclick="rowsPad.addRow()">新增</a>
+        <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" title="批量修改" plain="true"
+            onclick="rowsPad.alterRowsStart()">批量修改</a>
+        <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" title="删除" plain="true"
+            onclick="rowsPad.deleteRows()">删除</a>
         </div>
 
         <div id="alterRowsPad" style="padding:5px;display:none;" class="easyui-window" title="批量操作" data-options="modal:true,closed:true,closable:true,
@@ -639,7 +536,7 @@
 
 
             <form id="ff" method="post">
-                    <input name="done" class="easyui-combobox" style="width:100%" label="完成:" labelPosition="top"
+                    <input name="完成" class="easyui-combobox" style="width:100%" label="完成:" labelPosition="top"
                     data-options="editable:false,panelHeight:'auto',value:'',data:[
                                 {
                                     text: '否',
@@ -657,25 +554,6 @@
                                  }],
                                  onChange:function(newValue, oldValue){
                                     rowsPad.data.alterRows.doneNew=newValue
-                                 }" />
-                    <input name="hide" class="easyui-combobox" style="width:100%" label="隐藏:" labelPosition="top"
-                    data-options="editable:false,panelHeight:'auto',value:'',data:[
-                                {
-                                    text: '否',
-                                    value: '0'
-                                },{
-                                     text: '是',
-                                     value: '1'
-                                 }],
-                                 iconWidth:20,
-                                 icons:[{
-                                     iconCls:'icon-clear',
-                                     handler: function(e){
-                                         $(e.data.target).combobox('setValue','');
-                                     }
-                                 }],
-                                 onChange:function(newValue, oldValue){
-                                    rowsPad.data.alterRows.hideNew=newValue
                                  }" />
                 <input name="frozen" class="easyui-combobox" style="width:100%" label="冻结:" labelPosition="top"
                     data-options="editable:false,panelHeight:'auto',value:'',data:[

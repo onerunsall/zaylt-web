@@ -57,7 +57,7 @@
 
             $.ajax({
                 type: 'get',
-                url: `/maintain/maintain-user/${rowPad.param.maintainUserId}`,
+                url: `/maintain/super-admin/maintain-user/${rowPad.param.maintainUserId}`,
                 async: false,
                 data: { token: rowPad.param.token },
                 success: function (data) {
@@ -78,7 +78,7 @@
         rowAlter: function () {
             $.ajax({
                 type: 'post',
-                url: '/maintain/maintain-user-alter',
+                url: '/maintain/super-admin/maintain-user-alter',
                 data: Object.assign({ token: rowPad.param.token, maintainUserId: rowPad.param.maintainUserId }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
@@ -278,28 +278,7 @@
                                                 rowPad.row.lastAliveTime=newValue
                                             }"></td>
                 </tr>
-                <tr>
-                    <td>删除</td>
-                    <td><input name="del" class="easyui-combobox" style="width:100%" data-options="editable:false,panelHeight:'auto',
-                        value:rowPad.row.del,data:[
-                                    {
-                                         text: '否',
-                                         value: '0'
-                                     },{
-                                         text: '是',
-                                         value: '1'
-                                     }],
-                                     iconWidth:20,
-                                     icons:[{
-                                         iconCls:'icon-clear',
-                                         handler: function(e){
-                                             $(e.data.target).combobox('setValue','');
-                                         }
-                                     }],
-                                     onChange:function(newValue, oldValue){
-                                        rowPad.row.del=newValue
-                                     }" /></td>
-                </tr>
+               
             </tbody>
         </table>
         <div style="margin-top:5px;">

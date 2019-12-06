@@ -52,11 +52,14 @@
 
     var rowsPad = {
         selector: '#rowsPad',
+        data:{
+            rowsData:{}
+        },
         param: {
             token: null
         },
         queryParam: {
-            del:0
+           
         },
         beforePage: function () {
         },
@@ -69,6 +72,11 @@
                         }
                     },
                     { field: 'phone', title: '手机', width: 100, align: 'left', halign: 'center' },
+                    {
+                        field: 'frozen', title: '冻结', width: 50, align: 'center', halign: 'center', formatter: function (value, row, index) {
+                            return value == 0 ? '否' : value==1?'是':'未知';
+                        }
+                    },
                     {
                         field: 'lastAliveTime', title: '最后活跃时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
                             return value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : value;
@@ -124,7 +132,7 @@
                     param.pn = param.page;
                     Object.assign(param, rowsPad.queryParam);
                     $.ajax({
-                        url: '/maintain/maintain-users',
+                        url: '/maintain/super-admin/maintain-users',
                         type: 'get',
                         data: param,
                         success: function (data) {
@@ -133,6 +141,7 @@
                                 maintainCommon.breakCodeProcess(data.code, data.codeMsg)
                                 return false;
                             } else {
+                                rowsPad.data.rowsData = data.data;
                                 success(data.data);
                                 $(rowsPad.selector).find('[name=tb] [name=sum]').html(`总余额:${data.data.sum.totalMoney||''}`)
                             }
@@ -174,97 +183,77 @@
                 ]
             });
         },
-        deleteRow: function () {
-            debugger
-            var dg = $(rowsPad.selector).find('[name=dg]');
-            var checked = dg.datagrid('getChecked');
-            var selected = dg.datagrid('getSelected');
-            var maintainUserIds = $(checked).oneall_attrs('maintainUserId');
-            var maintainUserIdsSplit = maintainUserIds.join();
-            var doDel = false;
-            if (checked.length == 1) {
-                if (confirm(`将删除 ${ (dg.datagrid('getRowIndex',checked[0])+1) +'. '+checked[0].name} ，确定吗？`)) {
-                    doDel = true;
-                }
-            } else if (checked.length > 1) {
-                var r = prompt(`将删除 ${checked.length} 条记录，确定吗？`, `输入删除数量`);
+        deleteRows: function () {
+            var selections = $(rowsPad.selector).find('[name=dg]').datagrid('getSelections');
+            var selectionIdArr = null;
+            var count = 0;
+            var todo = false;
+            if (selections == null || selections.length == 0) {
+                var r = prompt(`你没有选择任何记录，将删除当前全部 ${rowsPad.data.rowsData.sum.rowCount} 条记录 ，确定吗？`, `请输入确认数量`);
                 if (r != null) {
-                    if (r == checked.length) {
+                    if (r == rowsPad.data.rowsData.sum.rowCount) {
+                        todo = true;
+                    } else {
+                        alert('输入有误')
+                        return;
+                    }
+                }
+                count = rowsPad.data.rowsData.sum.rowCount
+            } else if (selections.length == 1) {
+                selectionIdArr = $(selections).oneall_attrs('adId');
+                count = 1;
+
+                if (!confirm(`将删除记录 "${selections[0].name}" ，确定吗？`))
+                    return;
+                todo = true
+            } else {
+                debugger
+                selectionIdArr = $(selections).oneall_attrs('adId');
+                count = selectionIdArr.length;
+
+                var r = prompt(`将删除 ${count} 条记录 ，确定吗？`, `请输入确认数量`);
+                if (r != null) {
+                    if (r == selections.length) {
+                        todo = true;
+                    } else {
+                        alert('输入有误')
+                        return;
+                    }
+                }
+            }
+            if (todo) {
+                var password = prompt(`再次确认将删除 ${count} 条记录。确认请输入密码。`, `请输入密码`)
+                if (password != null) {
+                    if (password.length == 0) {
+                        alert('请输入密码')
+                        return;
+                    }
+                    var password2 = prompt(`最后确认将删除 ${count} 条记录。确认请输入密码。`, `再次输入密码`)
+                    if (password2 != null) {
+                        if (password2.length == 0) {
+                            alert('请输入密码')
+                            return;
+                        }else if(password2 != password){
+                            alert('两次密码不一致')
+                            return;
+                        }
                         doDel = true;
                     } else {
-                        alert('删除数量有误')
+                        return;
                     }
-                }
-            } else {
-                if (selected == null) {
-                    alert('需选择一条记录')
                 } else {
-                    if (confirm(`将删除 ${(dg.datagrid('getRowIndex',selected)+1)+'. '+selected.name}，确定吗？`)) {
-                        doDel = true;
-                        maintainUserIdsSplit = selected.maintainUserId;
-                    }
+                    return;
                 }
-            }
 
-            if (doDel) {
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/maintain-user-delete`,
-                    data: { token: rowsPad.param.token, maintainUserId: maintainUserIdsSplit },
+                    url: `/maintain/super-admin/maintain-users-delete`,
+                    data: Object.assign({ password: password, expectedRowCount: count, maintainUserId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam),
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
                         if (data.code == 0) {
-                            $(rowsPad.selector).find('[name=dg]').datagrid('reload')
-                            $(rowsPad.selector).find('[name=dg]').datagrid('clearChecked')
-                        }
-                    }
-                })
-            }
-
-        }, deleteRows: function () {
-            var doDel = false;
-            var rowCount = $(rowsPad.selector).find('[name=dg]').datagrid('getPager').pagination('options').total;
-            var n = prompt(`将删除全部 ${rowCount} 条记录，确定吗？`, `请输入删除数量`)
-            if (n != null) {
-                if (n.length == 0) {
-                    alert('请输入删除数量')
-                    return;
-                }
-                if (n == rowCount) {
-                    doDel = true;
-                } else {
-                    alert('删除数量有误')
-                    return;
-                }
-            } else {
-                return;
-            }
-
-
-
-            var password = prompt(`危险操作，请输入密码。`, ``)
-            if (password != null) {
-                if (password.length == 0) {
-                    alert('请输入密码')
-                    return;
-                }
-                doDel = true;
-            } else {
-                return;
-            }
-
-            if (doDel) {
-                $.ajax({
-                    type: 'post',
-                    url: `/maintain/maintain-users-delete`,
-                    data: Object.assign({ token: rowsPad.param.token, password: password },rowsPad.queryParam),
-                    success: function (data) {
-                        if (data.codeMsg)
-                            alert(data.codeMsg)
-                        if (data.code == 0) {
-                            $(rowsPad.selector).find('[name=dg]').datagrid('reload')
-                            $(rowsPad.selector).find('[name=dg]').datagrid('clearChecked')
+                            $(rowsPad.selector).find('[name=dg]').datagrid('reload').datagrid('clearSelections');
                         }
                     }
                 })
@@ -313,51 +302,6 @@
                 rowsPad.queryParam.kw=newValue
             }" style="width:200px" /></span>
 
-            <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                <span style="">医院:</span>
-                <input class="easyui-combobox" name="hospitalId" style="width:200px;" data-options="
-            valueField:'hospitalId',
-            textField:'name',
-            panelHeight:'auto',
-            mode:'remote',
-            onShowPanel:function(){
-                $(this).combobox('reload')
-            },
-            loader: function (param, success, error) {
-                debugger
-                param.token = rowsPad.param.token;
-                param.kw=param.q;
-                param.ps = param.rows;
-                param.pn = param.page;
-                $.ajax({
-                    url: '/maintain/hospitals',
-                    type: 'get',
-                    data: param,
-                    success: function (data) {
-                        if (data.code != 0) {
-                            return false;
-                        } else {
-                            success(data.data);
-                        }
-    
-                    }
-                })
-            },
-            onChange:function(newValue, oldValue){
-                rowsPad.queryParam.hospitalId=newValue
-            },
-            loadFilter: function (data) {
-                debugger
-                return data.rows;
-            },
-            iconWidth:20,
-            icons:[{
-                iconCls:'icon-clear',
-                handler: function(e){
-                    $(e.data.target).combobox('setValue','');
-                }
-            }]
-            "></span>
 
             <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
                 <span style="">注册时间 From:</span>
@@ -439,27 +383,6 @@
             }" />
         </span>
 
-        <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                <span style="">删除:</span>
-                <input name="del" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:0,data:[
-           {
-                                         text: '否',
-                                         value: '0'
-                                     },{
-                                         text: '是',
-                                         value: '1'
-                                     }],
-            iconWidth:20,
-            icons:[{
-                iconCls:'icon-clear',
-                handler: function(e){
-                    $(e.data.target).combobox('setValue','');
-                }
-            }],
-            onChange:function(newValue, oldValue){
-                rowsPad.queryParam.del=newValue
-            }" />
-        </span>
             </div>
             <div style="margin-top:5px;"></div>
             <span name="checkedCount" style="margin-right:5px;"></span><span name="sum"></span>
@@ -469,8 +392,6 @@
         <div name="ft" style="padding:2px 5px;">
             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true"
                 onclick="rowsPad.addRow()"></a>
-            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true"
-                onclick="rowsPad.deleteRow()"></a>
             <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-dustbin" plain="true"
                 onclick="rowsPad.deleteRows()"></a>
         </div>

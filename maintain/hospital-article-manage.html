@@ -57,7 +57,6 @@
         },
         data: {
             queryParam: {
-                del:0
             },
             alterRows: {},
             rowsData: {}
@@ -75,6 +74,11 @@
                     { field: 'viewCount', title: '浏览量', width: 70, align: 'right', sortable: true, halign: 'center' },
                     { field: 'hospitalName', title: '医院', width: 200, align: 'left', halign: 'center' },
                     { field: 'remark', title: '备注', width: 200, align: 'left', halign: 'center' },
+                    {
+                        field: 'frozen', title: '冻结', width: 50, align: 'center', halign: 'center', formatter: function (value, row, index) {
+                            return value == 1 ? '是' : '否';
+                        }
+                    },
                     { field: 'orderNo', title: '排序号', width: 70, align: 'right', sortable: true, halign: 'center' },
                     {
                         field: 'addTime', title: '添加时间', width: 158, align: 'left', sortable: true, halign: 'center', formatter: function (value, row, index) {
@@ -242,13 +246,25 @@
                 }
             }
             if (todo) {
-                var password = prompt(`危险操作，请输入密码。`, ``)
+                var password = prompt(`再次确认将修改 ${count} 条记录。确认请输入密码。`, `请输入密码`)
                 if (password != null) {
                     if (password.length == 0) {
                         alert('请输入密码')
                         return;
                     }
-                    doDel = true;
+                   var  password2 = prompt(`最后确认将修改 ${count} 条记录。确认请输入密码。`, `请输入密码`)
+                    if (password2 != null) {
+                        if (password2.length == 0) {
+                            alert('再次输入密码')
+                            return;
+                        }else if(password2 != password){
+                            alert('两次密码不一致')
+                            return;
+                        }
+                        doDel = true;
+                    } else {
+                        return;
+                    }
                 } else {
                     return;
                 }
@@ -264,6 +280,82 @@
                             $(rowsPad.selector).find('[name=dg]').datagrid('reload')
                             $('#ff').form('clear');
                             $('#alterRowsPad').window('close')
+                        }
+                    }
+                })
+            }
+        },
+        deleteRows: function () {
+            var selections = $(rowsPad.selector).find('[name=dg]').datagrid('getSelections');
+            var selectionIdArr = null;
+            var count = 0;
+            var todo = false;
+            if (selections == null || selections.length == 0) {
+                var r = prompt(`你没有选择任何记录，将删除当前全部 ${rowsPad.data.rowsData.sum.rowCount} 条记录 ，确定吗？`, `请输入确认数量`);
+                if (r != null) {
+                    if (r == rowsPad.data.rowsData.sum.rowCount) {
+                        todo = true;
+                    } else {
+                        alert('输入有误')
+                        return;
+                    }
+                }
+                count = rowsPad.data.rowsData.sum.rowCount
+            } else if (selections.length == 1) {
+                selectionIdArr = $(selections).oneall_attrs('adId');
+                count = 1;
+
+                if (!confirm(`将删除记录 "${selections[0].name}" ，确定吗？`))
+                    return;
+                todo = true
+            } else {
+                debugger
+                selectionIdArr = $(selections).oneall_attrs('adId');
+                count = selectionIdArr.length;
+
+                var r = prompt(`将删除 ${count} 条记录 ，确定吗？`, `请输入确认数量`);
+                if (r != null) {
+                    if (r == selections.length) {
+                        todo = true;
+                    } else {
+                        alert('输入有误')
+                        return;
+                    }
+                }
+            }
+            if (todo) {
+                var password = prompt(`再次确认将删除 ${count} 条记录。确认请输入密码。`, `请输入密码`)
+                if (password != null) {
+                    if (password.length == 0) {
+                        alert('请输入密码')
+                        return;
+                    }
+                    var password2 = prompt(`最后确认将删除 ${count} 条记录。确认请输入密码。`, `再次输入密码`)
+                    if (password2 != null) {
+                        if (password2.length == 0) {
+                            alert('请输入密码')
+                            return;
+                        }else if(password2 != password){
+                            alert('两次密码不一致')
+                            return;
+                        }
+                        doDel = true;
+                    } else {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+
+                $.ajax({
+                    type: 'post',
+                    url: `/maintain/hospital-articles-delete`,
+                    data: Object.assign({ password: password, expectedRowCount: count, hospitalArticleId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam),
+                    success: function (data) {
+                        if (data.codeMsg)
+                            alert(data.codeMsg)
+                        if (data.code == 0) {
+                            $(rowsPad.selector).find('[name=dg]').datagrid('reload').datagrid('clearSelections');
                         }
                     }
                 })
@@ -411,27 +503,7 @@
             }" />
                 </span>
 
-                <span style='display:inline-block;margin-top:5px;margin-left:5px;'>
-                    <span style="">删除:</span>
-                    <input name="del" class="easyui-combobox" style="width:80px" data-options="editable:false,panelHeight:'auto',value:0,data:[
-           {
-                                         text: '否',
-                                         value: '0'
-                                     },{
-                                         text: '是',
-                                         value: '1'
-                                     }],
-            iconWidth:20,
-            icons:[{
-                iconCls:'icon-clear',
-                handler: function(e){
-                    $(e.data.target).combobox('setValue','');
-                }
-            }],
-            onChange:function(newValue, oldValue){
-                rowsPad.data.queryParam.del=newValue
-            }" />
-                </span>
+              
             </div>
             <div style="margin-top:5px;"></div>
             <span name="checkedCount" style="margin-right:5px;"></span><span name="sum"></span>
@@ -439,10 +511,12 @@
         <table name="dg" style="width:100%;min-height:420px">
         </table>
         <div name="ft" style="padding:2px 5px;">
-            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-add" title="新增记录" plain="true"
-                onclick="rowsPad.addRow()"></a>
-            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" title="批量操作" plain="true"
-                onclick="rowsPad.alterRowsStart()">批量操作</a>
+            <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-add" title="新增" plain="true"
+            onclick="rowsPad.addRow()">新增</a>
+        <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" title="批量修改" plain="true"
+            onclick="rowsPad.alterRowsStart()">批量修改</a>
+        <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-dustbin" title="删除" plain="true"
+            onclick="rowsPad.deleteRows()">删除</a>
         </div>
 
         <div id="alterRowsPad" style="padding:5px;display:none;" class="easyui-window" title="批量操作" data-options="modal:true,closed:true,closable:true,
@@ -564,25 +638,7 @@
                                         }],
                                         onChange:function(newValue, oldValue){
                                             rowsPad.data.alterRows.alterTimeNew=newValue
-                                        }"><input name="del" class="easyui-combobox" style="width:100%" label="删除:"
-                    labelPosition="top" data-options="editable:false,panelHeight:'auto',value:'',data:[
-                                {
-                                    text: '否',
-                                    value: '0'
-                                },{
-                                     text: '是',
-                                     value: '1'
-                                 }],
-                                 iconWidth:20,
-                                 icons:[{
-                                     iconCls:'icon-clear',
-                                     handler: function(e){
-                                         $(e.data.target).combobox('setValue','');
-                                     }
-                                 }],
-                                 onChange:function(newValue, oldValue){
-                                    rowsPad.data.alterRows.delNew=newValue
-                                 }" />
+                                        }">
             </form>
             <div style="margin-top:5px;">
                 <a href="JavaScript:void(0)" class="easyui-linkbutton" iconCls="icon-save"
