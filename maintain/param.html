@@ -52,7 +52,7 @@
 
             $.ajax({
                 type: 'get',
-                url: `/maintain/param/${rowPad.param.paramId}`,
+                url: `/maintain/super-admin/param/${rowPad.param.paramId}`,
                 async: false,
                 success: function (data) {
                     if (data.codeMsg)
@@ -72,7 +72,7 @@
         rowAlter: function () {
             $.ajax({
                 type: 'post',
-                url: '/maintain/param-alter',
+                url: '/maintain/super-admin/param-alter',
                 data: Object.assign({ paramId: rowPad.param.paramId},rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)

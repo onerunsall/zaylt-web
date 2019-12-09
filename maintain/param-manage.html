@@ -118,7 +118,7 @@
                     param.pn = param.page;
                     Object.assign(param, rowsPad.queryParam);
                     $.ajax({
-                        url: '/maintain/params',
+                        url: '/maintain/super-admin/params',
                         type: 'get',
                         data: param,
                         success: function (data) {
