@@ -132,7 +132,7 @@
                     param.pn = param.page;
                     Object.assign(param, rowsPad.queryParam);
                     $.ajax({
-                        url: '/maintain/super-admin/maintain-users',
+                        url: '/maintain/admin/maintain-users',
                         type: 'get',
                         data: param,
                         success: function (data) {
@@ -247,7 +247,7 @@
 
                 $.ajax({
                     type: 'post',
-                    url: `/maintain/super-admin/maintain-users-delete`,
+                    url: `/maintain/admin/maintain-users-delete`,
                     data: Object.assign({ password: password, expectedRowCount: count, maintainUserId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam),
                     success: function (data) {
                         if (data.codeMsg)

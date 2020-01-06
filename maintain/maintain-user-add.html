@@ -56,7 +56,7 @@
         rowAdd: function () {
             $.ajax({
                 type: 'post',
-                url: '/maintain/super-admin/maintain-user-add',
+                url: '/maintain/admin/maintain-user-add',
                 data: Object.assign({ token: rowPad.param.token }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)

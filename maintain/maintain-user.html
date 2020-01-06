@@ -57,7 +57,7 @@
 
             $.ajax({
                 type: 'get',
-                url: `/maintain/super-admin/maintain-user/${rowPad.param.maintainUserId}`,
+                url: `/maintain/admin/maintain-user/${rowPad.param.maintainUserId}`,
                 async: false,
                 data: { token: rowPad.param.token },
                 success: function (data) {
@@ -78,7 +78,7 @@
         rowAlter: function () {
             $.ajax({
                 type: 'post',
-                url: '/maintain/super-admin/maintain-user-alter',
+                url: '/maintain/admin/maintain-user-alter',
                 data: Object.assign({ token: rowPad.param.token, maintainUserId: rowPad.param.maintainUserId }, rowPad.row),
                 success: function (data) {
                     if (data.codeMsg)
