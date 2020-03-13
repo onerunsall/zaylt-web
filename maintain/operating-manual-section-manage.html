@@ -383,7 +383,7 @@
                 $.ajax({
                     type: 'post',
                     url: `/maintain/operating-manual-sections-delete`,
-                    data: Object.assign({ password: password, expectedRowCount: count, operatingManualSectionId: selectionIdArr ? selectionIdArr.join() : '' },rowsPad.param, rowsPad.data.queryParam),
+                    data: Object.assign(queryStringObject,{ password: password, expectedRowCount: count,operatingManualSectionId: selectionIdArr ? selectionIdArr.join() : '' },rowsPad.param, rowsPad.data.queryParam),
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)

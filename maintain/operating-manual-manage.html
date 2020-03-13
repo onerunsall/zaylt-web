@@ -345,7 +345,7 @@
                 }
                 count = rowsPad.data.rowsData.sum.rowCount
             } else if (selections.length == 1) {
-                selectionIdArr = $(selections).oneall_attrs('adId');
+                selectionIdArr = $(selections).oneall_attrs('operatingManualId');
                 count = 1;
 
                 if (!confirm(`将删除记录 "${selections[0].name}" ，确定吗？`))
@@ -353,7 +353,7 @@
                 todo = true
             } else {
                 debugger
-                selectionIdArr = $(selections).oneall_attrs('adId');
+                selectionIdArr = $(selections).oneall_attrs('operatingManualId');
                 count = selectionIdArr.length;
 
                 var r = prompt(`将删除 ${count} 条记录 ，确定吗？`, `请输入确认数量`);
@@ -393,7 +393,7 @@
                 $.ajax({
                     type: 'post',
                     url: `/maintain/operating-manuals-delete`,
-                    data: Object.assign({ password: password, expectedRowCount: count, operatingManualsId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam),
+                    data: Object.assign({ password: password, expectedRowCount: count, operatingManualId: selectionIdArr ? selectionIdArr.join() : '' }, rowsPad.data.queryParam),
                     success: function (data) {
                         if (data.codeMsg)
                             alert(data.codeMsg)
