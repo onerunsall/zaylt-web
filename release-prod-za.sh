@@ -32,7 +32,7 @@ echo
 echo "-package"
 commitid=`git rev-parse --short HEAD`
 env=/root/data/njshangka.com
-packageName="prod-renx-ylt-web-$version-$commitid.zip"
+packageName="prod-za-ylt-web-$version-$commitid.zip"
 echo $packageName
 mkdir dist
 cd ./src
