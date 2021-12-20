@@ -1,17 +1,47 @@
 <!DOCTYPE html>
-    <head>
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-        <script src="./js/tinymce/tinymce.min.js"></script>
-    </head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 
-    <body>
-        <textarea id="tinydemo">Hello, World!</textarea>
-    </body>
-    <script>
-        tinymce.init({
-            selector: '#tinydemo',
-            language:'zh_CN',
-            height: 600,
-        });
-    </script>
+<head>
+  <script src="./js/tinymce/tinymce.min.js"></script>
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+
+  <style>
+    .submit-btn {
+      width: 100%;
+      height: 30px;
+      border-radius: 10px;
+      background: #4a7bd4;
+      color: #fff;
+      margin-top: 20px;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+  <textarea id="tinydemo">Hello, World!</textarea>
+
+  <button class="submit-btn" onclick="submit()">提交</button>
+</body>
+<script>
+  tinymce.init({
+    selector: '#tinydemo',
+    language: 'zh_CN',
+    height: 600,
+  });
+
+  function submit() {
+
+    let data = tinyMCE.activeEditor.getContent()
+    // alert(data)
+    if (data) {
+      wx.miniProgram.postMessage({
+        data
+      })
+      wx.miniProgram.navigateBack()
+    }
+  }
+</script>
+
 </html>
