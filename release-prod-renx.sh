@@ -42,11 +42,11 @@ git push
 echo
 
 echo "-remote push"
-scp -P 22 ./dist/$packageName admin@47.110.157.60:$env
+scp -P 33699 ./dist/$packageName admin@47.110.157.60:$env
 echo
 
 echo "-remote deploy"
-ssh -p 22 -t admin@47.110.157.60 "unzip -q -o $env/$packageName -d $env/webroot/ylt"
+ssh -p 33699 -t admin@47.110.157.60 "unzip -q -o $env/$packageName -d $env/webroot/ylt"
 echo
 
 start https://njshangka.com/ylt/index.html
