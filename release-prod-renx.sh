@@ -7,7 +7,6 @@ if [ -z "$versionMsg" ]; then
  versionMsg='pack 更新'
 fi
 
-
 echo "-assign version"
 version=`date +%y%m%d%H`
 echo version: $version
