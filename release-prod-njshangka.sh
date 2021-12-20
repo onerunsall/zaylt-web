@@ -13,17 +13,6 @@ echo version: $version
 sed -i "s/version=\'.*\'/version=\'$version\'/g" ./src/main.js
 echo
 
-echo "-package"
-commitid=`git rev-parse --short HEAD`
-env=/root/data/njshangka.com
-packageName="prod-renx-ylt-web-$version-$commitid.zip"
-echo $packageName
-mkdir dist
-cd ./src
-../zip -q -r ../dist/$packageName ./
-cd ..
-echo
-
 echo "-git add"
 git add .
 echo
@@ -38,6 +27,17 @@ echo
 
 echo "-git push"
 git push
+echo
+
+echo "-package"
+commitid=`git rev-parse --short HEAD`
+env=/root/data/njshangka.com
+packageName="prod-renx-ylt-web-$version-$commitid.zip"
+echo $packageName
+mkdir dist
+cd ./src
+../zip -q -r ../dist/$packageName ./
+cd ..
 echo
 
 echo "-remote push"
