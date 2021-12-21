@@ -61,8 +61,8 @@
         let data = tinyMCE.activeEditor.getContent()
         alert(query.url + '?data=' + data)
         wx.miniProgram.navigateTo({
-          // url: query.url + '?data=' + data
-          url: '/pages/test/test'
+          url: query.url + '?data=' + data
+          // url: '/pages/test/test'
         });
       }
     },
