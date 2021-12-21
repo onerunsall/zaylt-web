@@ -21,13 +21,13 @@ echo "-git commit"
 git commit -am "$versionMsg"
 echo
 
-echo "-git pull"
-git pull
-echo
+#echo "-git pull"
+#git pull
+#echo
 
-echo "-git push"
-git push
-echo
+#echo "-git push"
+#git push
+#echo
 
 echo "-package"
 commitid=`git rev-parse --short HEAD`
