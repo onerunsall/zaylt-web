@@ -69,7 +69,6 @@
       }
     },
     mounted() {
-      console.log(this)
       this.init()
     },
     methods: {
@@ -79,7 +78,7 @@
           let res = await getArticalItem({
             id: this.option.id
           })
-          alert(res)
+          console.log(res)
           let data = res.data.data.row
           this.editData = data
           this.name = data.name
