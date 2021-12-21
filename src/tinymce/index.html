@@ -65,8 +65,7 @@
   // 拿到url参数
   function getparams() {
     var url = window.location.search;
-    alert(url)
-    var theRequest = new Object();
+    var theRequest = {};
     if (url.indexOf("?") != -1) {
       var str = url.substr(1);
       var strs = str.split("&");
@@ -74,7 +73,7 @@
         theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
       }
     }
-    console.log(theRequest)
+    alert(theRequest)
     return theRequest
   }
 </script>
