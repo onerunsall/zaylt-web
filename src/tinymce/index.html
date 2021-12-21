@@ -64,13 +64,14 @@
     methods: {
       async init() {
         this.getparams()
+        alert(this.option.id)
         if (this.option.id) {
           let params = {
             no: this.option.id,
             name: this.option.id
           }
           let res2 = await getUploadContent(params)
-          this.content = res2.data
+          this.content = res2
           console.log(this.content)
         }
       },
