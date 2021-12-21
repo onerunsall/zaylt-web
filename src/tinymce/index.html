@@ -31,7 +31,7 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
 <script>
   function getArticalItem(data) {
-    $.ajax({
+    return $.ajax({
       type: "POST",
       url: "https://njshangka.com/ylt/hospital-admin/get-article",
       data: data || {},
@@ -41,7 +41,7 @@
     })
   }
   function getUploadContent(data) {
-    $.ajax({
+    return $.ajax({
       type: "GET",
       url: `https://njshangka.com/ylt/content/${data.no}/${data.name}`,
       data: data || {},
