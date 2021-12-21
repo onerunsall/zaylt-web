@@ -34,7 +34,7 @@
   function submit() {
 
     let data = tinyMCE.activeEditor.getContent()
-    // alert(data)
+    alert(data)
     if (data) {
       wx.miniProgram.postMessage({
         data
