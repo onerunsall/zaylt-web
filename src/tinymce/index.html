@@ -59,7 +59,7 @@
     methods: {
       submit() {
         let data = tinyMCE.activeEditor.getContent()
-        alert(!!data)
+        alert(query.url + '?data=' + data)
         wx.miniProgram.navigateTo({
           url: query.url + '?data=' + data
         });
