@@ -106,9 +106,9 @@
       },
       submit() {
         let data = tinyMCE.activeEditor.getContent()
-        alert(option.url + '?data=' + data)
+        alert(this.option.url + '?data=' + data)
         wx.miniProgram.navigateTo({
-          url: option.url + '?data=' + data
+          url: this.option.url + '?data=' + data
         })
       }
     },
