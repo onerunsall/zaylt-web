@@ -30,16 +30,6 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
 <script>
-  function getArticalItem(data) {
-    return $.ajax({
-      type: "POST",
-      url: "https://njshangka.com/ylt/hospital-admin/get-article",
-      data: data || {},
-      header: {
-        'content-type': 'application/x-www-form-urlencoded',
-      },
-    })
-  }
   function getUploadContent(data) {
     return $.ajax({
       type: "GET",
@@ -75,19 +65,13 @@
       async init() {
         this.getparams()
         if (this.option.id) {
-          let res = await getArticalItem({
-            id: this.option.id
-          })
-          console.log(res)
-          let data = res.data.data.row
-          this.editData = data
-          this.name = data.name
           let params = {
-            no: data.contentNo,
-            name: data.contentNo
+            no: this.option.id,
+            name: this.option.id
           }
           let res2 = await getUploadContent(params)
           this.content = res2.data
+          console.log(this.content)
         }
       },
       // 拿到url参数
