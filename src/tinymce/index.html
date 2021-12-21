@@ -35,19 +35,6 @@
     height: 600,
   })
   console.log(tinymce)
-  console.log('mounted')
-  var url = window.location.href;
-  var dz_url = url.split('#')[0];
-  var cs = dz_url.split('?')[1];
-  var cs_arr = cs.split('&')
-  var cs = {};
-
-  for (var i = 0; i < cs_arr.length; i++) {
-
-    cs[cs_arr[i].split('=')[0]] = cs_arr[i].split('=')[1]
-  }
-  console.log(cs)
-
   new Vue({
     el: '#app',
     data() {
