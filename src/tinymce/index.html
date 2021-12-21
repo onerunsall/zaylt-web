@@ -35,10 +35,21 @@
     height: 600,
   })
   // 拿到url参数
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  const params = Object.fromEntries(urlSearchParams.entries());
-  console.log(params)
+  function getparams() {
+    var url = window.location.search;
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      var strs = str.split("&");
+      for (var i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+      }
+    }
+    console.log(theRequest)
+    return theRequest
+  }
 
+  getparams()
 
   new Vue({
     el: '#app',
@@ -47,8 +58,6 @@
         content: params.content
       }
     },
-
-
     methods: {
       submit() {
         let data = tinyMCE.activeEditor.getContent()
