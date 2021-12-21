@@ -64,7 +64,7 @@
     methods: {
       async init() {
         this.getparams()
-        alert(this.option.id)
+        alert(!!this.option.id)
         if (this.option.id) {
           let params = {
             no: this.option.id,
@@ -89,10 +89,10 @@
         }
       },
       submit() {
-        let data = tinyMCE.activeEditor.getContent()
-        alert(this.option.url + '?data=' + data)
+        let content = tinyMCE.activeEditor.getContent()
+        let contentNo = this.option.id || ''
         wx.miniProgram.navigateTo({
-          url: this.option.url + '?data=' + data
+          url: this.option.url + '?content=' + content + '&contentNo=' + contentNo
         })
       }
     },
