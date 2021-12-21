@@ -64,11 +64,11 @@
     methods: {
       async init() {
         this.getparams()
-        alert(!!this.option.id)
-        if (this.option.id) {
+        alert(!!this.option.contentNo)
+        if (this.option.contentNo) {
           let params = {
-            no: this.option.id,
-            name: this.option.id
+            no: this.option.contentNo,
+            name: this.option.contentNo
           }
           let res2 = await getUploadContent(params)
           this.content = res2
@@ -90,7 +90,7 @@
       },
       submit() {
         let content = tinyMCE.activeEditor.getContent()
-        let contentNo = this.option.id || ''
+        let contentNo = this.option.contentNo || ''
         wx.miniProgram.navigateTo({
           url: this.option.url + '?content=' + content + '&contentNo=' + contentNo
         })
