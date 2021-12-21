@@ -53,7 +53,7 @@
 </script>
 <script>
   let option = getparams()
-  // 拿到url参数
+
   tinymce.init({
     selector: '#tinydemo',
     language: 'zh_CN',
@@ -92,6 +92,7 @@
           this.content = res2.data
         }
       },
+      // 拿到url参数
       getparams() {
         var url = window.location.search;
         var theRequest = {};
