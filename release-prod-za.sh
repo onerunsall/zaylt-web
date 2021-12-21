@@ -10,7 +10,7 @@ fi
 echo "-assign version"
 version=`date +%y%m%d%H`
 echo version: $version
-sed -i "s/version=\'.*\'/version=\'$version\'/g" ./src/main.js
+sed -i "s/version=\'.*\'/version=\'$version\'/g" ./src/app.js
 echo
 
 echo "-git add"
