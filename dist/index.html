@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+		<title>医联体 - 主页</title>
+		<script src="https://lib.sinaapp.com/js/jquery/1.9.0/jquery.min.js"></script>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#maintain{
+				width: 100%;
+				height: auto;
+				text-align: center;
+			}
+			#yptConfig-name{
+				width: 100%;
+				font-size: 40px;
+				color: #333;
+				font-weight: 400;
+				font-family: "微软雅黑";
+				margin: 30px auto;
+			}
+			.box{
+				width: 100%;
+				max-width: 1200px;
+				margin: 50px auto;
+				height: auto;
+				text-align: center;
+			}
+			.box .item{
+				/*width: 300px;*/
+				/*margin: 50px 25px;*/
+				margin: 50px 3% 0 0;
+				width: 25%;
+				min-width: 250px;
+				height: 130px;
+				line-height: 130px;
+				font-size: 35px;
+				display: inline-block;
+				border: 1px solid #e5e5e5;
+				text-align: center;
+				text-decoration:none;
+			}
+		</style>
+		<script>
+			var yptConfig
+ 			$(document).ready(function () {
+            	debugger
+				$.get('/oss/alive/config.json',function(res){
+					debugger
+					yptConfig = res;
+					$('#yptConfig-name').text(yptConfig.name)
+					$('title').text(yptConfig.name+ " - 选择入口")
+				})
+        	});
+
+		</script>
+	</head>
+	<body>
+		<div id="maintain">	
+			<div id="yptConfig-name" ></div>
+			<div >入口选择</div>
+			<div class="box">
+				<a href="/ylt/wap/index.html" class="item" target="_blank">WAP</a>
+				<a href="/ylt/wap/index.html" class="item" target="_blank">APP</a>
+				<a href="/ylt/wap/index.html" class="item" target="_blank">微信小程序</a>
+				<a href="/ylt/maintain/index.html" class="item" target="_blank">运维</a>
+				<a href="/ylt/hospital/maintain/index.html"  class="item" target="_blank">医院运维</a>
+			</div>
+		</div>
+	</body>
+</html>
