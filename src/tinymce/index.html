@@ -39,7 +39,9 @@
       wx.miniProgram.postMessage({
         data
       })
-      wx.miniProgram.navigateBack()
+      wx.miniProgram.navigateTo({
+        url: "/pages/test/test?name=" + data
+      });
     }
   }
 </script>
