@@ -59,14 +59,10 @@
     methods: {
       submit() {
         let data = tinyMCE.activeEditor.getContent()
-        if (data) {
-          wx.miniProgram.postMessage({
-            data
-          })
-          wx.miniProgram.navigateTo({
-            url: query.url + '?data=' + data
-          });
-        }
+        alert(!!data)
+        wx.miniProgram.navigateTo({
+          url: query.url + '?data=' + data
+        });
       }
     },
   })
