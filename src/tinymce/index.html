@@ -78,8 +78,9 @@
           let res = await getArticalItem({
             id: this.option.id
           })
-          debugger
+
           let data = res.data.data.row
+          debugger
           this.editData = data
           this.name = data.name
           let params = {
