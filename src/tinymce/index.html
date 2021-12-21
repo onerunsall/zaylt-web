@@ -34,12 +34,17 @@
     language: 'zh_CN',
     height: 600,
   })
-  console.log(tinyMCE)
+  // 拿到url参数
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
+  console.log(params)
+
+
   new Vue({
     el: '#app',
     data() {
       return {
-        content: '321321 '
+        content: params.content
       }
     },
 
@@ -52,7 +57,7 @@
             data
           })
           wx.miniProgram.navigateTo({
-            url: '/pages/test/test?data=' + data
+            url: params.url + '?data=' + data
           });
         }
       }
