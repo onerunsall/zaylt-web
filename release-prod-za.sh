@@ -34,9 +34,11 @@ commitid=`git rev-parse --short HEAD`
 env=/root/data/njshangka.com
 packageName="prod-za-ylt-web-$version-$commitid.zip"
 echo $packageName
+rm -rf ./dist/
 mkdir dist
-cd ./src
-../zip -q -r ../dist/$packageName ./
+cp -r ./src/* ./dist/
+cd ./dist/
+../zip -q -r ./$packageName ./
 cd ..
 echo
 
