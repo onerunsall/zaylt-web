@@ -72,11 +72,11 @@
     },
     mounted() {
       console.log(this)
-      this.getparams()
       this.init()
     },
     methods: {
       async init() {
+        this.getparams()
         if (this.option.id) {
           let res = await getArticalItem({
             id: this.option.id
