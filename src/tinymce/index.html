@@ -101,7 +101,7 @@
       },
       async submit() {
         let content = tinyMCE.activeEditor.getContent()
-        console.log(this.option.contentNo)
+        console.log(content)
         let res = await uploadContent(content, this.option.contentNo)
 
         wx.miniProgram.postMessage({
