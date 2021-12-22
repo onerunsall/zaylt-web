@@ -40,6 +40,16 @@
       },
     })
   }
+  function uploadContent(data, no = '') {
+    return $.ajax({
+      type: "POST",
+      url: `https://njshangka.com/ylt/upload-content?no=${no}`,
+      data: data || {},
+      header: {
+        'content-type': 'application/octet-stream',
+      },
+    })
+  }
 </script>
 <script>
   tinymce.init({
@@ -64,7 +74,7 @@
     methods: {
       async init() {
         this.getparams()
-        alert(!!this.option.contentNo)
+        // alert(!!this.option.contentNo)
         if (this.option.contentNo) {
           let params = {
             no: this.option.contentNo,
@@ -88,12 +98,18 @@
           this.option = theRequest
         }
       },
-      submit() {
+      async submit() {
         let content = tinyMCE.activeEditor.getContent()
-        let contentNo = this.option.contentNo || ''
-        wx.miniProgram.navigateTo({
-          url: this.option.url + '?content=' + content + '&contentNo=' + contentNo
+
+        let res = await uploadContent(content, this.option.contentNo)
+        alert(res.data.data.contentNo)
+        wx.miniProgram.postMessage({
+          contentNo: res.data.data.contentNo
         })
+        wx.miniProgram.navigateBack()
+        // wx.miniProgram.navigateTo({
+        //   url: this.option.url + '?content=' + content + '&contentNo=' + contentNo
+        // })
       }
     },
   })
