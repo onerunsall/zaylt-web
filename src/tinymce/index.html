@@ -59,35 +59,34 @@
     force_p_newlines: false,
     images_upload_url: 'postAcceptor.php',
 
-    // file_picker_callback: function (callback, value, meta) {
-    //   $(`<input type='file'>`).change(function () {
-    //     var target = this;
-    //     if (this.files.length > 0) {
-    //       var file = this.files[0];
-    //       var fd = new FormData()
-    //       fd.append('file', file);
-    //       $.ajax({
-    //         url: '/wuliu/upload-file',
-    //         type: 'POST',
-    //         data: fd,
-    //         cache: false,
-    //         processData: false,
-    //         contentType: false,
-    //         async: true,
-    //         success: function (res) {
-    //           if (res.codeMsg)
-    //             $.messager.alert('提示', res.codeMsg)
-    //           if (res.code == 0) {
-    //             callback(res.data.url)
-    //             target.value = null
-    //             $(target).remove()
-    //           }
-    //         }
-    //       })
-    //     }
-    //   }).click()
-
-    // },
+    file_picker_callback: function (callback, value, meta) {
+      $(`<input type='file'>`).change(function () {
+        var target = this;
+        if (this.files.length > 0) {
+          var file = this.files[0];
+          var fd = new FormData()
+          fd.append('file', file);
+          $.ajax({
+            url: '/wuliu/upload-file',
+            type: 'POST',
+            data: fd,
+            cache: false,
+            processData: false,
+            contentType: false,
+            async: true,
+            success: function (res) {
+              if (res.codeMsg)
+                $.messager.alert('提示', res.codeMsg)
+              if (res.code == 0) {
+                callback(res.data.url)
+                target.value = null
+                $(target).remove()
+              }
+            }
+          })
+        }
+      }).click()
+    },
     images_upload_handler: function (blobInfo, success, failure) {
       debugger
       var xhr, formData;
