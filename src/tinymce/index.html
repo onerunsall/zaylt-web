@@ -51,15 +51,14 @@
   tinymce.init({
     selector: '#tinydemo',
     language: 'zh_CN',
-    plugins: 'image',
-    toolbar: 'image',
+    plugins: 'link,image',
+    toolbar: 'image,link',
     automatic_uploads: false, relative_urls: false,
     forced_root_block: 'div',
     force_p_newlines: false,
     images_upload_url: 'postAcceptor.php',
 
     file_picker_callback: function (callback, value, meta) {
-      debugger
       $(`<input type='file'>`).change(function () {
         var target = this;
         if (this.files.length > 0) {
