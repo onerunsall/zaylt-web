@@ -106,7 +106,7 @@
         console.log(res.data.no)
         wx.miniProgram.postMessage({
           data: {
-            contentNo: res
+            contentNo: res.data.no
           }
         })
         // wx.miniProgram.postMessage({ data: { foo: 'bar' } })
