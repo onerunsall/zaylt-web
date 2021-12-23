@@ -51,34 +51,73 @@
   tinymce.init({
     selector: '#tinydemo',
     language: 'zh_CN',
-    height: 600,
-    // mobile: {
-    //   plugins: ['autosave', 'lists', 'autolink'],
-    //   toolbar: ['undo', 'bold', 'italic', 'styleselect']
-    // },
-    plugins: 'image',
-    toolbar: 'image',
-    images_upload_handler: function (blobInfo, succFun, failFun) {
+    plugins: 'advlist autolink link image lists charmap print preview media paste save imagetools template pagebreak hr autosave fullpage fullscreen table textcolor textpattern wordcount insertdatetime legacyoutput pageembed code bdmap',
+    automatic_uploads: false, relative_urls: false,
+    forced_root_block: 'div',
+    force_p_newlines: false,
+    images_upload_url: 'postAcceptor.php',
+
+    init_instance_callback: function (editor) {
+      debugger;
+      if (item.contentUrl)
+        $.get(item.contentUrl, function (res) {
+          editor.contentSrc = res
+          editor.setContent(res)
+        })
+    },
+    file_picker_callback: function (callback, value, meta) {
+      debugger
+      $(`<input type='file'>`).change(function () {
+        var target = this;
+        if (this.files.length > 0) {
+          var file = this.files[0];
+          var fd = new FormData()
+          fd.append('file', file);
+          $.ajax({
+            url: '/wuliu/upload-file',
+            type: 'POST',
+            data: fd,
+            cache: false,
+            processData: false,
+            contentType: false,
+            async: true,
+            success: function (res) {
+              if (res.codeMsg)
+                $.messager.alert('提示', res.codeMsg)
+              if (res.code == 0) {
+                callback(res.data.url)
+                target.value = null
+                $(target).remove()
+              }
+            }
+          })
+        }
+      }).click()
+
+    },
+    images_upload_handler: function (blobInfo, success, failure) {
+      debugger
       var xhr, formData;
-      var file = blobInfo.blob();//转化为易于理解的file对象
+
       xhr = new XMLHttpRequest();
       xhr.withCredentials = false;
-      xhr.open('POST', 'https://njshangka.com/ylt/upload-file');
+      xhr.open('POST', 'postAcceptor.php');
+
       xhr.onload = function () {
         var json;
         if (xhr.status != 200) {
-          failFun('HTTP Error: ' + xhr.status);
+          failure('HTTP Error: ' + xhr.status);
           return;
         }
         json = JSON.parse(xhr.responseText);
         if (!json || typeof json.location != 'string') {
-          failFun('Invalid JSON: ' + xhr.responseText);
+          failure('Invalid JSON: ' + xhr.responseText);
           return;
         }
-        succFun(json.location);
+        success(json.location);
       };
       formData = new FormData();
-      formData.append('file', file, file.name);//此处与源文档不一样
+      formData.append('file', blobInfo.blob(), blobInfo.filename());
       xhr.send(formData);
     }
   })
