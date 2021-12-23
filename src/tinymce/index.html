@@ -35,7 +35,7 @@
       type: "GET",
       url: `https://njshangka.com/ylt/content/${data.no}/${data.name}`,
       data: data || {},
-      header: {
+      headers: {
         'content-type': 'application/octet-stream',
       },
     })
@@ -45,8 +45,8 @@
       type: "POST",
       url: `https://njshangka.com/ylt/upload-content?no=${no}`,
       data: data || {},
-      header: {
-        'content-type': 'application/octet-stream',
+      headers: {
+        'Content-Type': 'application/octet-stream',
       },
     })
   }
@@ -74,7 +74,7 @@
     methods: {
       async init() {
         this.getparams()
-        alert(this.option.contentNo)
+        // alert(this.option.contentNo)
         if (this.option.contentNo) {
           let params = {
             no: this.option.contentNo,
