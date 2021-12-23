@@ -33,7 +33,7 @@
   function getUploadContent(data) {
     return $.ajax({
       type: "GET",
-      url: `https://njshangka.com/ylt/content/${data.no}/${data.name}?r=` + new Date(),
+      url: `https://njshangka.com/ylt/content/${data.no}/${data.name}?r=` + new Date().getTime(),
     })
   }
   function uploadContent(data, no = '') {
