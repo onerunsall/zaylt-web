@@ -103,7 +103,7 @@
         let content = tinyMCE.activeEditor.getContent()
         console.log(content)
         let res = await uploadContent(content, this.option.contentNo)
-
+        console.log(JSON.stringify(res))
         wx.miniProgram.postMessage({
           contentNo: res.data.no
         })
