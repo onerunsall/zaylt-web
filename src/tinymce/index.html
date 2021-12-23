@@ -104,10 +104,9 @@
         console.log(content)
         let res = await uploadContent(content, this.option.contentNo)
 
-        // wx.miniProgram.postMessage({
-        //   contentNo: res.data.no
-        // })
-        wx.miniProgram.postMessage({ data: { foo: 'bar' } })
+        wx.miniProgram.postMessage({
+          contentNo: res.data.no
+        })
         wx.miniProgram.navigateBack()
         // wx.miniProgram.navigateTo({
         //   url: this.option.url + '?content=' + content + '&contentNo=' + contentNo
