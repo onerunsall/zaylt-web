@@ -57,14 +57,14 @@
     force_p_newlines: false,
     images_upload_url: 'postAcceptor.php',
 
-    init_instance_callback: function (editor) {
-      debugger;
-      if (item.contentUrl)
-        $.get(item.contentUrl, function (res) {
-          editor.contentSrc = res
-          editor.setContent(res)
-        })
-    },
+    // init_instance_callback: function (editor) {
+    //   // debugger;
+    //   if (item.contentUrl)
+    //     $.get(item.contentUrl, function (res) {
+    //       editor.contentSrc = res
+    //       editor.setContent(res)
+    //     })
+    // },
     file_picker_callback: function (callback, value, meta) {
       debugger
       $(`<input type='file'>`).change(function () {
