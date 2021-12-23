@@ -58,7 +58,12 @@
     forced_root_block: 'div',
     force_p_newlines: false,
     images_upload_url: 'postAcceptor.php',
-
+    mobile: {
+        menubar: true,
+        toolbar_drawer: true,
+        toolbar_sticky: true,
+        table_grid: true,
+    },
     file_picker_callback: function (callback, value, meta) {
       $(`<input type='file'>`).change(function () {
         var target = this;
