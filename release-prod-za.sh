@@ -13,22 +13,6 @@ echo version: $version
 sed -i "s/app\.version='.*'/app\.version='$version'/g" ./src/app.js
 echo
 
-echo "-git add"
-git add .
-echo
-
-echo "-git commit"
-git commit -am "$versionMsg"
-echo
-
-echo "-git pull"
-git pull
-echo
-
-echo "-git push"
-git push
-echo
-
 echo "-package"
 commitid=`git rev-parse --short HEAD`
 env=/root/data/njshangka.com
@@ -40,6 +24,22 @@ cp -r ./src/* ./dist/
 cd ./dist/
 ../zip -q -r ./$packageName ./
 cd ..
+echo
+
+echo "-git add"
+git add .
+echo
+
+echo "-git commit"
+git commit -am "$version-$versionMsg"
+echo
+
+echo "-git pull"
+git pull
+echo
+
+echo "-git push"
+git push
 echo
 
 echo "-remote push"
