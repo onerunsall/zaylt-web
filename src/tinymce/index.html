@@ -52,6 +52,9 @@
     selector: '#tinydemo',
     language: 'zh_CN',
     height: 600,
+    plugins: 'image',
+    toolbar: 'image',
+    images_upload_url: 'https://njshangka.com/ylt/upload-file',
   })
 
   new Vue({
@@ -70,7 +73,6 @@
     methods: {
       async init() {
         this.getparams()
-        // alert(this.option.contentNo)
         if (this.option.contentNo) {
           let params = {
             no: this.option.contentNo,
@@ -105,11 +107,7 @@
             contentNo: res.data.no
           }
         })
-        // wx.miniProgram.postMessage({ data: { foo: 'bar' } })
         wx.miniProgram.navigateBack()
-        // wx.miniProgram.navigateTo({
-        //   url: this.option.url + '?content=' + content + '&contentNo=' + contentNo
-        // })
       }
     },
   })
