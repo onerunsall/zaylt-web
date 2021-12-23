@@ -52,9 +52,35 @@
     selector: '#tinydemo',
     language: 'zh_CN',
     height: 600,
-    plugins: 'advlist autolink link image lists charmap print preview media paste save imagetools template pagebreak hr autosave fullpage fullscreen table textcolor textpattern wordcount insertdatetime legacyoutput pageembed code bdmap',
-    // toolbar: 'image,insertdatetime',
-    // images_upload_url: 'https://njshangka.com/ylt/upload-file',
+    mobile: {
+      plugins: ['autosave', 'lists', 'autolink'],
+      toolbar: ['undo', 'bold', 'italic', 'styleselect']
+    },
+    plugins: 'image',
+    toolbar: 'image',
+    images_upload_handler: function (blobInfo, succFun, failFun) {
+      var xhr, formData;
+      var file = blobInfo.blob();//转化为易于理解的file对象
+      xhr = new XMLHttpRequest();
+      xhr.withCredentials = false;
+      xhr.open('POST', 'https://njshangka.com/ylt/upload-file');
+      xhr.onload = function () {
+        var json;
+        if (xhr.status != 200) {
+          failFun('HTTP Error: ' + xhr.status);
+          return;
+        }
+        json = JSON.parse(xhr.responseText);
+        if (!json || typeof json.location != 'string') {
+          failFun('Invalid JSON: ' + xhr.responseText);
+          return;
+        }
+        succFun(json.location);
+      };
+      formData = new FormData();
+      formData.append('file', file, file.name);//此处与源文档不一样
+      xhr.send(formData);
+    }
   })
 
   new Vue({
