@@ -103,8 +103,12 @@
         let content = tinyMCE.activeEditor.getContent()
         console.log(content)
         let res = await uploadContent(content, this.option.contentNo)
+        console.log(res.data.no)
         wx.miniProgram.postMessage({
-          data: { contentNo: content }
+          data: {
+            content: content,
+            contentNo: res.data.no
+          }
         })
         // wx.miniProgram.postMessage({ data: { foo: 'bar' } })
         wx.miniProgram.navigateBack()
