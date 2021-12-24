@@ -38,9 +38,9 @@ echo "-git pull"
 git pull
 echo
 
-echo "-git push"
-git push
-echo
+# echo "-git push"
+# git push
+# echo
 
 echo "-git status"
 result=`git status`
