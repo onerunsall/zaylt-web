@@ -84,7 +84,7 @@
       table_grid: true,
     },
     file_picker_callback: function (callback, value, meta) {
-      console.log('开始')
+      alert('开始')
       //文件分类
       var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
       //后端接收上传文件的地址
@@ -111,14 +111,14 @@
         var file = this.files[0];
 
         var xhr, formData;
-        console.log(file.name)
+        alert(file.name)
         xhr = new XMLHttpRequest();
         xhr.withCredentials = false;
         xhr.open('POST', upurl);
         xhr.onload = function () {
 
           var res = JSON.parse(xhr.responseText);
-          console.log(res.code)
+          alert(res.code)
           if (res.code == 0) {
             callback(res.data.url);
           }
