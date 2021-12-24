@@ -82,9 +82,8 @@
     },
     file_picker_callback: function (callback, value, meta) {
         console.log('file_picker_callback')
-        console.log('meta.filetype : '+meta.filetype)
       //文件分类
-      var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
+      var filetype = null;
       //后端接收上传文件的地址
       var upurl = '/ylt/upload-file';
       //为不同插件指定文件类型及后端地址
@@ -103,7 +102,8 @@
       //模拟出一个input用于添加本地文件
       var input = document.createElement('input');
       input.setAttribute('type', 'file');
-      input.setAttribute('accept', filetype);
+      if(filetype)
+        input.setAttribute('accept', filetype);
       input.click();
       input.onchange = function () {
         var file = this.files[0];
