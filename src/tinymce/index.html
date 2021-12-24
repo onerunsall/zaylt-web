@@ -90,11 +90,11 @@
       //为不同插件指定文件类型及后端地址
       switch (meta.filetype) {
         case 'image':
-          filetype = '.jpg, .jpeg, .png, .gif';
+          filetype = 'image/*';
           // upurl = 'upimg.php';
           break;
         case 'media':
-          filetype = '.mp3, .mp4';
+          filetype = 'video/*, audio/*';
           // upurl = 'upfile.php';
           break;
         case 'file':
