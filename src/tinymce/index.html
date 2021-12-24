@@ -115,12 +115,12 @@
         xhr.onload = function () {
           var json;
           if (xhr.status != 200) {
-            failure('HTTP Error: ' + xhr.status);
+            alert('HTTP Error: ' + xhr.status);
             return;
           }
           json = JSON.parse(xhr.responseText);
           if (!json || typeof json.location != 'string') {
-            failure('Invalid JSON: ' + xhr.responseText);
+            alert('Invalid JSON: ' + xhr.responseText);
             return;
           }
           callback(json.location);
