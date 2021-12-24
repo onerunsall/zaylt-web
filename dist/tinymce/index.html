@@ -91,7 +91,7 @@
       }).click()
     },
     images_upload_handler: function (blobInfo, success, failure) {
-      debugger
+      // debugger
       var xhr, formData;
 
       xhr = new XMLHttpRequest();
@@ -101,6 +101,7 @@
       xhr.onload = function () {
         var json;
         if (xhr.status != 200) {
+          alert('出错了！')
           failure('HTTP Error: ' + xhr.status);
           return;
         }
@@ -109,6 +110,7 @@
           failure('Invalid JSON: ' + xhr.responseText);
           return;
         }
+        alert(json.location)
         success(json.location);
       };
       formData = new FormData();
