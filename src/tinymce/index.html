@@ -21,7 +21,7 @@
 
 <body>
   <div id="app" style="position:absolute;top:0;bottom:0;left:0;right:0;">
-    
+
     <textarea id="tinydemo" v-model="content"></textarea>
     <button class="submit-btn" @click="submit"
       style="height:45px;position:absolute;bottom:0;left:0;right:0;font-size: 16px;">
@@ -50,7 +50,7 @@
   }
 </script>
 <script>
-  var vConsole = new window.VConsole();
+  // var vConsole = new window.VConsole();
   tinymce.init({
     selector: '#tinydemo',
     language: 'zh_CN',
@@ -82,7 +82,7 @@
       table_grid: true,
     },
     file_picker_callback: function (callback, value, meta) {
-        console.log('file_picker_callback')
+      console.log('file_picker_callback')
       //文件分类
       var filetype = null;
       //后端接收上传文件的地址
@@ -103,10 +103,10 @@
       //模拟出一个input用于添加本地文件
       var input = document.createElement('input');
       input.setAttribute('type', 'file');
-      input.style['display']='none';
+      input.style['display'] = 'none';
       document.body.appendChild(input)
       input.click();
-      input.addEventListener("change", function() {
+      input.addEventListener("change", function () {
         var file = this.files[0];
 
         var xhr, formData;
