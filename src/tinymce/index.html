@@ -101,7 +101,7 @@
       }
       //模拟出一个input用于添加本地文件
       var input = document.createElement('input');
-      input.setAttribute('type', 'file');
+      input.setAttribute('type', meta.filetype);
       input.setAttribute('accept', filetype);
       input.click();
       input.onchange = function () {
