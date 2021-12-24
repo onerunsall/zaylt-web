@@ -81,7 +81,8 @@
       table_grid: true,
     },
     file_picker_callback: function (callback, value, meta) {
-      alert('开始')
+        console.log('file_picker_callback')
+        console.log('meta.filetype : '+meta.filetype)
       //文件分类
       var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
       //后端接收上传文件的地址
@@ -101,7 +102,7 @@
       }
       //模拟出一个input用于添加本地文件
       var input = document.createElement('input');
-      input.setAttribute('type', meta.filetype);
+      input.setAttribute('type', 'file');
       input.setAttribute('accept', filetype);
       input.click();
       input.onchange = function () {
