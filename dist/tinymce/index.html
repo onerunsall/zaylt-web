@@ -82,34 +82,82 @@
       table_grid: true,
     },
     file_picker_callback: function (callback, value, meta) {
-      $(`<input type='file'>`).change(function () {
-        var target = this;
-        if (this.files.length > 0) {
-          var file = this.files[0];
-          var fd = new FormData()
-          fd.append('file', file);
-          $.ajax({
-            url: '/ylt/upload-file',
-            type: 'POST',
-            data: fd,
-            cache: false,
-            processData: false,
-            contentType: false,
-            async: true,
-            success: function (res) {
-              if (res.codeMsg)
-                alert('提示', res.codeMsg)
-              if (res.code == 0) {
-                callback(res.data.url)
-                target.value = null
-                console.log(target)
-                $(target).remove()
-              }
-            }
-          })
-        }
-      }).click()
-    },
+      //文件分类
+      var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
+      //后端接收上传文件的地址
+      var upurl = '/ylt/upload-file';
+      //为不同插件指定文件类型及后端地址
+      switch (meta.filetype) {
+        case 'image':
+          filetype = '.jpg, .jpeg, .png, .gif';
+          // upurl = 'upimg.php';
+          break;
+        case 'media':
+          filetype = '.mp3, .mp4';
+          // upurl = 'upfile.php';
+          break;
+        case 'file':
+        default:
+      }
+      //模拟出一个input用于添加本地文件
+      var input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.setAttribute('accept', filetype);
+      input.click();
+      input.onchange = function () {
+        var file = this.files[0];
+
+        var xhr, formData;
+        console.log(file.name);
+        xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        xhr.open('POST', upurl);
+        xhr.onload = function () {
+          var json;
+          if (xhr.status != 200) {
+            failure('HTTP Error: ' + xhr.status);
+            return;
+          }
+          json = JSON.parse(xhr.responseText);
+          if (!json || typeof json.location != 'string') {
+            failure('Invalid JSON: ' + xhr.responseText);
+            return;
+          }
+          callback(json.location);
+        };
+        formData = new FormData();
+        formData.append('file', file, file.name);
+        xhr.send(formData);
+      },
+    // file_picker_callback: function (callback, value, meta) {
+    //   $(`<input type='file'>`).change(function () {
+    //     var target = this;
+    //     if (this.files.length > 0) {
+    //       var file = this.files[0];
+    //       var fd = new FormData()
+    //       fd.append('file', file);
+    //       $.ajax({
+    //         url: '/ylt/upload-file',
+    //         type: 'POST',
+    //         data: fd,
+    //         cache: false,
+    //         processData: false,
+    //         contentType: false,
+    //         async: true,
+    //         success: function (res) {
+    //           if (res.codeMsg)
+    //             alert('提示', res.codeMsg)
+    //           if (res.code == 0) {
+    //             callback(res.data.url)
+    //             target.value = null
+    //             console.log(target)
+    //             $(target).remove()
+    //           }
+    //         }
+    //       })
+    //     }
+    //   }).click()
+    // },
     // images_upload_handler: function (blobInfo, success, failure) {
     //   // debugger
     //   var xhr, formData;
