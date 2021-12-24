@@ -114,15 +114,15 @@
         xhr.open('POST', upurl);
         xhr.onload = function () {
           var json;
-          if (xhr.status != 200) {
-            alert('HTTP Error: ' + xhr.status);
-            return;
-          }
-          json = JSON.parse(xhr.responseText);
-          if (!json || typeof json.location != 'string') {
-            alert('Invalid JSON: ' + xhr.responseText);
-            return;
-          }
+          // if (xhr.status != 200) {
+          //   alert('HTTP Error: ' + xhr.status);
+          //   return;
+          // }
+          // json = JSON.parse(xhr.responseText);
+          // if (!json || typeof json.location != 'string') {
+          //   alert('Invalid JSON: ' + xhr.responseText);
+          //   return;
+          // }
           callback(json.location);
         };
         formData = new FormData();
