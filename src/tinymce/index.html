@@ -109,14 +109,12 @@
         var file = this.files[0];
 
         var xhr, formData;
-        alert(file.name)
         xhr = new XMLHttpRequest();
         xhr.withCredentials = false;
         xhr.open('POST', upurl);
         xhr.onload = function () {
 
           var res = JSON.parse(xhr.responseText);
-          alert(res.code)
           if (res.code == 0) {
             callback(res.data.url);
           }

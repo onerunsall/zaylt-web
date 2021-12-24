@@ -34,31 +34,31 @@ echo "-git commit"
 git commit -am "$version-$versionMsg"
 echo
 
-# echo "-git pull"
-# git pull
-# echo
+echo "-git pull"
+git pull
+echo
 
-# echo "-git push"
-# git push
-# echo
+echo "-git push"
+git push
+echo
 
-# echo "-git status"
-# result=`git status`
-# echo $result
-# ck=$(echo $result | grep "nothing to commit, working tree clean")
-# if [[ "$ck" = "" ]]
-# then 
-# 	echo -e "\033[31mfail: git有未提交的内容，请检查。\033[0m"
-# 	exit 1
-# fi
+echo "-git status"
+result=`git status`
+echo $result
+ck=$(echo $result | grep "nothing to commit, working tree clean")
+if [[ "$ck" = "" ]]
+then 
+	echo -e "\033[31mfail: git有未提交的内容，请检查。\033[0m"
+	exit 1
+fi
 
-# ck=$(echo $result | grep "Your branch is up to date with")
-# if [[ "$ck" = "" ]]
-# then
-# 	echo -e "\033[31mfail: git push失败，请检查。\033[0m"
-# 	exit 1
-# fi
-# echo
+ck=$(echo $result | grep "Your branch is up to date with")
+if [[ "$ck" = "" ]]
+then
+	echo -e "\033[31mfail: git push失败，请检查。\033[0m"
+	exit 1
+fi
+echo
 
 echo "-remote push"
 scp -P 33699 ./dist/$packageName admin@47.110.157.60:$env
