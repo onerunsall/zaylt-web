@@ -26,21 +26,21 @@ cd ./dist/
 cd ..
 echo
 
-# echo "-git add"
-# git add .
-# echo
+echo "-git add"
+git add .
+echo
 
-# echo "-git commit"
-# git commit -am "$version-$versionMsg"
-# echo
+echo "-git commit"
+git commit -am "$version-$versionMsg"
+echo
 
-# echo "-git pull"
-# git pull
-# echo
+echo "-git pull"
+git pull
+echo
 
-# echo "-git push"
-# git push
-# echo
+echo "-git push"
+git push
+echo
 
 echo "-git status"
 result=`git status`
