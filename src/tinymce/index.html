@@ -21,6 +21,7 @@
 
 <body>
   <div id="app" style="position:absolute;top:0;bottom:0;left:0;right:0;">
+    
     <textarea id="tinydemo" v-model="content"></textarea>
     <button class="submit-btn" @click="submit"
       style="height:45px;position:absolute;bottom:0;left:0;right:0;font-size: 16px;">
@@ -102,10 +103,10 @@
       //模拟出一个input用于添加本地文件
       var input = document.createElement('input');
       input.setAttribute('type', 'file');
-      if(filetype)
-        input.setAttribute('accept', filetype);
+      input.style['display']='none';
+      document.body.appendChild(input)
       input.click();
-      input.onchange = function () {
+      input.addEventListener("change", function() {
         var file = this.files[0];
 
         var xhr, formData;
@@ -123,7 +124,7 @@
         formData = new FormData();
         formData.append('file', file, file.name);
         xhr.send(formData);
-      };
+      });
     },
     // file_picker_callback: function (callback, value, meta) {
     //   $(`<input type='file'>`).change(function () {
