@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 2021/12/24 09:06:28 [emerg] 20476#16144: CreateFile() "C:\Users\ÔøÇìÈó\Desktop\¸»ÎÄ±¾\nginx-1.15.10/conf/nginx.conf" failed (1113: No mapping for the Unicode character exists in the target multi-byte code page)
+=======
+2021/12/23 17:47:23 [error] 25464#7464: *2 CreateFile() "C:\Users\rxw\Desktop\archive\source-code\za-ylt-web\nginx-1.15.10/../oss/alive/config.json" failed (3: The system cannot find the path specified), client: 127.0.0.1, server: , request: "GET /oss/alive/config.json HTTP/1.1", host: "127.0.0.1", referrer: "http://127.0.0.1/src/index.html"
+>>>>>>> 4cc06e8212349ec55fbfc32ffa64d329724d6b6e
