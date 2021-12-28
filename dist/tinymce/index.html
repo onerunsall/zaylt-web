@@ -206,6 +206,10 @@
           }
           let res2 = await getUploadContent(params)
           setTimeout(() => {
+            layer.open({
+              content: res2
+              , time: 3
+            })
             tinyMCE.activeEditor.setContent(res2)
           }, 500)
         } else {
