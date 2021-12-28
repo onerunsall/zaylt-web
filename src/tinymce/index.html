@@ -205,7 +205,9 @@
             name: this.option.contentNo
           }
           let res2 = await getUploadContent(params)
-          tinyMCE.activeEditor.setContent(res2)
+          this.this.$nextTick(() => {
+            tinyMCE.activeEditor.setContent(res2)
+          })
         } else {
           console.log('新增')
         }
