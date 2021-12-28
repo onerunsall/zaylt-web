@@ -22,7 +22,7 @@
 <body>
   <div id="app" style="position:absolute;top:0;bottom:0;left:0;right:0;">
 
-    <textarea id="tinydemo" v-model="content"></textarea>
+    <textarea id="tinydemo"></textarea>
     <button class="submit-btn" @click="submit"
       style="height:45px;position:absolute;bottom:0;left:0;right:0;font-size: 16px;">
       提交
@@ -188,7 +188,6 @@
     el: '#app',
     data() {
       return {
-        content: '',
         option: {},
         editData: {},
         name: ''
@@ -201,18 +200,12 @@
       async init() {
         this.getparams()
         if (this.option.contentNo) {
-          layer.open({
-            content: '已获取内容id:' + this.option.contentNo,
-            skin: 'msg',
-            time: 2 //2秒后自动关闭
-          })
           let params = {
             no: this.option.contentNo,
             name: this.option.contentNo
           }
           let res2 = await getUploadContent(params)
-          this.content = res2
-          console.log(this.content)
+          tinyMCE.activeEditor.setContent(res2)
         } else {
           console.log('新增')
         }
@@ -233,7 +226,6 @@
       },
       async submit() {
         let content = tinyMCE.activeEditor.getContent()
-        console.log(content)
         let res = await uploadContent(content, this.option.contentNo || '')
         if (res.code != 0) {
           return alert('提交修改失败！')
