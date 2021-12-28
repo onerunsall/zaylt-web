@@ -205,9 +205,9 @@
             name: this.option.contentNo
           }
           let res2 = await getUploadContent(params)
-          this.this.$nextTick(() => {
+          setTimeout(() => {
             tinyMCE.activeEditor.setContent(res2)
-          })
+          }, 500)
         } else {
           console.log('新增')
         }
