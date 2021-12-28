@@ -22,7 +22,7 @@
 <body>
   <div id="app" style="position:absolute;top:0;bottom:0;left:0;right:0;">
 
-    <textarea id="tinydemo"></textarea>
+    <textarea id="tinydemo" v-model="content"></textarea>
     <button class="submit-btn" @click="submit"
       style="height:45px;position:absolute;bottom:0;left:0;right:0;font-size: 16px;">
       提交
@@ -188,6 +188,7 @@
     el: '#app',
     data() {
       return {
+        content: '',
         option: {},
         editData: {},
         name: ''
@@ -205,11 +206,10 @@
             name: this.option.contentNo
           }
           let res2 = await getUploadContent(params)
+          this.$nextTick(() => {
+            this.content = res2
+          })
           setTimeout(() => {
-            layer.open({
-              content: res2
-              , time: 3
-            })
             tinyMCE.activeEditor.setContent(res2)
           }, 500)
         } else {
