@@ -69,12 +69,11 @@
     resize: false,
     plugins: 'textcolor bdmap charmap link image media code',
     toolbar: ' undo redo | fontsizeselect | forecolor backcolor |bold italic underline strikethrough | alignleft aligncenter alignright alignjustify charmap | outdent indent | removeformat cut | link image media bdmap',
-    automatic_uploads: false,
+    automatic_uploads: true,
     relative_urls: false,
     fontsize_formats: "8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt",
     forced_root_block: 'div',
     force_p_newlines: false,
-    images_upload_url: 'postAcceptor.php',
     toolbar_drawer: true,
     toolbar_sticky: true,
     mobile: {
@@ -82,6 +81,31 @@
       toolbar_drawer: true,
       toolbar_sticky: true,
       table_grid: true,
+    },
+    images_upload_handler: function (blobInfo, success, failure) {
+      // debugger
+      var xhr, formData;
+
+      xhr = new XMLHttpRequest();
+      xhr.withCredentials = false;
+      xhr.open('POST', '/ylt/upload-file');
+
+      xhr.onload = function () {
+        var json;
+        if (xhr.status != 200) {
+          failure('HTTP Error: ' + xhr.status);
+          return;
+        }
+        json = JSON.parse(xhr.responseText);
+        if (!json || json.code != 0) {
+          failure('Invalid JSON: ' + xhr.responseText);
+          return;
+        }
+        success(json.data.url);
+      };
+      formData = new FormData();
+      formData.append('file', blobInfo.blob(), blobInfo.filename());
+      xhr.send(formData);
     },
     file_picker_callback: function (callback, value, meta) {
       console.log('file_picker_callback')
@@ -127,61 +151,7 @@
         formData.append('file', file, file.name);
         xhr.send(formData);
       });
-    },
-    // file_picker_callback: function (callback, value, meta) {
-    //   $(`<input type='file'>`).change(function () {
-    //     var target = this;
-    //     if (this.files.length > 0) {
-    //       var file = this.files[0];
-    //       var fd = new FormData()
-    //       fd.append('file', file);
-    //       $.ajax({
-    //         url: '/ylt/upload-file',
-    //         type: 'POST',
-    //         data: fd,
-    //         cache: false,
-    //         processData: false,
-    //         contentType: false,
-    //         async: true,
-    //         success: function (res) {
-    //           if (res.codeMsg)
-    //             alert('提示', res.codeMsg)
-    //           if (res.code == 0) {
-    //             callback(res.data.url)
-    //             target.value = null
-    //             console.log(target)
-    //             $(target).remove()
-    //           }
-    //         }
-    //       })
-    //     }
-    //   }).click()
-    // },
-    // images_upload_handler: function (blobInfo, success, failure) {
-    //   // debugger
-    //   var xhr, formData;
-
-    //   xhr = new XMLHttpRequest();
-    //   xhr.withCredentials = false;
-    //   xhr.open('POST', 'postAcceptor.php');
-
-    //   xhr.onload = function () {
-    //     var json;
-    //     if (xhr.status != 200) {
-    //       failure('HTTP Error: ' + xhr.status);
-    //       return;
-    //     }
-    //     json = JSON.parse(xhr.responseText);
-    //     if (!json || typeof json.location != 'string') {
-    //       failure('Invalid JSON: ' + xhr.responseText);
-    //       return;
-    //     }
-    //     success(json.location);
-    //   };
-    //   formData = new FormData();
-    //   formData.append('file', blobInfo.blob(), blobInfo.filename());
-    //   xhr.send(formData);
-    // }
+    }
   })
 
   new Vue({
