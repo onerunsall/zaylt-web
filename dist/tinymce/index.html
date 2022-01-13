@@ -31,6 +31,8 @@
 </body>
 <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<link href="https://cdn.bootcdn.net/ajax/libs/layer/3.5.1/mobile/need/layer.min.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/layer/3.5.1/mobile/layer.min.js"></script>
 <script>
   function getUploadContent(data) {
     return $.ajax({
@@ -204,8 +206,14 @@
             name: this.option.contentNo
           }
           let res2 = await getUploadContent(params)
-          this.content = res2
-          console.log(this.content)
+          this.$nextTick(() => {
+            this.content = res2
+          })
+          setTimeout(() => {
+            tinyMCE.activeEditor.setContent(res2)
+          }, 500)
+        } else {
+          console.log('新增')
         }
       },
       // 拿到url参数
@@ -224,9 +232,10 @@
       },
       async submit() {
         let content = tinyMCE.activeEditor.getContent()
-        console.log(content)
-        let res = await uploadContent(content, this.option.contentNo)
-        console.log(res.data.no)
+        let res = await uploadContent(content, this.option.contentNo || '')
+        if (res.code != 0) {
+          return alert('提交修改失败！')
+        }
         wx.miniProgram.postMessage({
           data: {
             contentNo: res.data.no
