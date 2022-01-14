@@ -67,8 +67,8 @@
     },
     content_style: "body {margin:0;padding:0;} .mce-object-iframe {margin:0;box-sizing:border-box;}",
     resize: false,
-    plugins: 'textcolor bdmap charmap link image media code imagetools',
-    toolbar: 'undo redo | fontsizeselect | forecolor backcolor |bold italic underline strikethrough | alignleft aligncenter alignright alignjustify charmap | outdent indent | removeformat cut | link image media bdmap',
+    plugins: 'textcolor bdmap charmap link image media code imagetools axupimgs',
+    toolbar: 'undo redo | fontsizeselect | forecolor backcolor |bold italic underline strikethrough | alignleft aligncenter alignright alignjustify charmap | outdent indent | removeformat cut | link image axupimgs media bdmap',
     automatic_uploads: true,
     relative_urls: false,
     fontsize_formats: "8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt",
@@ -104,7 +104,7 @@
         success(json.data.url);
       };
       formData = new FormData();
-      formData.append('file', blobInfo.blob(), blobInfo.filename());
+      formData.append('file', blobInfo.blob(), blobInfo.filename?blobInfo.filename():blobInfo.file.name);
       xhr.send(formData);
     },
     file_picker_callback: function (callback, value, meta) {
