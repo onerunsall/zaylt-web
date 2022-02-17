@@ -57,10 +57,8 @@ then
 fi
 echo
 
-exit 1
-
 echo "-remote push"
-scp -P 33699 ./dist/$packageName admin@47.110.157.60:$env
+scp -P 33699 ./packages/$packageName admin@47.110.157.60:$env
 echo
 
 echo "-remote deploy"
