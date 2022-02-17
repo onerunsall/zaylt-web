@@ -26,7 +26,7 @@ tinymce.addI18n('zh_CN',{
 "Increase indent": "增加缩进",
 "Close": "关闭",
 "Formats": "格式",
-"Your browser doesn't support direct access to the clipboard. Please use the Ctrl+X\/C\/V keyboard shortcuts instead.": "当前浏览器不支持访问剪贴板，请使用快捷键Ctrl+X/C/V复制粘贴",
+"Your browser doesn't support direct access to the clipboard. Please use the Ctrl+X\/C\/V keyboard shortcuts instead.": "当前浏览器不支持访问剪贴板，请使用快捷键Ctrl+X/C/V复制粘贴，或在光标位置长按。",
 "Headers": "标题",
 "Header 1": "标题1",
 "Header 2": "标题2",
