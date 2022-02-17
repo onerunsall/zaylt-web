@@ -18,11 +18,11 @@ commitId=`git rev-parse --short HEAD`
 env=/root/data/domains/za
 packageName="za-ylt-web-$version-$commitId.zip"
 echo $packageName
+mkdir ./packages
 rm -rf ./dist/
 mkdir dist
 cp -r ./src/* ./dist/
 cd ./dist/
-mkdir packages
 ../zip -q -r ../packages/$packageName ./
 cd ..
 echo
